@@ -65,7 +65,7 @@
         <dependency>
             <groupId>me.drkmatr1984</groupId>
     		<artifactId>customevents</artifactId>
-    		<version>0.11</version>
+    		<version>0.14</version>
     		<scope>compile</scope>
     	</dependency>
     </dependencies>

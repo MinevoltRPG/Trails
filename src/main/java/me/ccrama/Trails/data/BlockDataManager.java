@@ -1,33 +1,33 @@
-package me.ccrama.Trails.playerdata;
+package me.ccrama.Trails.data;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import me.ccrama.Trails.Main;
-import me.ccrama.Trails.WrappedLocation;
-import me.ccrama.Trails.utils.SerializeLocation;
+import me.ccrama.Trails.Trails;
+import me.ccrama.Trails.objects.TrailBlock;
+import me.ccrama.Trails.objects.WrappedLocation;
 
 
-public class BlockData{
+public class BlockDataManager{
 	
 	private File dataFile;
 	private File dataFolder;
 	private FileConfiguration data;
-	private Main plugin;
-	public HashMap<WrappedLocation, Integer> walkedOver;
+	private Trails plugin;
+	public List<TrailBlock> walkedOver;
 	
-	public BlockData(Main plugin){		
+	public BlockDataManager(Trails plugin){		
 		this.plugin = plugin;
 		dataFolder = new File(this.plugin.getDataFolder().toString()+"/data");
+		initLists();
 	}
 		
-	public void initLists(){
+	private void initLists(){
 		saveDefaultBlockList();
 		loadBlockList();
 	}
@@ -48,14 +48,14 @@ public class BlockData{
 	  
 	public void loadBlockList(){
 		//pickup toggle data
-		walkedOver = new HashMap<WrappedLocation, Integer>();
+		walkedOver = new ArrayList<TrailBlock>();
 		data = YamlConfiguration.loadConfiguration(dataFile);
 		for(String key : data.getKeys(false)){
 			ConfigurationSection section = data.getConfigurationSection(key);
 			if(section.getString("location")!=null && section.getString("location")!=""){
 				if(section.getInt("walks")!=0){
 					try {
-						walkedOver.put(SerializeLocation.fromBase64(section.getString("location")), section.getInt("walks"));
+						walkedOver.add(new TrailBlock(WrappedLocation.fromBase64(section.getString("location")), section.getInt("walks")));
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -71,9 +71,9 @@ public class BlockData{
 		if(walkedOver!=null && !walkedOver.isEmpty())
 		{
 			int i = 0;
-			for(WrappedLocation loc : walkedOver.keySet()){
-				data.set(i + ".location", SerializeLocation.toBase64(loc));
-				data.set(i + ".walks", walkedOver.get(loc));
+			for(TrailBlock b : walkedOver){
+				data.set(i + ".location", b.getWrappedLocation().toBase64());
+				data.set(i + ".walks", b.getWalks());
 				i++;
 			}
 		}
@@ -93,4 +93,15 @@ public class BlockData{
 		}	
 	}
 	
+	public List<TrailBlock> getTrailBlocks(){
+		return walkedOver;
+	}
+	
+	public void addTrailBlock(TrailBlock b) {
+		walkedOver.add(b);
+	}
+	
+	public void removeTrailBlock(TrailBlock b) {
+		walkedOver.remove(b);
+	}
 }

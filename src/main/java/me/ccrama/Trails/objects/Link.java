@@ -1,9 +1,6 @@
-package me.ccrama.Trails;
+package me.ccrama.Trails.objects;
 
-import java.util.HashMap;
 import org.bukkit.Material;
-
-import me.ccrama.Trails.Main.TypeAndData;
 
 public class Link {
    private Material mat;
@@ -12,7 +9,6 @@ public class Link {
    private int chanceoccur;
    private byte dataValue;
    private Link next;
-   public static HashMap<TypeAndData, Link> matLinks = new HashMap<TypeAndData, Link>();
 
    public Link(Material material, byte dataValue, int decaynum, int chance, int linknumb, Link nextlink) {
       this.mat = material;
@@ -47,14 +43,4 @@ public class Link {
       return this.chanceoccur;
    }
 
-   public Link getFromMat(Material mat) {
-	  if(matLinks!=null){
-		  for(TypeAndData mats : matLinks.keySet()){
-			  if(mats.mat == mat){
-				  return matLinks.get(mats);
-			  }
-		  } 
-	  }
-	  return null;
-   }
 }
