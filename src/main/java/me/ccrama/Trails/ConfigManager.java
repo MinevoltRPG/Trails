@@ -1,21 +1,24 @@
-package me.ccrama.Trails.data;
+package me.ccrama.Trails;
 
 import java.util.Iterator;
 
 import org.bukkit.Material;
 
-import me.ccrama.Trails.Trails;
 import me.ccrama.Trails.objects.Link;
 import me.ccrama.Trails.objects.Links;
 
-public class LinksDataManager{
+public class ConfigManager{
 	
 	private Trails main;
 	private Links links = new Links();
+	private boolean isPathsInWilderness;
+	private boolean isTownyPathsPerm;
 	
-	public LinksDataManager(Trails plugin) {
+	public ConfigManager(Trails plugin) {
 		this.main = plugin;
-		createLinks();
+		this.createLinks(); 
+		this.isPathsInWilderness = main.getConfig().getBoolean("Plugin-Integration.Towny.PathsInWilderness");
+		this.isTownyPathsPerm = main.getConfig().getBoolean("Plugin-Integration.Towny.TownyPathsPerm");
 	}
 	
 	private void createLinks() {
@@ -69,5 +72,13 @@ public class LinksDataManager{
 	
 	public Links getLinks() {
 		return this.links;
+	}
+	
+	public boolean isPathsInWilderness() {
+		return this.isPathsInWilderness;
+	}
+	
+	public boolean isTownyPathsPerm() {
+		return this.isTownyPathsPerm;
 	}
 }

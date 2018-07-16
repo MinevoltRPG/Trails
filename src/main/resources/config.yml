@@ -1,11 +1,24 @@
-#Welcome to the Trails config. If you would like to add Towny support (no trails in cities), change HookTowny to true.
-#WorldGuard is automatically detected and players that cannot build in specific regions will not generate trails
-HookTowny: false
+#Welcome to the Trails config.
+#WorldGuard is automatically detected regions with the Trails flag set to false will be protected from trails.
 #Trails are composed of "Links" separated by a ">". Each link is comprised of 3 numbers: the material/datavalue(done like WOOL;4), walks to degrade to the next link, 
-# and the percent chance of it occuring. They should follow the followin format "material/datavalue:walks:chance". If you want it to instantly change, change
+# and the percent chance of it occuring. They should follow the following format "material/datavalue:walks:chance". If you want it to instantly change, change
 # walks to 0. 
 
 #WARNING: If two trails have one of the same material value links (the first number), all Trails will fail. Make sure no two links are the same!
 Trails:
     DirtPath: 'GRASS:5:100>DIRT:5:100>DIRT;1:5:100>GRAVEL:7:30>SMOOTH_BRICK;2:10:100'
     SandPath: 'SAND:0:100>SANDSTONE:5:30'
+Plugin-Integration:
+    # Towny integration now works two ways. If 'PathsInWilderness' is set to true, then players will create
+    #  paths in the Wilderness unless individually toggled off. If TownyPathsPerm is set to true, players with 
+    #  "trails.towny.town" will create paths anywhere in their home town, and players with "trails.towny.nation"
+    #  will create paths anywhere in their nation. Recommend setting these in Towny config permissions for 
+    #  Assistant, or create your own resident type "TrailMaker" and add perms to that.
+    Towny:
+        PathsInWilderness: 'true'
+        TownyPathsPerm: 'true'
+    LogBlock:
+        LogPathBlocks: 'true'
+Saves:
+    Interval: 20
+    SaveOnShutdown: false

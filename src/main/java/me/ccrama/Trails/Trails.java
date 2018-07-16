@@ -1,49 +1,52 @@
 package me.ccrama.Trails;
 
 import java.util.ArrayList;
-import java.util.Random;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.UUID;
+
 import me.ccrama.Trails.CommandFramework;
+import me.ccrama.Trails.compatibility.towny.TownyHook;
+import me.ccrama.Trails.compatibility.worldguard.WorldGuardHook;
 import me.ccrama.Trails.data.BlockDataManager;
-import me.ccrama.Trails.data.LinksDataManager;
 import me.ccrama.Trails.listeners.MoveEventListener;
-import me.ccrama.Trails.worldguard.WorldGuardHook;
 import me.drkmatr1984.customevents.CustomEvents;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Trails extends JavaPlugin{
-   public boolean usingTowny;
-   public WorldGuardHook hook = null;
-   public ArrayList<String> off = new ArrayList<String>();
+   private TownyHook townyHook = null;
+   private WorldGuardHook wgHook = null;
+   private ArrayList<String> off = new ArrayList<String>();
+   private CustomEvents customEvents;
    private BlockDataManager blockData;
-   private LinksDataManager linksData;
+   private ConfigManager linksData;
    private CommandFramework framework;
-   public ConcurrentHashMap<?, ?> times = new ConcurrentHashMap<Object, Object>();
-   Random r = new Random();
 
    public void onEnable() {
       this.saveDefaultConfig();
-      CustomEvents customEvents = new CustomEvents((JavaPlugin)this, false, false, true, false, false);
-  	  customEvents.initializeLib();
+      this.customEvents = new CustomEvents((JavaPlugin)this, false, false, true, false, false);
+  	  this.customEvents.initializeLib();
   	  this.blockData = new BlockDataManager(this);
-      this.linksData = new LinksDataManager(this);
-      System.out.println("Trails v" + this.getDescription().getVersion() + " by ccrama & drkmatr1984 is enabled!");
-      Bukkit.getServer().getPluginManager().registerEvents(new MoveEventListener(this), this);
+      this.linksData = new ConfigManager(this);    
       this.framework = new CommandFramework(this);
       if(Bukkit.getServer().getPluginManager().getPlugin("Towny") != null) {
-         this.usingTowny = this.getConfig().getBoolean("HookTowny");
-         if(this.usingTowny) {
-            System.out.println("Towny present and hooked into Trails.");
-         }
+         townyHook = new TownyHook();
+    	 //this.usingTowny = this.getConfig().getBoolean("HookTowny");
+         //if(this.usingTowny) {
+         //   System.out.println("Towny present and hooked into Trails.");
+         //}
       }
       if(Bukkit.getServer().getPluginManager().getPlugin("WorldGuard") != null) {
-    	  hook = new WorldGuardHook(this);
+    	  wgHook = new WorldGuardHook();
       }
+      Bukkit.getServer().getPluginManager().registerEvents(new MoveEventListener(this), this);
       this.framework.registerCommands(this);
+      
+      System.out.println("Trails v" + this.getDescription().getVersion() + " by ccrama & drkmatr1984 is enabled!");
    }
    
    public void onDisable(){
@@ -75,14 +78,36 @@ public class Trails extends JavaPlugin{
     	 args.getPlayer().sendMessage(ChatColor.RED + "[Trails] You also need to type on or off");
       }
 
-   }
+   }  
    
    public BlockDataManager getBlockDataManager() {
 	   return this.blockData;
    }
    
-   public LinksDataManager getLinksDataManager() {
+   public ConfigManager getConfigManager() {
 	   return this.linksData;
    }
-
+   
+   public WorldGuardHook getWorldGuardHook() {
+	   return this.wgHook;
+   }
+   
+   public TownyHook getTownyHook() {
+	   return this.townyHook;
+   }
+   
+   public boolean isToggledOff(UUID player) {
+	   if(this.off.contains(player.toString())) {
+		   return true;
+	   }
+	   return false;
+   }
+   
+   public boolean isToggledOff(Player player) {
+	   return isToggledOff(player.getUniqueId());
+   }
+   
+   public boolean isToggledOff(OfflinePlayer player) {
+	   return isToggledOff(player.getUniqueId());
+   }
 }

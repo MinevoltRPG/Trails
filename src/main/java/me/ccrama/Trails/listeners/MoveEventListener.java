@@ -22,20 +22,34 @@ public class MoveEventListener implements Listener {
 	
 	public MoveEventListener(Trails plugin) {
 		this.main = plugin;
-	    this.links = this.main.getLinksDataManager().getLinks();
+	    this.links = this.main.getConfigManager().getLinks();
 	}
 	
 	@EventHandler
 	public void walk(SignificantPlayerMoveEvent e) {
 		Player p = e.getPlayer();
-		if(main.off.contains(p.getName())) {
+		if(main.isToggledOff(p)) {
 			return;
 		}
-		if(main.usingTowny && !TownyUniverse.isWilderness(p.getLocation().subtract(0.0D, 1.0D, 0.0D).getBlock()))
-			return;
-		if(main.hook!=null && !main.hook.canBuild(p, p.getLocation().subtract(0.0D, 1.0D, 0.0D)))	
+		// Check towny conditions
+		if(main.getTownyHook()!=null) {
+			if(main.getTownyHook().isWilderness(p) && !main.getConfigManager().isPathsInWilderness()) {
+				return;
+			}
+			if(main.getConfigManager().isTownyPathsPerm()) {
+				if(main.getTownyHook().isInHomeNation(p) && !main.getTownyHook().hasNationPermission(p) && !main.getTownyHook().isInHomeTown(p)) {
+					return;
+				}
+				if(main.getTownyHook().isInHomeTown(p) && !main.getTownyHook().hasTownPermission(p)) {
+					return;
+				}
+			}		
+		}
+		// Check worldguard conditions
+		if(main.getWorldGuardHook()!=null && !main.getWorldGuardHook().canBuild(p, p.getLocation().subtract(0.0D, 1.0D, 0.0D)))	
 			return;          		
 		makePath(e.getFrom().subtract(0.0D, 1.0D, 0.0D).getBlock());
+		//log blocks
 	}
 	
 	@SuppressWarnings("deprecation")

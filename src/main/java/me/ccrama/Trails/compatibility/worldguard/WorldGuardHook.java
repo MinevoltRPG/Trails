@@ -1,5 +1,6 @@
-package me.ccrama.Trails.worldguard;
+package me.ccrama.Trails.compatibility.worldguard;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -7,14 +8,12 @@ import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.flags.registry.FlagConflictException;
 import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
 
-import me.ccrama.Trails.Trails;
-
 public class WorldGuardHook
 {
 	private WorldGuardPlugin wg;
 	
-	public WorldGuardHook(Trails plugin){
-		this.wg = (WorldGuardPlugin) plugin.getServer().getPluginManager().getPlugin("WorldGuard");
+	public WorldGuardHook(){
+		this.wg = (WorldGuardPlugin) Bukkit.getServer().getPluginManager().getPlugin("WorldGuard");
 		FlagRegistry registry = this.wg.getFlagRegistry();
 	    try {
 	        // register our flag with the registry
