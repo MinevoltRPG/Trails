@@ -1,7 +1,7 @@
 <h1 align="center"> Trails ✨ Spigot plugin </h1> <br>
 
 <p align="center">
-   [![Preview video](http://img.youtube.com/vi/L9XmBr-IAeA/0.jpg)](http://www.youtube.com/watch?v=L9XmBr-IAeA "Trails Plugin Spigot")
+   [![Watch the video](http://img.youtube.com/vi/L9XmBr-IAeA/0.jpg)](http://www.youtube.com/watch?v=L9XmBr-IAeA)   
 </p>
 
 ## Table of Contents
