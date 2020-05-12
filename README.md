@@ -16,7 +16,7 @@ Trails is a great RPG plugin that works on the premise that, in the real world, 
 
 ## How to start
 1. Install Spigot on http://www.spigotmc.org/
-2. Download this plugin at https://www.spigotmc.org/resources/villagernames-%E2%9C%A8-lightweight-villager-update-1-14-1-15.76618/
+2. Download this plugin at https://www.spigotmc.org/resources/trails.49930/
 3. Drop this plugin in your server's "/plugins" folder
 
 ## License
