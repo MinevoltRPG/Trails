@@ -20,4 +20,4 @@ Trails is a great RPG plugin that works on the premise that, in the real world, 
 3. Drop this plugin in your server's "/plugins" folder
 
 ## License
-This project is licensed under the MIT license - see the [LICENSE.md](LICENSE.md) file for details.
+This project is licensed under the Unlicense - see the [LICENSE.md](LICENSE.md) file for details.
