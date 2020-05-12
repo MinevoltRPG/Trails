@@ -1,7 +1,7 @@
-<h1 align="center"> Trails ✨ Spigot plugin </h1> <br>
+<h1 align="center"> Trails - Spigot plugin </h1> <br>
 
 <p align="center">
-    ![](preview.gif)
+    <img src="./preview.gif" width="600" />
 </p>
 
 ## Table of Contents
