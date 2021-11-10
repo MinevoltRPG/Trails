@@ -6,7 +6,7 @@
 
     <groupId>me.ccrama.Trails</groupId>
     <artifactId>Trails</artifactId>
-    <version>0.6</version>
+    <version>0.8</version>
     <name>Trails</name>
 
     <!-- Properties -->
@@ -33,33 +33,35 @@
             <id>DrkMatr1984 Repo</id>
             <url>https://minevolt.net/repo/</url>
         </repository>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
     </repositories>
     <!-- Dependencies -->
     <dependencies>
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.15.2-R0.1-SNAPSHOT</version>
+            <version>1.17.1-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.palmergames.bukkit.towny</groupId>
+            <groupId>com.github.TownyAdvanced</groupId>
             <artifactId>Towny</artifactId>
-            <version>0.91.0.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/Towny.jar</systemPath>
+            <version>0.97.2.0</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.sk89q.worldguard</groupId>
-            <artifactId>worldguard-legacy</artifactId>
-            <version>6.2</version>
+            <artifactId>worldguard-bukkit</artifactId>
+            <version>7.0.7-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>me.drkmatr1984</groupId>
-    		<artifactId>customevents</artifactId>
-    		<version>0.14</version>
-    		<scope>compile</scope>
-    	</dependency>
+            <groupId>com.github.DrkMatr1984</groupId>
+            <artifactId>CustomEvents</artifactId>
+            <version>master-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <!-- Build information -->

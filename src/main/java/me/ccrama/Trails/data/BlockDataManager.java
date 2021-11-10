@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -17,14 +18,14 @@ import me.ccrama.Trails.objects.WrappedLocation;
 public class BlockDataManager {
 
     private File dataFile;
-    private File dataFolder;
+    private final File dataFolder;
     private FileConfiguration data;
-    private Trails plugin;
+    private final Trails plugin;
     public List<TrailBlock> walkedOver;
 
     public BlockDataManager(Trails plugin) {
         this.plugin = plugin;
-        dataFolder = new File(this.plugin.getDataFolder().toString() + "/data");
+        dataFolder = new File(this.plugin.getDataFolder() + "/data");
         initLists();
     }
 
@@ -49,11 +50,11 @@ public class BlockDataManager {
 
     public void loadBlockList() {
         //pickup toggle data
-        walkedOver = new ArrayList<TrailBlock>();
+        walkedOver = new ArrayList<>();
         data = YamlConfiguration.loadConfiguration(dataFile);
         for (String key : data.getKeys(false)) {
             ConfigurationSection section = data.getConfigurationSection(key);
-            if (section.getString("location") != null && section.getString("location") != "") {
+            if (section.getString("location") != null && !Objects.equals(section.getString("location"), "")) {
                 if (section.getInt("walks") != 0) {
                     try {
                         walkedOver.add(new TrailBlock(WrappedLocation.fromBase64(section.getString("location")), section.getInt("walks")));

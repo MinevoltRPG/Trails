@@ -19,13 +19,13 @@ public class WrappedLocation implements Serializable{
 	/**
 	 * 
 	 */
-	private double x;
-	private double y;
-	private double z;
-	private String world;
-	private int blockX;
-	private int blockY;
-	private int blockZ;
+	private final double x;
+	private final double y;
+	private final double z;
+	private final String world;
+	private final int blockX;
+	private final int blockY;
+	private final int blockZ;
 	
 	public WrappedLocation(Location loc){
 		this.x = loc.getX();
@@ -69,8 +69,7 @@ public class WrappedLocation implements Serializable{
 		if(this.getBlockX() == loc.getBlockX())
 			if(this.getBlockY() == loc.getBlockY())
 				if(this.getBlockZ() == loc.getBlockZ())
-					if(this.getWorld() == loc.getWorld())
-						return true;
+					return this.getWorld() == loc.getWorld();
 		return false;
 	}
 	

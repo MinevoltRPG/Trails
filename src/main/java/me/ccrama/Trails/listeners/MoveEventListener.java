@@ -1,26 +1,24 @@
 package me.ccrama.Trails.listeners;
 
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import com.palmergames.bukkit.towny.object.TownyUniverse;
-
 import me.ccrama.Trails.Trails;
 import me.ccrama.Trails.objects.Link;
 import me.ccrama.Trails.objects.Links;
 import me.ccrama.Trails.objects.TrailBlock;
 import me.ccrama.Trails.objects.WrappedLocation;
 import me.drkmatr1984.customevents.moveEvents.SignificantPlayerMoveEvent;
+import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 
 import java.lang.reflect.InvocationTargetException;
 
 public class MoveEventListener implements Listener {
 
-    private Trails main;
+    private final Trails main;
 
-    private Links links;
+    private final Links links;
 
     public MoveEventListener(Trails plugin) {
         this.main = plugin;

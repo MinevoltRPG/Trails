@@ -32,7 +32,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.SimplePluginManager;
 
 public class CommandHelper {
-    private final Map<String, SimpleEntry<Method, Object>> commandMap = new HashMap<String, SimpleEntry<Method, Object>>();
+    private final Map<String, SimpleEntry<Method, Object>> commandMap = new HashMap<>();
     private CommandMap map;
     private final Plugin plugin;
 
@@ -63,15 +63,15 @@ public class CommandHelper {
 
             String var12 = buffer.toString();
             if (this.commandMap.containsKey(var12)) {
-                Entry<Method, Object> entry = (Entry<Method, Object>) this.commandMap.get(var12);
-                CommandHelper.Command command = (CommandHelper.Command) ((Method) entry.getKey()).getAnnotation(CommandHelper.Command.class);
+                Entry<Method, Object> entry = this.commandMap.get(var12);
+                CommandHelper.Command command = entry.getKey().getAnnotation(Command.class);
                 if (!sender.hasPermission(command.permission())) {
                     sender.sendMessage(command.noPerm());
                     return true;
                 }
 
                 try {
-                    ((Method) entry.getKey()).invoke(entry.getValue(), new Object[]{new CommandHelper.CommandArgs(sender, cmd, label, args, var12.split("\\.").length - 1)});
+                    entry.getKey().invoke(entry.getValue(), new CommandArgs(sender, cmd, label, args, var12.split("\\.").length - 1));
                 } catch (InvocationTargetException | IllegalAccessException | IllegalArgumentException var11) {
                     var11.printStackTrace();
                 }
@@ -95,7 +95,7 @@ public class CommandHelper {
             int var9;
             String[] var10;
             if (m.getAnnotation(CommandHelper.Command.class) != null) {
-                CommandHelper.Command var11 = (CommandHelper.Command) m.getAnnotation(CommandHelper.Command.class);
+                CommandHelper.Command var11 = m.getAnnotation(Command.class);
                 if (m.getParameterTypes().length <= 1 && m.getParameterTypes()[0] == CommandHelper.CommandArgs.class) {
                     this.registerCommand(var11, var11.name(), m, obj);
                     var9 = (var10 = var11.aliases()).length;
@@ -108,8 +108,8 @@ public class CommandHelper {
                     System.out.println("Unable to register command " + m.getName() + ". Unexpected method arguments");
                 }
             } else if (m.getAnnotation(CommandHelper.Completer.class) != null) {
-                CommandHelper.Completer comp = (CommandHelper.Completer) m.getAnnotation(CommandHelper.Completer.class);
-                if (m.getParameterTypes().length <= 1 && m.getParameterTypes().length != 0 && m.getParameterTypes()[0] == CommandHelper.CommandArgs.class) {
+                CommandHelper.Completer comp = m.getAnnotation(Completer.class);
+                if (m.getParameterTypes().length == 1 && m.getParameterTypes()[0] == CommandArgs.class) {
                     if (m.getReturnType() != List.class) {
                         System.out.println("Unable to register tab completer " + m.getName() + ". Unexpected return type");
                     } else {
@@ -130,11 +130,9 @@ public class CommandHelper {
     }
 
     public void registerHelp() {
-        TreeSet<HelpTopic> help = new TreeSet<HelpTopic>(HelpTopicComparator.helpTopicComparatorInstance());
-        Iterator<String> var3 = this.commandMap.keySet().iterator();
+        TreeSet<HelpTopic> help = new TreeSet<>(HelpTopicComparator.helpTopicComparatorInstance());
 
-        while (var3.hasNext()) {
-            String topic = (String) var3.next();
+        for (String topic : this.commandMap.keySet()) {
             if (!topic.contains(".")) {
                 org.bukkit.command.Command cmd = this.map.getCommand(topic);
                 GenericCommandHelpTopic topic1 = new GenericCommandHelpTopic(cmd);
@@ -142,12 +140,12 @@ public class CommandHelper {
             }
         }
 
-        IndexHelpTopic topic2 = new IndexHelpTopic(this.plugin.getName(), "All commands for " + this.plugin.getName(), (String) null, help, "Below is a list of all " + this.plugin.getName() + " commands:");
+        IndexHelpTopic topic2 = new IndexHelpTopic(this.plugin.getName(), "All commands for " + this.plugin.getName(), null, help, "Below is a list of all " + this.plugin.getName() + " commands:");
         Bukkit.getServer().getHelpMap().addTopic(topic2);
     }
 
     private void registerCommand(CommandHelper.Command command, String label, Method m, Object obj) {
-        SimpleEntry<Method, Object> entry = new SimpleEntry<Method, Object>(m, obj);
+        SimpleEntry<Method, Object> entry = new SimpleEntry<>(m, obj);
         this.commandMap.put(label.toLowerCase(), entry);
         String cmdLabel = label.replace(".", ",").split(",")[0].toLowerCase();
         if (this.map.getCommand(cmdLabel) == null) {
@@ -155,11 +153,11 @@ public class CommandHelper {
             this.map.register(this.plugin.getName(), cmd);
         }
 
-        if (!command.description().equalsIgnoreCase("") && cmdLabel == label) {
+        if (!command.description().equalsIgnoreCase("") && cmdLabel.equals(label)) {
             this.map.getCommand(cmdLabel).setDescription(command.description());
         }
 
-        if (!command.usage().equalsIgnoreCase("") && cmdLabel == label) {
+        if (!command.usage().equalsIgnoreCase("") && cmdLabel.equals(label)) {
             this.map.getCommand(cmdLabel).setUsage(command.usage());
         }
 
@@ -229,7 +227,7 @@ public class CommandHelper {
                 try {
                     success = this.executor.onCommand(sender, this, commandLabel, args);
                 } catch (Throwable var9) {
-                    throw new CommandException("Unhandled exception executing command \'" + commandLabel + "\' in plugin " + this.owningPlugin.getDescription().getFullName(), var9);
+                    throw new CommandException("Unhandled exception executing command '" + commandLabel + "' in plugin " + this.owningPlugin.getDescription().getFullName(), var9);
                 }
 
                 if (!success && this.usageMessage.length() > 0) {
@@ -262,7 +260,7 @@ public class CommandHelper {
                 }
             } catch (Throwable var11) {
                 StringBuilder message = new StringBuilder();
-                message.append("Unhandled exception during tab completion for command \'/").append(alias).append(' ');
+                message.append("Unhandled exception during tab completion for command '/").append(alias).append(' ');
                 String[] var10 = args;
                 int var9 = args.length;
 
@@ -271,7 +269,7 @@ public class CommandHelper {
                     message.append(arg).append(' ');
                 }
 
-                message.deleteCharAt(message.length() - 1).append("\' in plugin ").append(this.owningPlugin.getDescription().getFullName());
+                message.deleteCharAt(message.length() - 1).append("' in plugin ").append(this.owningPlugin.getDescription().getFullName());
                 throw new CommandException(message.toString(), var11);
             }
 
@@ -280,7 +278,7 @@ public class CommandHelper {
     }
 
     class BukkitCompleter implements TabCompleter {
-        private final Map<String, SimpleEntry<Method, Object>> completers = new HashMap<String, SimpleEntry<Method, Object>>();
+        private final Map<String, SimpleEntry<Method, Object>> completers = new HashMap<>();
 
         public void addCompleter(String label, Method m, Object obj) {
             this.completers.put(label, new SimpleEntry<Method, Object>(m, obj));
@@ -300,10 +298,10 @@ public class CommandHelper {
 
                 String var11 = buffer.toString();
                 if (this.completers.containsKey(var11)) {
-                    Entry<Method, Object> entry = (Entry<Method, Object>) this.completers.get(var11);
+                    Entry<Method, Object> entry = this.completers.get(var11);
 
                     try {
-                        return (List<String>) ((Method) entry.getKey()).invoke(entry.getValue(), new Object[]{CommandHelper.this.new CommandArgs(sender, command, label, args, var11.split("\\.").length - 1)});
+                        return (List<String>) entry.getKey().invoke(entry.getValue(), new Object[]{CommandHelper.this.new CommandArgs(sender, command, label, args, var11.split("\\.").length - 1)});
                     } catch (IllegalAccessException | InvocationTargetException | IllegalArgumentException var10) {
                         var10.printStackTrace();
                     }

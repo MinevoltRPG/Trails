@@ -20,13 +20,14 @@ import org.bukkit.plugin.java.JavaPlugin;
 /**
  * Trails Plugin V0.7
  * - Updated to 1.15.2 by j10max
+ * - Updated to 1.17.1 by Mr-Deej
  * - Created by ccrama & drkmatr1984
  */
 public class Trails extends JavaPlugin {
 
     private TownyHook townyHook = null;
     private WorldGuardHook wgHook = null;
-    private ArrayList<String> off = new ArrayList<String>();
+    private ArrayList<String> off = new ArrayList<>();
     private CustomEvents customEvents;
     private BlockDataManager blockData;
     private ConfigHelper linksData;
@@ -122,10 +123,7 @@ public class Trails extends JavaPlugin {
     }
 
     public boolean isToggledOff(UUID player) {
-        if (this.off.contains(player.toString())) {
-            return true;
-        }
-        return false;
+        return this.off.contains(player.toString());
     }
 
     public boolean isToggledOff(Player player) {

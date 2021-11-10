@@ -14,14 +14,14 @@ public class Console {
         int length = 0;
         // Find longest string
         for (String s : message) if (s.length() > length) length = s.length();
-        List<String> strings = new ArrayList<String>();
+        List<String> strings = new ArrayList<>();
         // Formulate header
         StringBuilder plus = new StringBuilder("++++");
         for (int i = 0; i < length; i++) plus.append("+");
-        strings.add("==" + ChatColor.DARK_AQUA + plus.toString() + ChatColor.RESET + "==");
+        strings.add("==" + ChatColor.DARK_AQUA + plus + ChatColor.RESET + "==");
         // Messages
         for (String msg : message) strings.add("++ " + ChatColor.translateAlternateColorCodes('&', msg));
-        strings.add("==" + ChatColor.DARK_AQUA + plus.toString() + ChatColor.RESET + "==");
+        strings.add("==" + ChatColor.DARK_AQUA + plus + ChatColor.RESET + "==");
         // Send message to console
         sender.sendMessage(strings.toArray(new String[0]));
     }

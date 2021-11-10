@@ -7,7 +7,7 @@ import org.bukkit.Location;
 public class TrailBlock implements Serializable{
 	
 	private static final long serialVersionUID = -5944092517430475806L;
-	private WrappedLocation location;
+	private final WrappedLocation location;
 	private Integer walks = 0;
 	
 	/**

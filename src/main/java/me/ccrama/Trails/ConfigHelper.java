@@ -1,20 +1,17 @@
 package me.ccrama.Trails;
 
-import java.util.Iterator;
-
+import me.ccrama.Trails.objects.Link;
+import me.ccrama.Trails.objects.Links;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 
-import me.ccrama.Trails.objects.Link;
-import me.ccrama.Trails.objects.Links;
-
 public class ConfigHelper {
 
-    private Trails main;
-    private Links links = new Links();
-    private boolean isPathsInWilderness;
-    private boolean isTownyPathsPerm;
+    private final Trails main;
+    private final Links links = new Links();
+    private final boolean isPathsInWilderness;
+    private final boolean isTownyPathsPerm;
 
     public ConfigHelper(Trails plugin) {
         this.main = plugin;
@@ -24,16 +21,14 @@ public class ConfigHelper {
     }
 
     private void createLinks() {
-        Iterator<?> var2 = this.main.getConfig().getConfigurationSection("Trails").getKeys(false).iterator();
 
-        while (var2.hasNext()) {
-            String configs = (String) var2.next();
+        for (String configs : this.main.getConfig().getConfigurationSection("Trails").getKeys(false)) {
             String s = this.main.getConfig().getString("Trails." + configs);
             String[] sarray = s.split(">");
             int numb = sarray.length - 1;
             Link lastlink = null;
 
-            while (true) {
+            do {
                 boolean legit = true;
                 Material mat;
                 byte dataValue = 0;
@@ -64,10 +59,7 @@ public class ConfigHelper {
                     --numb;
                 }
 
-                if (numb == -1) {
-                    break;
-                }
-            }
+            } while (numb != -1);
         }
 
     }
