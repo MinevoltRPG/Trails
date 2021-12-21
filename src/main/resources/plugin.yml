@@ -1,4 +1,5 @@
 name: Trails
 main: me.ccrama.Trails.Trails
 authors: [j10max, ccrama, drkmatr1984, Mr-Deej]
+api-version: 1.17
 version: 0.8

@@ -30,10 +30,6 @@
             <url>http://maven.sk89q.com/repo/</url>
         </repository>
         <repository>
-            <id>DrkMatr1984 Repo</id>
-            <url>https://minevolt.net/repo/</url>
-        </repository>
-        <repository>
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
@@ -58,9 +54,16 @@
             <version>7.0.7-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>com.github.DrkMatr1984</groupId>
-            <artifactId>CustomEvents</artifactId>
-            <version>master-SNAPSHOT</version>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+            <version>1.13</version>
+        </dependency>
+        <dependency>
+            <groupId>me.drkmatr1984</groupId>
+            <artifactId>customevents</artifactId>
+            <version>0.16</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/customevents-0.16.jar</systemPath>
         </dependency>
     </dependencies>
 
