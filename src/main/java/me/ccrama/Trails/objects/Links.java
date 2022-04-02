@@ -11,7 +11,7 @@ public class Links extends AbstractList<Link>
 
     public Link get(int i){
         if(i >= size) throw new IndexOutOfBoundsException("duh!");
-        return (Link)list[i];
+        return list[i];
     }
 
     public boolean add(Link e){

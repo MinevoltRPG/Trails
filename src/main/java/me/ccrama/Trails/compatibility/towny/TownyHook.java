@@ -1,39 +1,34 @@
 package me.ccrama.Trails.compatibility.towny;
 
+import com.palmergames.bukkit.towny.TownyAPI;
+import com.palmergames.bukkit.towny.TownyUniverse;
+import com.palmergames.bukkit.towny.exceptions.NotRegisteredException;
+import com.palmergames.bukkit.towny.object.Resident;
+import com.palmergames.bukkit.towny.object.TownBlock;
+import com.palmergames.bukkit.towny.object.WorldCoord;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
-import com.palmergames.bukkit.towny.exceptions.NotRegisteredException;
-import com.palmergames.bukkit.towny.object.Resident;
-import com.palmergames.bukkit.towny.object.TownBlock;
-import com.palmergames.bukkit.towny.object.TownyUniverse;
-import com.palmergames.bukkit.towny.object.WorldCoord;
-
 public class TownyHook
 {
-	
+
+	private Player player;
+
 	public TownyHook() {
 	}
 	
 	public boolean hasTownPermission(Player p) {
-		if(p.hasPermission("trails.towny.town")) {
-			return true;
-		}
-		return false;
+		return p.hasPermission("trails.towny.town");
 	}
 	
 	public boolean hasNationPermission(Player p) {
-		if(p.hasPermission("trails.towny.nation")) {
-			return true;
-		}
-		return false;
+		return p.hasPermission("trails.towny.nation");
 	}
 	
 	public boolean isWilderness(Location loc) {
-		if(TownyUniverse.isWilderness(loc.getBlock())) {
-			return true;
-		}
+		//return TownyUniverse.isWilderness(loc.getBlock());
+		TownyAPI.getInstance().isWilderness(player.getLocation());
 		return false;
 	}
 	
@@ -42,14 +37,15 @@ public class TownyHook
 	}
 	
 	public boolean isWilderness(Block block) {
-		return TownyUniverse.isWilderness(block);		
+		TownyAPI.getInstance().isWilderness(block);
+		return false;
 	}
 	
 	public boolean isInHomeTown(Player p) {
 		Resident resident;
 		TownBlock block;
 		try {
-			resident = TownyUniverse.getDataSource().getResident(p.getName());
+			resident = TownyUniverse.getInstance().getResident(player.getUniqueId());
 			block = WorldCoord.parseWorldCoord(p).getTownBlock();
 			if(block.hasTown()) {
 				if(resident.getTown() == block.getTown()) {
@@ -66,7 +62,7 @@ public class TownyHook
 		Resident resident;
 		TownBlock block;
 		try {
-			resident = TownyUniverse.getDataSource().getResident(p.getName());
+			resident = TownyUniverse.getInstance().getResident(p.getName());
 			block = WorldCoord.parseWorldCoord(p).getTownBlock();
 			if(block.hasTown()) {
 				if(block.getTown().hasNation()) {

@@ -6,7 +6,7 @@
 
     <groupId>me.ccrama.Trails</groupId>
     <artifactId>Trails</artifactId>
-    <version>0.6</version>
+    <version>0.9</version>
     <name>Trails</name>
 
     <!-- Properties -->
@@ -30,44 +30,41 @@
             <url>http://maven.sk89q.com/repo/</url>
         </repository>
         <repository>
-            <id>DrkMatr1984 Repo</id>
-            <url>https://minevolt.net/repo/</url>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
         </repository>
     </repositories>
     <!-- Dependencies -->
     <dependencies>
         <dependency>
-            <groupId>org.bukkit</groupId>
-            <artifactId>bukkit</artifactId>
-            <version>1.12.2-R0.1-SNAPSHOT</version>
-            <type>jar</type>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>org.spigotmc</groupId>
-            <artifactId>spigot</artifactId>
-            <version>1.12.2-R0.1-SNAPSHOT</version>
-            <type>jar</type>
+            <artifactId>spigot-api</artifactId>
+            <version>1.17.1-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.palmergames.bukkit.towny</groupId>
+            <groupId>com.github.TownyAdvanced</groupId>
             <artifactId>Towny</artifactId>
-            <version>0.91.0.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/Towny.jar</systemPath>
+            <version>0.97.2.0</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.sk89q.worldguard</groupId>
-            <artifactId>worldguard-legacy</artifactId>
-            <version>6.2</version>
+            <artifactId>worldguard-bukkit</artifactId>
+            <version>7.0.7-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+            <version>1.13</version>
         </dependency>
         <dependency>
             <groupId>me.drkmatr1984</groupId>
-    		<artifactId>customevents</artifactId>
-    		<version>0.14</version>
-    		<scope>compile</scope>
-    	</dependency>
+            <artifactId>customevents</artifactId>
+            <version>0.16</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/customevents-0.16.jar</systemPath>
+        </dependency>
     </dependencies>
 
     <!-- Build information -->

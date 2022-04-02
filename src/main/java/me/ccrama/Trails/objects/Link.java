@@ -3,12 +3,12 @@ package me.ccrama.Trails.objects;
 import org.bukkit.Material;
 
 public class Link {
-   private Material mat;
-   private int decay;
-   private int id;
-   private int chanceoccur;
-   private byte dataValue;
-   private Link next;
+   private final Material mat;
+   private final int decay;
+   private final int id;
+   private final int chanceoccur;
+   private final byte dataValue;
+   private final Link next;
 
    public Link(Material material, byte dataValue, int decaynum, int chance, int linknumb, Link nextlink) {
       this.mat = material;
