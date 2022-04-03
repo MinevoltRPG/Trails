@@ -39,7 +39,7 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.17.1-R0.1-SNAPSHOT</version>
+            <version>1.18.2-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -52,6 +52,15 @@
             <groupId>com.sk89q.worldguard</groupId>
             <artifactId>worldguard-bukkit</artifactId>
             <version>7.0.7-SNAPSHOT</version>
+            <scope>system</scope>
+            <systemPath>E:\Users\Owner\workspace\Trails\lib\worldguard-bukkit-7.0.7-dist.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>com.sk89q.worldedit</groupId>
+            <artifactId>worldedit-bukkit</artifactId>
+            <version>7.2.10</version>
+            <scope>system</scope>
+            <systemPath>E:\Users\Owner\workspace\Trails\lib\worldedit-bukkit-7.2.10.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>org.yaml</groupId>
@@ -63,7 +72,7 @@
             <artifactId>customevents</artifactId>
             <version>0.16</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/lib/customevents-0.16.jar</systemPath>
+            <systemPath>E:\Users\Owner\workspace\Trails\lib\customevents-0.16.jar</systemPath>
         </dependency>
     </dependencies>
 
