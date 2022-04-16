@@ -13,8 +13,6 @@ import org.bukkit.entity.Player;
 public class TownyHook
 {
 
-	private Player player;
-
 	public TownyHook() {
 	}
 	
@@ -28,8 +26,7 @@ public class TownyHook
 	
 	public boolean isWilderness(Location loc) {
 		//return TownyUniverse.isWilderness(loc.getBlock());
-		TownyAPI.getInstance().isWilderness(player.getLocation());
-		return false;
+		return TownyAPI.getInstance().isWilderness(loc);
 	}
 	
 	public boolean isWilderness(Player p) {
@@ -45,7 +42,7 @@ public class TownyHook
 		Resident resident;
 		TownBlock block;
 		try {
-			resident = TownyUniverse.getInstance().getResident(player.getUniqueId());
+			resident = TownyUniverse.getInstance().getResident(p.getUniqueId());
 			block = WorldCoord.parseWorldCoord(p).getTownBlock();
 			if(block.hasTown()) {
 				if(resident.getTown() == block.getTown()) {
