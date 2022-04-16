@@ -7,12 +7,10 @@ public class Link {
    private final int decay;
    private final int id;
    private final int chanceoccur;
-   private final byte dataValue;
    private final Link next;
 
-   public Link(Material material, byte dataValue, int decaynum, int chance, int linknumb, Link nextlink) {
+   public Link(Material material, int decaynum, int chance, int linknumb, Link nextlink) {
       this.mat = material;
-      this.dataValue = dataValue;
       this.decay = decaynum;
       this.id = linknumb;
       this.chanceoccur = chance;
@@ -25,10 +23,6 @@ public class Link {
 
    public int decayNumber() {
       return this.decay;
-   }
-   
-   public byte getDataValue() {
-	   return this.dataValue;
    }
 
    public int identifier() {

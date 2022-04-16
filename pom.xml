@@ -33,6 +33,10 @@
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
+        <repository>
+            <id>drkmatr1984-repo</id>
+            <url>https://minevolt.net/repo/</url>
+        </repository>
     </repositories>
     <!-- Dependencies -->
     <dependencies>
@@ -65,14 +69,12 @@
         <dependency>
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
-            <version>1.13</version>
+            <version>1.26</version>
         </dependency>
         <dependency>
             <groupId>me.drkmatr1984</groupId>
             <artifactId>customevents</artifactId>
-            <version>0.16</version>
-            <scope>system</scope>
-            <systemPath>E:\Users\Owner\workspace\Trails\lib\customevents-0.16.jar</systemPath>
+            <version>0.15</version>
         </dependency>
     </dependencies>
 

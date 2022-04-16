@@ -60,16 +60,21 @@ public class Trails extends JavaPlugin {
             //   System.out.println("Towny present and hooked into Trails.");
             //}
         }
-        // Worldguard Hook
-        if (Bukkit.getServer().getPluginManager().getPlugin("WorldGuard") != null) {
-            wgHook = new WorldGuardHook();
-        }
         // Register Move Listener
         Bukkit.getServer().getPluginManager().registerEvents(new MoveEventListener(this), this);
         // Register commands
         this.framework.registerCommands(this);
         // Console enabled message
         Console.sendConsoleMessage(String.format("Trails v%s", this.getDescription().getVersion()), "updated to 1.15.2 by j10max", "created by ccrama & drkmatr1984", ChatColor.GREEN + "Thank you");
+    }
+    
+    @Override
+    public void onLoad() {
+    	// Worldguard Hook
+        if (Bukkit.getServer().getPluginManager().getPlugin("WorldGuard") != null) {
+            wgHook = new WorldGuardHook();
+            Console.sendConsoleMessage(String.format(ChatColor.YELLOW + "[Trails]" + ChatColor.GREEN + " hooked into worldguard! Flag trails-flag registered. Set trails-flag = true to allow trails in regions."));
+        }
     }
 
     /**

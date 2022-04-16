@@ -2,6 +2,8 @@ package me.ccrama.Trails;
 
 import me.ccrama.Trails.objects.Link;
 import me.ccrama.Trails.objects.Links;
+import me.ccrama.Trails.util.Console;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -29,21 +31,13 @@ public class ConfigHelper {
             Link lastlink = null;
 
             do {
-                boolean legit = true;
-                Material mat;
-                byte dataValue = 0;
+                boolean legit = true;            
                 String numbs = sarray[numb];
                 String[] sarray2 = numbs.split(":");
-                if (sarray2[0].contains(";")) {
-                    String[] matAndDataValue = sarray2[0].split(";");
-                    mat = Material.getMaterial(matAndDataValue[0].toUpperCase());
-                    dataValue = (byte) Integer.parseInt(matAndDataValue[1]);
-                } else {
-                    mat = Material.getMaterial(sarray2[0]);
-                }
+                Material mat = Material.getMaterial(sarray2[0]);      
                 for (Link link : links) {
-                    if (link.getMat() == mat && link.getDataValue() == dataValue) {
-                        Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.RED + "[Trails] ERROR: " + "Two Trails have the same material && data values. Please check the config and make sure no two trails have the same data values.");
+                    if (link.getMat() == mat) {
+                    	Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.YELLOW + "[Trails] " + ChatColor.RED +"ERROR: " + "Two Trails have the same materials. Please check the config and make sure no two trails have the same material values.");
                         numb = -1;
                         legit = false;
                     }
@@ -51,14 +45,17 @@ public class ConfigHelper {
                 if (legit) {
                     int wearTimes = Integer.parseInt(sarray2[1]);
                     int chance = Integer.parseInt(sarray2[2]);
-                    Link link2 = new Link(mat, dataValue, wearTimes - 1, chance, numb, lastlink);
+                    Link link2 = new Link(mat, wearTimes - 1, chance, numb, lastlink);
 
                     links.add(link2);
                     lastlink = link2;
-                    System.out.println(ChatColor.GREEN + "[TRAILS] added: Link material = " + mat.name() + ":" + dataValue + " wear = " + wearTimes + " chance = " + chance + "%");
+                    if(mat != null)
+                    	Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.YELLOW + "[Trails] " + ChatColor.GREEN + "added: Link material = " + mat.name() + " wear = " + wearTimes + " chance = " + chance + " percent");
+                    else
+                    	Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.YELLOW + "[Trails] " + ChatColor.RED +"ERROR: " + ChatColor.WHITE + sarray2[0] + ChatColor.RED + " is not a valid Material name. Check "
+                    			+ "https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html for the proper names.");
                     --numb;
                 }
-
             } while (numb != -1);
         }
 

@@ -1,12 +1,13 @@
 #Welcome to the Trails config.
-#WorldGuard is automatically detected regions with the Trails flag set to false will be protected from trails.
-#Trails are composed of "Links" separated by a ">". Each link comprises 3 numbers: the material/datavalue(done like WOOL;4), walks to degrade to the next link,
-# and the percent chance of it occurring. They should follow the following format "material/datavalue:walks:chance". If you want it to instantly change, change
-# walks to 0. 
+#WorldGuard is automatically detected. Regions with the Trails flag set to false will be protected from trails. Trails flag is trails-flag
+#Trails are composed of "Links" separated by a ">". Each link comprises 3 numbers: the material, walks to degrade to the next link,
+# and the percent chance of it occurring. They should follow the following format "material:walks:chance". If you want it to instantly change, change
+# walks to 0.
+# Get material names from https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html 
 
-#WARNING: If two trails have one of the same material value links (the first number), all Trails will fail. Make sure no two links are the same!
+#WARNING: If two trails have one of the same material value links, all Trails will fail. Make sure no two links are the same!
 Trails:
-    DirtPath: 'GRASS:5:100>DIRT:5:100>DIRT;1:5:100>GRAVEL:7:30>SMOOTH_BRICK;2:10:100'
+    DirtPath: 'GRASS_BLOCK:5:100>DIRT:5:100>GRAVEL:7:30>SMOOTH_STONE:10:100'
     SandPath: 'SAND:0:100>SANDSTONE:5:30'
 Plugin-Integration:
     # Towny integration now works two ways. If 'PathsInWilderness' is set to true, then players will create

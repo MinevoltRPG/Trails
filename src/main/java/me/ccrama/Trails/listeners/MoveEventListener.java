@@ -52,12 +52,10 @@ public class MoveEventListener implements Listener {
         //log blocks
     }
 
-    @SuppressWarnings("deprecation")
     private void makePath(Block block) {
         Material type = block.getType();
-        byte dataValue = block.getData();
         for (Link link : this.links) {
-            if (link.getMat() == type && link.getDataValue() == dataValue) {
+            if (link.getMat() == type) {
                 double foo = Math.random() * 100.0D;
                 if (foo <= (double) link.chanceOccurance()) {
                     for (TrailBlock b : this.main.getBlockDataManager().getTrailBlocks()) {
@@ -84,20 +82,13 @@ public class MoveEventListener implements Listener {
         }
     }
 
-    @SuppressWarnings("deprecation")
     private void changeNext(Block block) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         Material type = block.getType();
-        byte dataValue = block.getData();
         for (Link link : links) {
-            if (link.getMat() == type && link.getDataValue() == dataValue) {
+            if (link.getMat() == type) {
                 if (link.getNext() != null) {
                     Material nextMat = link.getNext().getMat();
-                    byte dValue = link.getNext().getDataValue();
                     block.setType(nextMat);
-                    // depreciated as of 1.12 onwards
-                    // block.setData(dValue);
-                    // j10max update to 1.15.2 [12/05/2020]
-                    block.getState().setRawData(dValue);
                     block.getState().update(true);
                 }
             }

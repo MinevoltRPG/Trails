@@ -33,7 +33,7 @@ public class WorldGuardHook
 		} catch (FlagConflictException e) {
 			// some other plugin registered a flag by the same name already.
 			// you can use the existing flag, but this may cause conflicts - be sure to check type
-			Flag<?> existing = registry.get("my-custom-flag");
+			Flag<?> existing = registry.get("trails-flag");
 			if (existing instanceof StateFlag) {
 				TRAILS_FLAG = (StateFlag) existing;
 			} else {
@@ -41,6 +41,7 @@ public class WorldGuardHook
 				// hopefully this never actually happens
 			}
 		}
+		
 	}
 
 	public boolean canBuild(Player player, Location location) {
