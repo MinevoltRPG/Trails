@@ -29,25 +29,37 @@ public class MoveEventListener implements Listener {
     public void walk(SignificantPlayerMoveEvent e) {
         Player p = e.getPlayer();
         if (main.isToggledOff(p)) {
+        	p.sendMessage("Trails is toggled off");
             return;
         }
         // Check towny conditions
         if (main.getTownyHook() != null) {
-            if (main.getTownyHook().isWilderness(p) && !main.getConfigManager().isPathsInWilderness()) {
-                return;
+            if (main.getTownyHook().isWilderness(p)){
+            	if(!main.getTownyHook().isPathsInWilderness()) {
+                    return;
+                }
             }
-            if (main.getConfigManager().isTownyPathsPerm()) {
+            
+            if (main.getTownyHook().isTownyPathsPerms()) {
                 if (main.getTownyHook().isInHomeNation(p) && !main.getTownyHook().hasNationPermission(p) && !main.getTownyHook().isInHomeTown(p)) {
                     return;
                 }
                 if (main.getTownyHook().isInHomeTown(p) && !main.getTownyHook().hasTownPermission(p)) {
                     return;
                 }
+            }else {
+            	if (main.getTownyHook().isInOtherNation(p)) {
+                    return;
+                }
+                if (main.getTownyHook().isInOtherTown(p)) {
+                    return;
+                }
             }
         }
         // Check worldguard conditions
-        if (main.getWorldGuardHook() != null && !main.getWorldGuardHook().canBuild(p, p.getLocation().subtract(0.0D, 1.0D, 0.0D)))
-            return;
+        if (main.getWorldGuardHook() != null && !main.getWorldGuardHook().canCreateTrails(p, p.getLocation().subtract(0.0D, 1.0D, 0.0D))) {
+        	return;
+        }           
         makePath(e.getFrom().subtract(0.0D, 1.0D, 0.0D).getBlock());
         //log blocks
     }

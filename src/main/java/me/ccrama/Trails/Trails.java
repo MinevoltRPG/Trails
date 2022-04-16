@@ -54,11 +54,8 @@ public class Trails extends JavaPlugin {
         this.framework = new CommandHelper(this);
         // Towny hook
         if (Bukkit.getServer().getPluginManager().getPlugin("Towny") != null) {
-            townyHook = new TownyHook();
-            //this.usingTowny = this.getConfig().getBoolean("HookTowny");
-            //if(this.usingTowny) {
-            //   System.out.println("Towny present and hooked into Trails.");
-            //}
+            townyHook = new TownyHook(this);
+            Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.YELLOW + "[Trails]" + ChatColor.GREEN + " hooked into Towny!");
         }
         // Register Move Listener
         Bukkit.getServer().getPluginManager().registerEvents(new MoveEventListener(this), this);
@@ -73,7 +70,7 @@ public class Trails extends JavaPlugin {
     	// Worldguard Hook
         if (Bukkit.getServer().getPluginManager().getPlugin("WorldGuard") != null) {
             wgHook = new WorldGuardHook();
-            Console.sendConsoleMessage(String.format(ChatColor.YELLOW + "[Trails]" + ChatColor.GREEN + " hooked into worldguard! Flag trails-flag registered. Set trails-flag = true to allow trails in regions."));
+            Console.sendConsoleMessage(String.format(ChatColor.YELLOW + "[Trails]" + ChatColor.GREEN + " hooked into worldguard! Flag trails-flag registered. Set trails-flag = DENY to deny trails in regions."));
         }
     }
 

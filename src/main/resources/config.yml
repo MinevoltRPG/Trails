@@ -14,7 +14,9 @@ Plugin-Integration:
     #  paths in the Wilderness unless individually toggled off. If TownyPathsPerm is set to true, players with 
     #  "trails.towny.town" will create paths anywhere in their hometown, and players with "trails.towny.nation"
     #  will create paths anywhere in their nation. Recommend setting these in Towny config permissions for 
-    #  Assistant, or create your own resident type "TrailMaker" and add perms to that.
+    #  Assistant, or create your own resident type "TrailMaker" and add perms to that. If TownyPathsPerm is set to false,
+    #  any player in their home town or nation will create trails in their own town or nation unless they have trails
+    #  individually toggled off.
     Towny:
         PathsInWilderness: 'true'
         TownyPathsPerm: 'true'

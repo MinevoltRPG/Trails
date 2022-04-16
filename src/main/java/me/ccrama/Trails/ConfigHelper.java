@@ -2,24 +2,18 @@ package me.ccrama.Trails;
 
 import me.ccrama.Trails.objects.Link;
 import me.ccrama.Trails.objects.Links;
-import me.ccrama.Trails.util.Console;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 
 public class ConfigHelper {
 
-    private final Trails main;
-    private final Links links = new Links();
-    private final boolean isPathsInWilderness;
-    private final boolean isTownyPathsPerm;
+    private Trails main;
+    private Links links = new Links();
 
     public ConfigHelper(Trails plugin) {
         this.main = plugin;
         this.createLinks();
-        this.isPathsInWilderness = main.getConfig().getBoolean("Plugin-Integration.Towny.PathsInWilderness");
-        this.isTownyPathsPerm = main.getConfig().getBoolean("Plugin-Integration.Towny.TownyPathsPerm");
     }
 
     private void createLinks() {
@@ -65,11 +59,4 @@ public class ConfigHelper {
         return this.links;
     }
 
-    public boolean isPathsInWilderness() {
-        return this.isPathsInWilderness;
-    }
-
-    public boolean isTownyPathsPerm() {
-        return this.isTownyPathsPerm;
-    }
 }

@@ -2,5 +2,5 @@ name: Trails
 main: me.ccrama.Trails.Trails
 authors: [j10max, ccrama, drkmatr1984, Mr-Deej]
 api-version: 1.17
-softdepend: [Worldguard, Towny]
+softdepend: [Worldguard, Worldedit, Towny]
 version: 0.9

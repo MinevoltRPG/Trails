@@ -6,14 +6,21 @@ import com.palmergames.bukkit.towny.exceptions.NotRegisteredException;
 import com.palmergames.bukkit.towny.object.Resident;
 import com.palmergames.bukkit.towny.object.TownBlock;
 import com.palmergames.bukkit.towny.object.WorldCoord;
+
+import me.ccrama.Trails.Trails;
+
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
 public class TownyHook
 {
-
-	public TownyHook() {
+	private boolean isPathsInWilderness = true;
+    private boolean isTownyPathsPerm = true;
+	
+	public TownyHook(Trails main) {
+		this.isPathsInWilderness = Boolean.valueOf(main.getConfig().getString("Plugin-Integration.Towny.PathsInWilderness"));
+        this.isTownyPathsPerm =  Boolean.valueOf(main.getConfig().getString("Plugin-Integration.Towny.TownyPathsPerm"));
 	}
 	
 	public boolean hasTownPermission(Player p) {
@@ -26,16 +33,15 @@ public class TownyHook
 	
 	public boolean isWilderness(Location loc) {
 		//return TownyUniverse.isWilderness(loc.getBlock());
-		return TownyAPI.getInstance().isWilderness(loc);
+		return isWilderness(loc.getBlock());
 	}
 	
 	public boolean isWilderness(Player p) {
-		return isWilderness(p.getLocation().subtract(0.0D, 1.0D, 0.0D));
+		return isWilderness(p.getLocation().getBlock());
 	}
 	
 	public boolean isWilderness(Block block) {
-		TownyAPI.getInstance().isWilderness(block);
-		return false;
+		return TownyAPI.getInstance().isWilderness(block);
 	}
 	
 	public boolean isInHomeTown(Player p) {
@@ -50,7 +56,6 @@ public class TownyHook
 				}
 			}
 		} catch (NotRegisteredException e) {
-			p.sendMessage("[Trails] Are you sure you are in a town/nation?");
 		}		
 		return false;
 	}
@@ -69,9 +74,49 @@ public class TownyHook
 				}				
 			}
 		} catch (NotRegisteredException e) {
-			p.sendMessage("[Trails] Are you sure you are in a town/nation?");
 		}		
 		return false;
 	}
+	
+	public boolean isInOtherTown(Player p) {
+		Resident resident;
+		TownBlock block;
+		try {
+			resident = TownyUniverse.getInstance().getResident(p.getUniqueId());
+			block = WorldCoord.parseWorldCoord(p).getTownBlock();
+			if(block.hasTown()) {
+				if(resident.getTown() != block.getTown()) {
+					return true;
+				}
+			}
+		} catch (NotRegisteredException e) {
+		}		
+		return false;
+	}
+	
+	public boolean isInOtherNation(Player p) {
+		Resident resident;
+		TownBlock block;
+		try {
+			resident = TownyUniverse.getInstance().getResident(p.getName());
+			block = WorldCoord.parseWorldCoord(p).getTownBlock();
+			if(block.hasTown()) {
+				if(block.getTown().hasNation()) {
+					if(resident.getTown().getNation() != block.getTown().getNation()) {
+						return true;
+					}
+				}				
+			}
+		} catch (NotRegisteredException e) {
+		}		
+		return false;
+	}
+	
+	public boolean isPathsInWilderness() {
+		return this.isPathsInWilderness;
+	}
 
+	public boolean isTownyPathsPerms() {
+		return this.isTownyPathsPerm;
+	}
 }
