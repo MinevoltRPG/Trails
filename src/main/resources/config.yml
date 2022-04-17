@@ -7,7 +7,10 @@
 
 #WARNING: If two trails have one of the same material value links, all Trails will fail. Make sure no two links are the same!
 Trails:
-    DirtPath: 'GRASS_BLOCK:5:100>DIRT:5:100>GRAVEL:7:30>SMOOTH_STONE:10:100'
+    DirtPath: 'GRASS_BLOCK:5:100>DIRT:5:100>COARSE_DIRT:7:30>DIRT_PATH:10:100'
+    # This is translated as a GRASS_BLOCK will degrade into DIRT after no more than 5 walks. After that, into COARSE_DIRT after 7 walks, but each walk has a
+    # 30% chance of counting. Finally, the COARSE_DIRT will turn into DIRT_PATH after no more than 10 walks. (The step counting system is a little strange
+    # sometimes so you may have to tinker with these numbers to get your desired results. 
     SandPath: 'SAND:0:100>SANDSTONE:5:30'
 Plugin-Integration:
     # Towny integration now works two ways. If 'PathsInWilderness' is set to true, then players will create
