@@ -2,5 +2,18 @@ name: Trails
 main: me.ccrama.Trails.Trails
 authors: [j10max, ccrama, drkmatr1984, Mr-Deej]
 api-version: 1.17
-softdepend: [Worldguard, Worldedit, Towny]
-version: 0.9
+softdepend: [Worldguard, Worldedit, Towny, Lands]
+version: 1.0
+description: Naturally create paths whereever you go!
+
+commands:
+    trails:
+        description: Toggles trails/paths off/on
+        aliases: [paths]
+permissions:
+    trails.toggle:
+        description: Toggles a player's trails on/off
+        default: true
+    trails.other:
+        description: Toggles a different player's trails on/off
+        default: false

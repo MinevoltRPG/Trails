@@ -1,17 +1,18 @@
-package me.ccrama.Trails;
+package me.ccrama.Trails.configs;
 
+import me.ccrama.Trails.Trails;
 import me.ccrama.Trails.objects.Link;
 import me.ccrama.Trails.objects.Links;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 
-public class ConfigHelper {
+public class LinksConfig {
 
     private Trails main;
     private Links links = new Links();
 
-    public ConfigHelper(Trails plugin) {
+    public LinksConfig(Trails plugin) {
         this.main = plugin;
         this.createLinks();
     }

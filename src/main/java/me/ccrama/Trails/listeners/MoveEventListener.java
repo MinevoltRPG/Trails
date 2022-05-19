@@ -6,6 +6,8 @@ import me.ccrama.Trails.objects.Links;
 import me.ccrama.Trails.objects.TrailBlock;
 import me.ccrama.Trails.objects.WrappedLocation;
 import me.drkmatr1984.customevents.moveEvents.SignificantPlayerMoveEvent;
+
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -13,6 +15,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.UUID;
 
 public class MoveEventListener implements Listener {
 
@@ -28,7 +31,7 @@ public class MoveEventListener implements Listener {
     @EventHandler
     public void walk(SignificantPlayerMoveEvent e) {
         Player p = e.getPlayer();
-        if (main.isToggledOff(p)) {
+        if (main.getToggles().isDisabled(p)) {
         	p.sendMessage("Trails is toggled off");
             return;
         }
@@ -57,8 +60,16 @@ public class MoveEventListener implements Listener {
             }
         }
         // Check worldguard conditions
-        if (main.getWorldGuardHook() != null && !main.getWorldGuardHook().canCreateTrails(p, p.getLocation().subtract(0.0D, 1.0D, 0.0D))) {
-        	return;
+        if (main.getWorldGuardHook() != null) {
+        		if(!main.getWorldGuardHook().canCreateTrails(p, p.getLocation().subtract(0.0D, 1.0D, 0.0D))) {
+        			if(!main.wgPlayers.contains(p.getUniqueId())) {
+        				p.sendMessage("You can't create trails here!");
+        				main.wgPlayers.add(p.getUniqueId());
+        				Bukkit.getScheduler().runTaskLater(main, () -> delayWGMessage(p.getUniqueId()),20*3);           			
+        			}
+        			
+        	        return;
+        	    }
         }           
         makePath(e.getFrom().subtract(0.0D, 1.0D, 0.0D).getBlock());
         //log blocks
@@ -105,6 +116,12 @@ public class MoveEventListener implements Listener {
                 }
             }
         }
+    }
+    
+    private void delayWGMessage(UUID id) {
+    	if(main.wgPlayers.contains(id)){
+    		main.wgPlayers.remove(id);
+		}
     }
 
 }
