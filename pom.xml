@@ -6,7 +6,7 @@
 
     <groupId>me.ccrama.Trails</groupId>
     <artifactId>Trails</artifactId>
-    <version>0.9</version>
+    <version>1.0</version>
     <name>Trails</name>
 
     <!-- Properties -->
@@ -37,6 +37,11 @@
             <id>drkmatr1984-repo</id>
             <url>https://minevolt.net/repo/</url>
         </repository>
+        <repository>
+            <id>minebench-repo</id>
+            <url>https://repo.minebench.de/</url>
+        </repository>
+        
     </repositories>
     <!-- Dependencies -->
     <dependencies>
@@ -55,16 +60,26 @@
         <dependency>
             <groupId>com.sk89q.worldguard</groupId>
             <artifactId>worldguard-bukkit</artifactId>
-            <version>7.0.7-SNAPSHOT</version>
-            <scope>system</scope>
-            <systemPath>E:\Users\Owner\workspace\Trails\lib\worldguard-bukkit-7.0.7-dist.jar</systemPath>
+            <version>7.0.6</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.sk89q.worldedit</groupId>
             <artifactId>worldedit-bukkit</artifactId>
-            <version>7.2.10</version>
-            <scope>system</scope>
-            <systemPath>E:\Users\Owner\workspace\Trails\lib\worldedit-bukkit-7.2.10.jar</systemPath>
+            <version>7.3.0-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.sk89q.worldedit</groupId>
+            <artifactId>worldedit-core</artifactId>
+            <version>7.3.0-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.sk89q.worldedit.worldedit-libs</groupId>
+            <artifactId>core</artifactId>
+            <version>7.3.0-SNAPSHOT</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.yaml</groupId>
@@ -75,6 +90,12 @@
             <groupId>me.drkmatr1984</groupId>
             <artifactId>customevents</artifactId>
             <version>0.15</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.angeschossen</groupId>
+            <artifactId>LandsAPI</artifactId>
+            <version>6.0.2</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 
