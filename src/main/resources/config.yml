@@ -1,30 +1,38 @@
 #Welcome to the Trails config.
-#WorldGuard is automatically detected. Regions with the Trails flag set to false will be protected from trails. Trails flag is trails-flag
-#Trails are composed of "Links" separated by a ">". Each link comprises 3 numbers: the material, walks to degrade to the next link,
-# and the percent chance of it occurring. They should follow the following format "material:walks:chance". If you want it to instantly change, change
-# walks to 0.
-# Get material names from https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html 
-
-#WARNING: If two trails have one of the same material value links, all Trails will fail. Make sure no two links are the same!
+General:
+    ## Language files are located in /plugins/Trails/lang. Default is en-US.yml. If you edit one into a new language, try to rename the file with a language code from
+    ## https://www.alchemysoftware.com/livedocs/ezscript/Topics/Catalyst/Language.htm such as zh.yml or zh-CHS.yml for simplified Chinese for example. You can then set 
+    ## this setting here in this file to zh or zh-CHS and it will load properly. If you create a new language file, please send it to me so I can include it in future
+    ## updates of the project for all to enjoy! (Email: DrkMatr1984@aol.com)
+    Language: en-US
+    
+Plugin-Integration:
+    # WorldGuard is automatically detected. Regions with the Trails flag set to false will be protected from trails. Trails flag is trails-flag
+    
+    # Towny integration now works two ways. If 'PathsInWilderness' is set to true, then players will create
+    # paths in the Wilderness unless individually toggled off. If TownyPathsPerm is set to true, players with 
+    # "trails.towny.town" will create paths anywhere in their hometown, and players with "trails.towny.nation"
+    # will create paths anywhere in their nation. Recommend setting these in Towny config permissions for 
+    # Assistant, or create your own resident type "TrailMaker" and add perms to that. If TownyPathsPerm is set to false,
+    # any player in their home town or nation will create trails in their own town or nation unless they have trails
+    # individually toggled off. Players will never create trails in towns that aren't their own or in their Nation.
+    Towny:
+        PathsInWilderness: 'true'
+        TownyPathsPerm: 'false'
+    LogBlock:
+        LogPathBlocks: 'true'
+    
+## Trails are composed of "Links" separated by a ">". Each link comprises 3 numbers: the material, walks to degrade to the next link,
+## and the percent chance of it occurring. They should follow the following format "material:walks:chance". If you want it to instantly change, change
+## walks to 0.
+## Get material names from https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html 
+## WARNING: If two trails have one of the same material value links, all Trails will fail. Make sure no two links are the same!
 Trails:
     DirtPath: 'GRASS_BLOCK:5:100>DIRT:5:100>COARSE_DIRT:7:30>DIRT_PATH:10:100'
     # This is translated as a GRASS_BLOCK will degrade into DIRT after no more than 5 walks. After that, into COARSE_DIRT after 7 walks, but each walk has a
     # 30% chance of counting. Finally, the COARSE_DIRT will turn into DIRT_PATH after no more than 10 walks. (The step counting system is a little strange
     # sometimes so you may have to tinker with these numbers to get your desired results. 
     SandPath: 'SAND:0:100>SANDSTONE:5:30'
-Plugin-Integration:
-    # Towny integration now works two ways. If 'PathsInWilderness' is set to true, then players will create
-    #  paths in the Wilderness unless individually toggled off. If TownyPathsPerm is set to true, players with 
-    #  "trails.towny.town" will create paths anywhere in their hometown, and players with "trails.towny.nation"
-    #  will create paths anywhere in their nation. Recommend setting these in Towny config permissions for 
-    #  Assistant, or create your own resident type "TrailMaker" and add perms to that. If TownyPathsPerm is set to false,
-    #  any player in their home town or nation will create trails in their own town or nation unless they have trails
-    #  individually toggled off. Players will never create trails in towns that aren't in their Nation or their own.
-    Towny:
-        PathsInWilderness: 'true'
-        TownyPathsPerm: 'true'
-    LogBlock:
-        LogPathBlocks: 'true'
-Saves:
-    Interval: 20
-    SaveOnShutdown: false
+
+Data-Saving:
+    Interval: 5.0   

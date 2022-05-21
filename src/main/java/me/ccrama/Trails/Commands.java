@@ -3,9 +3,11 @@ package me.ccrama.Trails;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 public class Commands implements CommandExecutor
@@ -19,38 +21,58 @@ public class Commands implements CommandExecutor
 	@Override
 	public boolean onCommand(CommandSender sender, org.bukkit.command.Command command, String label, String[] args) {
 		try{
-			if (command.getName().equalsIgnoreCase("trails") || command.getName().equalsIgnoreCase("paths")) {
-				if ((args.length == 0) || (args.equals(null)))
-			    {   
-					if (sender instanceof Player) {
-						if(sender.hasPermission("trails.toggle")){
-							// toggle their trails and send them the trails toggle message
-						}else{
-				       		//send no permission message
-				       	}
-					}else {
-						//send must specify player name from console message 
-					}									
-			    }else if(args.length > 0){
-			    	if(sender.hasPermission("trails.other")) {
-					    for(String s : args){
-						    if(getOfflinePlayerUUID(s)!=null) {
-						    	UUID id = getOfflinePlayerUUID(s);
-							    //toggle player's messages
-							    if(Bukkit.getOfflinePlayer(id).isOnline()) {
-							    	//send toggle message to player
+			if ((args.length == 0) || (args.equals(null)))
+			{   
+			    if (sender instanceof Player) {
+				    Player p = (Player) sender;
+					if(p.hasPermission("trails.toggle")){
+					    if(this.plugin.getToggles().isDisabled(p)) {
+						    this.plugin.getToggles().enablePlayer(p);
+							p.sendMessage(getFormattedMessage(p.getName(),plugin.getLanguage().toggledOn)); //send toggled on message to player
+						}else {
+						    this.plugin.getToggles().disablePlayer(p);
+						    p.sendMessage(getFormattedMessage(p.getName(),plugin.getLanguage().toggledOff)); //send toggled off message to player
+						}
+					}else{
+						p.sendMessage(getFormattedMessage(p.getName(), plugin.getLanguage().noPerm));
+						return false;
+				    }
+				}else {
+					sender.sendMessage(getFormattedMessage(sender.getName(), plugin.getLanguage().consoleSpecify));
+					return false;
+				}									
+			}else if(args.length > 0){
+			   	if(sender.hasPermission("trails.other") || sender instanceof ConsoleCommandSender) {
+				    for(String s : args){
+					    if(getOfflinePlayerUUID(s)!=null) {
+					    	UUID id = getOfflinePlayerUUID(s);
+					    	if(this.plugin.getToggles().isDisabled(id)) {
+								this.plugin.getToggles().enablePlayer(id);
+								sender.sendMessage(getFormattedMessage(s ,plugin.getLanguage().toggledOnOther));
+								if(Bukkit.getOfflinePlayer(id).isOnline()) {
+									Bukkit.getOfflinePlayer(id).getPlayer().sendMessage(getFormattedMessage(Bukkit.getOfflinePlayer(id).getPlayer().getName(),plugin.getLanguage().toggledOn));
 							    }
-						    }else {
-						    	//send no player with that name has played on server before message
-						    }
+							}else {
+								this.plugin.getToggles().disablePlayer(id);
+								sender.sendMessage(getFormattedMessage(s, plugin.getLanguage().toggledOffOther));
+								if(Bukkit.getOfflinePlayer(id).isOnline()) {
+									Bukkit.getOfflinePlayer(id).getPlayer().sendMessage(getFormattedMessage(Bukkit.getOfflinePlayer(id).getPlayer().getName(),plugin.getLanguage().toggledOff));
+							    }
+							}
+					    }else {
+					    	sender.sendMessage(getFormattedMessage(s, plugin.getLanguage().notPlayedBefore));
+					    	return false;
 					    }
-			        }else {
-			        	//send no permission message
-			        }
+				    }
+			    }else {
+			    	sender.sendMessage(getFormattedMessage(sender.getName(), plugin.getLanguage().noPermOthers));
+			    	return false;
 			    }
 			}
 		}catch (Exception e) {
-			//send error message to console
+			Bukkit.getConsoleSender().sendMessage(getFormattedMessage("", "%plugin_prefix% has encountered a serious error."));
+			Bukkit.getConsoleSender().sendMessage(getFormattedMessage("", "%plugin_prefix% Please report to DrkMatr1984"));
+			Bukkit.getConsoleSender().sendMessage(e.getMessage());
 			return false;
 		}
 		return true;
@@ -63,5 +85,14 @@ public class Commands implements CommandExecutor
 			}
 		}
 		return null;
+	}
+	
+	public String getFormattedMessage(String name, String message) {
+		message = message.replace("%plugin_prefix%", plugin.getLanguage().pluginPrefix);
+		message = message.replace("%name%", name);			 
+		message = message.replace("%command%",plugin.getLanguage().command);
+		// Do Colors
+	    message = ChatColor.translateAlternateColorCodes('&', message);
+		return message;
 	}
 }

@@ -2,7 +2,6 @@ package me.ccrama.Trails.listeners;
 
 import me.ccrama.Trails.Trails;
 import me.ccrama.Trails.objects.Link;
-import me.ccrama.Trails.objects.Links;
 import me.ccrama.Trails.objects.TrailBlock;
 import me.ccrama.Trails.objects.WrappedLocation;
 import me.drkmatr1984.customevents.moveEvents.SignificantPlayerMoveEvent;
@@ -13,7 +12,6 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-
 import java.lang.reflect.InvocationTargetException;
 import java.util.UUID;
 
@@ -21,18 +19,14 @@ public class MoveEventListener implements Listener {
 
     private final Trails main;
 
-    private final Links links;
-
     public MoveEventListener(Trails plugin) {
         this.main = plugin;
-        this.links = this.main.getConfigManager().getLinks();
     }
 
     @EventHandler
     public void walk(SignificantPlayerMoveEvent e) {
         Player p = e.getPlayer();
         if (main.getToggles().isDisabled(p)) {
-        	p.sendMessage("Trails is toggled off");
             return;
         }
         // Check towny conditions
@@ -63,9 +57,9 @@ public class MoveEventListener implements Listener {
         if (main.getWorldGuardHook() != null) {
         		if(!main.getWorldGuardHook().canCreateTrails(p, p.getLocation().subtract(0.0D, 1.0D, 0.0D))) {
         			if(!main.wgPlayers.contains(p.getUniqueId())) {
-        				p.sendMessage("You can't create trails here!");
+        				p.sendMessage(main.getCommands().getFormattedMessage(p.getName(), main.getLanguage().cantCreateTrails));
         				main.wgPlayers.add(p.getUniqueId());
-        				Bukkit.getScheduler().runTaskLater(main, () -> delayWGMessage(p.getUniqueId()),20*3);           			
+        				Bukkit.getScheduler().runTaskLater(main, () -> delayWGMessage(p.getUniqueId()),20*10);           			
         			}
         			
         	        return;
@@ -77,7 +71,7 @@ public class MoveEventListener implements Listener {
 
     private void makePath(Block block) {
         Material type = block.getType();
-        for (Link link : this.links) {
+        for (Link link : this.main.getConfigManager().getLinksConfig().getLinks()) {
             if (link.getMat() == type) {
                 double foo = Math.random() * 100.0D;
                 if (foo <= (double) link.chanceOccurance()) {
@@ -107,7 +101,7 @@ public class MoveEventListener implements Listener {
 
     private void changeNext(Block block) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         Material type = block.getType();
-        for (Link link : links) {
+        for (Link link : this.main.getConfigManager().getLinksConfig().getLinks()) {
             if (link.getMat() == type) {
                 if (link.getNext() != null) {
                     Material nextMat = link.getNext().getMat();

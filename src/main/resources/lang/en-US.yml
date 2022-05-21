@@ -1,0 +1,17 @@
+command-name: "trails"
+plugin-prefix: "&7[&eTrails&7]&r"
+messages:
+  ## These are messages send in game when commands are used. There are some placeholders
+  ## You have to use.
+  ## %plugin_prefix% = plugin prefix you set above         %command% = Name of the command you set above
+  ## %name% = name of person referred to
+  noPerm: "%plugin_prefix% &cYou do not have permission to toggle Trails."
+  noPermOthers: "%plugin_prefix% &cYou do not have permission to toggle other peoples' Trails."
+  consoleSpecify: "%plugin_prefix% &cYou must specify a &fname &cwhen running from &7Console."
+  toggledOn: "%plugin_prefix% &fYour &eTrails &fhave been toggle &aOn!"
+  toggledOff: "%plugin_prefix% &fYour &eTrails &fhave been toggle &cOff!"
+  toggledOnOther: "%plugin_prefix% %name%'s &eTrails &fhave been toggle &aOn!"
+  toggledOffOther: "%plugin_prefix% %name%'s &eTrails &fhave been toggle &cOff!"
+  notPlayedBefore: "%plugin_prefix% %name% has not Played on this server before."
+  cantCreateTrails: "%plugin_prefix% You can't create trails here."
+  

@@ -69,7 +69,6 @@ public class BlockDataManager {
     }
 
     public void saveBlockList() {
-        //pickup toggle data
         if (walkedOver != null && !walkedOver.isEmpty()) {
             int i = 0;
             for (TrailBlock b : walkedOver) {

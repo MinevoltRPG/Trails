@@ -1,22 +1,25 @@
 package me.ccrama.Trails;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 import me.ccrama.Trails.compatibility.towny.TownyHook;
 import me.ccrama.Trails.compatibility.worldguard.WorldGuardHook;
-import me.ccrama.Trails.configs.LinksConfig;
-import me.ccrama.Trails.configs.ToggleLists;
+import me.ccrama.Trails.configs.Config;
+import me.ccrama.Trails.configs.Language;
 import me.ccrama.Trails.data.BlockDataManager;
+import me.ccrama.Trails.data.ToggleLists;
 import me.ccrama.Trails.listeners.MoveEventListener;
 import me.ccrama.Trails.util.Console;
 import me.drkmatr1984.customevents.CustomEvents;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandExecutor;
+import org.bukkit.command.CommandMap;
+import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -31,9 +34,14 @@ public class Trails extends JavaPlugin {
     private WorldGuardHook wgHook = null;
     private CustomEvents customEvents;
     private BlockDataManager blockData;
-    private LinksConfig linksData;
     private ToggleLists toggle;
+    private Config config;
     public List<UUID> wgPlayers;
+    private Language language;
+    private Commands commands;
+
+	private static CommandMap cmap;   
+    private CCommand command;
 
     /**
      * On Plugin Enable
@@ -41,7 +49,8 @@ public class Trails extends JavaPlugin {
     @Override
     public void onEnable() {
         // Activate plugin config
-        this.saveDefaultConfig();
+        this.config = new Config(this);
+        this.language = new Language(this);
         // Wrapper for custom bukkit events
         this.customEvents = new CustomEvents((JavaPlugin) this,
                 false,
@@ -51,18 +60,18 @@ public class Trails extends JavaPlugin {
                 false);
         // Initalise events
         this.customEvents.initializeLib();
-        this.blockData = new BlockDataManager(this);
-        this.linksData = new LinksConfig(this);
+        this.blockData = new BlockDataManager(this);      
         this.toggle = new ToggleLists(this);
-        // Towny hook
-        if (Bukkit.getServer().getPluginManager().getPlugin("Towny") != null) {
-            townyHook = new TownyHook(this);
-            Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.YELLOW + "[Trails]" + ChatColor.GREEN + " hooked into Towny!");
-        }
         // Register Move Listener
         Bukkit.getServer().getPluginManager().registerEvents(new MoveEventListener(this), this);
         // Register commands
-        Objects.requireNonNull(getCommand("trails")).setExecutor(new Commands(this));
+        this.commands = new Commands(this);
+        RegisterCommands();
+        // Towny hook
+        if (Bukkit.getServer().getPluginManager().getPlugin("Towny") != null) {
+            townyHook = new TownyHook(this);
+            Bukkit.getServer().getConsoleSender().sendMessage(commands.getFormattedMessage(Bukkit.getConsoleSender().getName(), (language.pluginPrefix + ChatColor.GREEN + " hooked into Towny!")));
+        }   
         // Console enabled message
         Console.sendConsoleMessage(String.format("Trails v%s", this.getDescription().getVersion()), "updated to 1.15.2 by j10max", "created by ccrama & drkmatr1984", ChatColor.GREEN + "Thank you");
     }
@@ -73,7 +82,8 @@ public class Trails extends JavaPlugin {
         if (Bukkit.getServer().getPluginManager().getPlugin("WorldGuard") != null) {
             wgHook = new WorldGuardHook();
             this.wgPlayers = new ArrayList<UUID>();
-            Console.sendConsoleMessage(String.format(ChatColor.YELLOW + "[Trails]" + ChatColor.GREEN + " hooked into worldguard! Flag trails-flag registered. Set trails-flag = DENY to deny trails in regions."));
+            Console.sendConsoleMessage(String.format(ChatColor.GRAY + "[" + ChatColor.YELLOW + "Trails" + ChatColor.GRAY + "]" 
+            + ChatColor.GREEN + " hooked into worldguard! Flag trails-flag registered. Set trails-flag = DENY to deny trails in regions."));
         }
     }
 
@@ -81,15 +91,85 @@ public class Trails extends JavaPlugin {
      * On plugin disable
      */
     public void onDisable() {
+    	unRegisterCommands();
         this.blockData.saveBlockList();
+        this.getToggles().saveUserList();
+        this.getPluginLoader().disablePlugin(this);
+    }
+    
+    public CommandMap getCommandMap() {
+        return cmap;
+    }
+      
+    public class CCommand extends Command {
+        private CommandExecutor exe = null;
+        
+        protected CCommand(String name) {
+          super(name);
+        }
+        
+        public boolean execute(CommandSender sender, String commandLabel, String[] args) {
+            if (this.exe != null)
+                this.exe.onCommand(sender, this, commandLabel, args); 
+            return false;
+        }
+        
+        public void setExecutor(CommandExecutor exe) {
+            this.exe = exe;
+        }
+        
+    }
+    
+    private void RegisterCommands() {
+        String cbukkit = Bukkit.getServer().getClass().getPackage().getName() + ".CraftServer";
+        try {
+          Class<?> clazz = Class.forName(cbukkit);
+          try {
+            Field f = clazz.getDeclaredField("commandMap");
+            f.setAccessible(true);
+            cmap = (CommandMap)f.get(Bukkit.getServer());
+            if (!language.command.equals(null)) {
+              this.command = new CCommand(language.command);
+              if(!cmap.register("paths", this.command)) {
+            	  Bukkit.getConsoleSender().sendMessage(this.commands.getFormattedMessage(Bukkit.getConsoleSender().getName(), (language.pluginPrefix + " &aCommand " + language.command
+            			  + " command has already been taken. Defaulting to 'paths' for Trails command.")));
+              }else {
+            	  Bukkit.getConsoleSender().sendMessage(this.commands.getFormattedMessage(Bukkit.getConsoleSender().getName(), (language.pluginPrefix + " &aCommand " + language.command + " command Registered!")));
+              }
+              this.command.setExecutor(this.commands);        
+            } 
+          } catch (Exception e) {
+            e.printStackTrace();
+          } 
+        } catch (ClassNotFoundException e) {
+          Bukkit.getConsoleSender().sendMessage(this.commands.getFormattedMessage(Bukkit.getConsoleSender().getName(), (language.pluginPrefix + " &ccould not be loaded, is this even Spigot or CraftBukkit?")));
+          setEnabled(false);
+        } 
+      }
+      
+      private void unRegisterCommands() {
+          String cbukkit = Bukkit.getServer().getClass().getPackage().getName() + ".CraftServer";
+          try {
+              Class<?> clazz = Class.forName(cbukkit);
+              try {
+                  Field f = clazz.getDeclaredField("commandMap");
+                  f.setAccessible(true);
+                  cmap = (CommandMap)f.get(Bukkit.getServer());
+                  if (!this.command.equals(null)) {
+                      this.command.unregister(cmap);
+                      Bukkit.getConsoleSender().sendMessage(this.commands.getFormattedMessage(Bukkit.getConsoleSender().getName(), (language.pluginPrefix + " &aCommand " + language.command + " Unregistered!")));
+                  } 
+              } catch (Exception e) {
+              e.printStackTrace();
+              } 
+          } catch (ClassNotFoundException e) {
+              Bukkit.getConsoleSender().sendMessage(this.commands.getFormattedMessage(Bukkit.getConsoleSender().getName(), (language.pluginPrefix + " &ccould not be unloaded, is this even Spigot or CraftBukkit?")));
+              setEnabled(false);
+          } 
     }
 
     public BlockDataManager getBlockDataManager() {
         return this.blockData;
-    }
-
-    public LinksConfig getConfigManager() {
-        return this.linksData;
     }
 
     public WorldGuardHook getWorldGuardHook() {
@@ -103,5 +183,17 @@ public class Trails extends JavaPlugin {
     public ToggleLists getToggles() {
     	return this.toggle;
     }
+    
+    public Config getConfigManager() {
+    	return this.config;
+    }
+    
+    public Language getLanguage() {
+    	return language;
+    }
+    
+    public Commands getCommands() {
+		return this.commands;
+	}
 
 }

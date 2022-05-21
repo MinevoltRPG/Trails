@@ -6,10 +6,6 @@ softdepend: [Worldguard, Worldedit, Towny, Lands]
 version: 1.0
 description: Naturally create paths whereever you go!
 
-commands:
-    trails:
-        description: Toggles trails/paths off/on
-        aliases: [paths]
 permissions:
     trails.toggle:
         description: Toggles a player's trails on/off

@@ -1,4 +1,4 @@
-package me.ccrama.Trails.configs;
+package me.ccrama.Trails.data;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,6 +27,7 @@ public class ToggleLists{
 	public ToggleLists(Trails plugin){		
 		this.plugin = plugin;
 		dataFolder = new File(this.plugin.getDataFolder() +"/data");
+		initLists();
 	}
 		
 	public void initLists(){
@@ -87,31 +88,33 @@ public class ToggleLists{
 	}
 	
 	private boolean isDisabled(@Nonnull String s) {
-		return this.toggledPlayers.contains(s);
+		if(this.toggledPlayers == null)
+			return true;
+		return !this.toggledPlayers.contains(s);
 	}
 	
-	public void addPlayer(@Nonnull Player p) {
-		addPlayer(p.getUniqueId().toString());
+	public void enablePlayer(@Nonnull Player p) {
+		enablePlayer(p.getUniqueId().toString());
 	}
 	
-    public void addPlayer(@Nonnull UUID id) {
-		addPlayer(id.toString());
+    public void enablePlayer(@Nonnull UUID id) {
+		enablePlayer(id.toString());
 	}
     
-    private void addPlayer(@Nonnull String s) {
+    private void enablePlayer(@Nonnull String s) {
 		this.toggledPlayers.add(s);
 	}
     
-    public boolean removePlayer(@Nonnull Player p) {
-    	return removePlayer(p.getUniqueId().toString());
+    public boolean disablePlayer(@Nonnull Player p) {
+    	return disablePlayer(p.getUniqueId().toString());
     }
     
-    public boolean removePlayer(@Nonnull UUID id) {
-    	return removePlayer(id.toString());
+    public boolean disablePlayer(@Nonnull UUID id) {
+    	return disablePlayer(id.toString());
     }
     
-    private boolean removePlayer(@Nonnull String s) {
-		if(isDisabled(s)) {
+    private boolean disablePlayer(@Nonnull String s) {
+		if(!isDisabled(s)) {
 			this.toggledPlayers.remove(s);
 			return true;
 		}
