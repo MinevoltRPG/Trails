@@ -1,4 +1,4 @@
-package me.ccrama.Trails.compatibility.towny;
+package me.ccrama.Trails.compatibility;
 
 import com.palmergames.bukkit.towny.TownyAPI;
 import com.palmergames.bukkit.towny.TownyUniverse;

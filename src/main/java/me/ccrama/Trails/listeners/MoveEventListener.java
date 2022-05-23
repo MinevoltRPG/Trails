@@ -9,9 +9,14 @@ import me.drkmatr1984.customevents.moveEvents.SignificantPlayerMoveEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+
+import de.diddiz.LogBlock.Actor;
+
 import java.lang.reflect.InvocationTargetException;
 import java.util.UUID;
 
@@ -60,16 +65,15 @@ public class MoveEventListener implements Listener {
         				p.sendMessage(main.getCommands().getFormattedMessage(p.getName(), main.getLanguage().cantCreateTrails));
         				main.wgPlayers.add(p.getUniqueId());
         				Bukkit.getScheduler().runTaskLater(main, () -> delayWGMessage(p.getUniqueId()),20*10);           			
-        			}
-        			
+        			}      			
         	        return;
         	    }
         }           
-        makePath(e.getFrom().subtract(0.0D, 1.0D, 0.0D).getBlock());
+        makePath(p, e.getFrom().subtract(0.0D, 1.0D, 0.0D).getBlock());
         //log blocks
     }
 
-    private void makePath(Block block) {
+    private void makePath(Player p, Block block) {
         Material type = block.getType();
         for (Link link : this.main.getConfigManager().getLinksConfig().getLinks()) {
             if (link.getMat() == type) {
@@ -81,7 +85,7 @@ public class MoveEventListener implements Listener {
                             if (walked >= link.decayNumber()) {
                                 this.main.getBlockDataManager().removeTrailBlock(b);
                                 try {
-                                    this.changeNext(block);
+                                    this.changeNext(p, block);
                                 } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
                                     e.printStackTrace();
                                 }
@@ -99,14 +103,24 @@ public class MoveEventListener implements Listener {
         }
     }
 
-    private void changeNext(Block block) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    private void changeNext(Player p, Block block) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         Material type = block.getType();
+        BlockState state = block.getState();
+        BlockData data = block.getBlockData();
         for (Link link : this.main.getConfigManager().getLinksConfig().getLinks()) {
             if (link.getMat() == type) {
                 if (link.getNext() != null) {
                     Material nextMat = link.getNext().getMat();
                     block.setType(nextMat);
                     block.getState().update(true);
+                    //log block changes in LogBlock and CoreProtect
+                    if(main.getLbHook()!=null) {
+                    	main.getLbHook().getLBConsumer().queueBlockReplace(new Actor(p.getName()), state, block.getState());
+                    }
+                    if(main.getCpHook()!=null) {
+                    	main.getCpHook().getAPI().logRemoval(p.getName(), block.getLocation(), type, data);
+                    	main.getCpHook().getAPI().logPlacement(p.getName(), block.getLocation(), nextMat, block.getBlockData());
+                    }
                 }
             }
         }

@@ -1,4 +1,4 @@
-package me.ccrama.Trails.compatibility.worldguard;
+package me.ccrama.Trails.compatibility;
 
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -14,11 +14,15 @@ import com.sk89q.worldguard.protection.flags.registry.FlagConflictException;
 import com.sk89q.worldguard.protection.flags.registry.FlagRegistry;
 import com.sk89q.worldguard.protection.regions.RegionQuery;
 
+import me.ccrama.Trails.Trails;
+
 public class WorldGuardHook
 {
 	private StateFlag TRAILS_FLAG;
+	private Trails plugin;
 	
-	public WorldGuardHook(){
+	public WorldGuardHook(Trails plugin){
+		this.plugin = plugin;
 		FlagRegistry registry = WorldGuard.getInstance().getFlagRegistry();
 		try {
 	        // register our flag with the registry
@@ -44,12 +48,11 @@ public class WorldGuardHook
 		//return wg.canBuild(player, location);
 		RegionQuery query = WorldGuard.getInstance().getPlatform().getRegionContainer().createQuery();
 		com.sk89q.worldedit.util.Location loc = BukkitAdapter.adapt(location);
-		if (!hasBypass(player, location)) {
-			return query.testState(loc, getLocalPlayer(player), TRAILS_FLAG);
-		}else  {
+		if (hasBypass(player, location) && plugin.getConfigManager().checkBypass) {
 			return true;
+		}else  {
+			return query.testState(loc, getLocalPlayer(player), TRAILS_FLAG);
 		}
-
 	}
 
 	// technically the bypass check inst needed but if it doesnt function properly it can be removed with no issues

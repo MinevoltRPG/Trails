@@ -7,8 +7,6 @@ General:
     Language: en-US
     
 Plugin-Integration:
-    # WorldGuard is automatically detected. Regions with the Trails flag set to false will be protected from trails. Trails flag is trails-flag
-    
     # Towny integration now works two ways. If 'PathsInWilderness' is set to true, then players will create
     # paths in the Wilderness unless individually toggled off. If TownyPathsPerm is set to true, players with 
     # "trails.towny.town" will create paths anywhere in their hometown, and players with "trails.towny.nation"
@@ -19,14 +17,22 @@ Plugin-Integration:
     Towny:
         PathsInWilderness: 'true'
         TownyPathsPerm: 'false'
+    # WorldGuard is automatically detected. Regions with the Trails flag set to false will be protected from trails. Trails flag is trails-flag. Setting 
+    # "checkBypass: 'true'" will allow OPs to use trails anywhere regardless of Region settings.
+    WorldGuard:
+        CheckBypass: 'false'
+    # LogBlock and CoreProtect settings both work the same. If set to true and LogBlock and/or CoreProtect are installed, Trails will create rollback data
+    # when blocks change using Trails. 
     LogBlock:
         LogPathBlocks: 'true'
+    CoreProtect:
+        LogPathBlocks: 'true'
     
-## Trails are composed of "Links" separated by a ">". Each link comprises 3 numbers: the material, walks to degrade to the next link,
-## and the percent chance of it occurring. They should follow the following format "material:walks:chance". If you want it to instantly change, change
-## walks to 0.
-## Get material names from https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html 
-## WARNING: If two trails have one of the same material value links, all Trails will fail. Make sure no two links are the same!
+  ##  Trails are composed of "Links" separated by a ">". Each link comprises 3 numbers: the material, walks to degrade to the next link,
+  ## and the percent chance of it occurring. They should follow the following format "material:walks:chance". If you want it to instantly change, change
+  ## walks to 0.
+  ## Get material names from https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html 
+  ## WARNING: If two trails have one of the same material value links, all Trails will fail. Make sure no two links are the same!
 Trails:
     DirtPath: 'GRASS_BLOCK:5:100>DIRT:5:100>COARSE_DIRT:7:30>DIRT_PATH:10:100'
     # This is translated as a GRASS_BLOCK will degrade into DIRT after no more than 5 walks. After that, into COARSE_DIRT after 7 walks, but each walk has a
@@ -35,4 +41,4 @@ Trails:
     SandPath: 'SAND:0:100>SANDSTONE:5:30'
 
 Data-Saving:
-    Interval: 5.0   
+    Interval: 5   

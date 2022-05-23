@@ -2,7 +2,7 @@ name: Trails
 main: me.ccrama.Trails.Trails
 authors: [j10max, ccrama, drkmatr1984, Mr-Deej]
 api-version: 1.17
-softdepend: [Worldguard, Worldedit, Towny, Lands]
+softdepend: [Worldguard, Worldedit, Towny, Lands, LogBlock, CoreProtect]
 version: 1.0
 description: Naturally create paths whereever you go!
 

@@ -5,8 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import me.ccrama.Trails.compatibility.towny.TownyHook;
-import me.ccrama.Trails.compatibility.worldguard.WorldGuardHook;
+import me.ccrama.Trails.compatibility.CoreProtectHook;
+import me.ccrama.Trails.compatibility.LogBlockHook;
+import me.ccrama.Trails.compatibility.TownyHook;
+import me.ccrama.Trails.compatibility.WorldGuardHook;
 import me.ccrama.Trails.configs.Config;
 import me.ccrama.Trails.configs.Language;
 import me.ccrama.Trails.data.BlockDataManager;
@@ -20,6 +22,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandMap;
 import org.bukkit.command.CommandSender;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -32,6 +35,8 @@ public class Trails extends JavaPlugin {
 
     private TownyHook townyHook = null;
     private WorldGuardHook wgHook = null;
+    private LogBlockHook lbHook = null;
+    private CoreProtectHook cpHook = null;
     private CustomEvents customEvents;
     private BlockDataManager blockData;
     private ToggleLists toggle;
@@ -48,6 +53,7 @@ public class Trails extends JavaPlugin {
      */
     @Override
     public void onEnable() {
+    	PluginManager pm = Bukkit.getServer().getPluginManager();
         // Activate plugin config
         this.config = new Config(this);
         this.language = new Language(this);
@@ -63,15 +69,20 @@ public class Trails extends JavaPlugin {
         this.blockData = new BlockDataManager(this);      
         this.toggle = new ToggleLists(this);
         // Register Move Listener
-        Bukkit.getServer().getPluginManager().registerEvents(new MoveEventListener(this), this);
+        pm.registerEvents(new MoveEventListener(this), this);
         // Register commands
         this.commands = new Commands(this);
         RegisterCommands();
         // Towny hook
-        if (Bukkit.getServer().getPluginManager().getPlugin("Towny") != null) {
+        if (pm.getPlugin("Towny") != null) {
             townyHook = new TownyHook(this);
-            Bukkit.getServer().getConsoleSender().sendMessage(commands.getFormattedMessage(Bukkit.getConsoleSender().getName(), (language.pluginPrefix + ChatColor.GREEN + " hooked into Towny!")));
-        }   
+        }
+        if(pm.getPlugin("LogBlock") != null && config.logBlock) {
+        	lbHook = new LogBlockHook(this);
+        }
+        if(pm.getPlugin("CoreProtect") != null && config.coreProtect) {
+        	cpHook = new CoreProtectHook(this);
+        }
         // Console enabled message
         Console.sendConsoleMessage(String.format("Trails v%s", this.getDescription().getVersion()), "updated to 1.15.2 by j10max", "created by ccrama & drkmatr1984", ChatColor.GREEN + "Thank you");
     }
@@ -80,7 +91,7 @@ public class Trails extends JavaPlugin {
     public void onLoad() {
     	// Worldguard Hook
         if (Bukkit.getServer().getPluginManager().getPlugin("WorldGuard") != null) {
-            wgHook = new WorldGuardHook();
+            wgHook = new WorldGuardHook(this);
             this.wgPlayers = new ArrayList<UUID>();
             Console.sendConsoleMessage(String.format(ChatColor.GRAY + "[" + ChatColor.YELLOW + "Trails" + ChatColor.GRAY + "]" 
             + ChatColor.GREEN + " hooked into worldguard! Flag trails-flag registered. Set trails-flag = DENY to deny trails in regions."));
@@ -194,6 +205,14 @@ public class Trails extends JavaPlugin {
     
     public Commands getCommands() {
 		return this.commands;
+	}
+
+	public LogBlockHook getLbHook() {
+		return lbHook;
+	}
+
+	public CoreProtectHook getCpHook() {
+		return cpHook;
 	}
 
 }
