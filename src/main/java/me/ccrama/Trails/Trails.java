@@ -87,6 +87,7 @@ public class Trails extends JavaPlugin {
         if(pm.getPlugin("CoreProtect") != null && config.coreProtect) {
         	cpHook = new CoreProtectHook(this);
         }
+        // MVdWPlaceholderAPI Hook
         if(pm.isPluginEnabled("MVdWPlaceholderAPI"))
 		{
 			if(new MVDWPAPIHook(this).trailsToggledOn()){
@@ -94,6 +95,7 @@ public class Trails extends JavaPlugin {
 				getLogger().info("Successfully registered {trails_toggled_on}");
 			}
 		}
+        // PlaceholderAPI Support
 		if (pm.isPluginEnabled("PlaceholderAPI"))
 		{
 			if(new PAPIHook(this).register()) {

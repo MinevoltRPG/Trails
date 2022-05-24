@@ -33,6 +33,8 @@ public class ToggleLists{
 	public void initLists(){
 		saveDefaultUserList();
 		loadUserList();
+		//Start save task
+		plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, () -> saveUserList(), 20*60*plugin.getConfigManager().saveInterval, 20*60*plugin.getConfigManager().saveInterval);
 	}
 	
     ////////////////////////////////////////////////////////////
@@ -53,15 +55,19 @@ public class ToggleLists{
 		//pickup toggle users
 		toggledPlayers = new ArrayList<>();
 		users = YamlConfiguration.loadConfiguration(usersFile);
-		if(users.getStringList("DisabledPlayers")!=null && !users.getStringList("DisabledPlayers").isEmpty())
-			toggledPlayers = users.getStringList("DisabledPlayers");
+		if(users.getStringList("EnabledPlayers")!=null && !users.getStringList("EnabledPlayers").isEmpty())
+			toggledPlayers = users.getStringList("EnabledPlayers");
+	}
+	
+	public void saveUserList() {
+		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> saveUserListAsync(toggledPlayers, users, usersFile)); 
 	}
 	  
-	public void saveUserList(){
+	private void saveUserListAsync(List<String> toggledPlayers, FileConfiguration users, File usersFile){
 		//pickup toggle users
 		if(toggledPlayers!=null)
 		{
-			users.set("DisabledPlayers",toggledPlayers);
+			users.set("EnabledPlayers",toggledPlayers);
 		}
 		if(usersFile.exists())
 			usersFile.delete();

@@ -32,6 +32,8 @@ public class BlockDataManager {
     private void initLists() {
         saveDefaultBlockList();
         loadBlockList();
+        //Start save task
+        plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, () -> saveBlockList(), 20*60*plugin.getConfigManager().saveInterval, 20*60*plugin.getConfigManager().saveInterval);
     }
 
     ////////////////////////////////////////////////////////////
@@ -67,8 +69,12 @@ public class BlockDataManager {
             }
         }
     }
-
+    
     public void saveBlockList() {
+    	plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> saveBlockListAsync(walkedOver, data, dataFile)); 
+    }
+    
+    private void saveBlockListAsync(List<TrailBlock> walkedOver, FileConfiguration data, File dataFile) {
         if (walkedOver != null && !walkedOver.isEmpty()) {
             int i = 0;
             for (TrailBlock b : walkedOver) {
