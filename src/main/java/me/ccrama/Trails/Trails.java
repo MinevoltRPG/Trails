@@ -7,6 +7,8 @@ import java.util.UUID;
 
 import me.ccrama.Trails.compatibility.CoreProtectHook;
 import me.ccrama.Trails.compatibility.LogBlockHook;
+import me.ccrama.Trails.compatibility.MVDWPAPIHook;
+import me.ccrama.Trails.compatibility.PAPIHook;
 import me.ccrama.Trails.compatibility.TownyHook;
 import me.ccrama.Trails.compatibility.WorldGuardHook;
 import me.ccrama.Trails.configs.Config;
@@ -77,12 +79,28 @@ public class Trails extends JavaPlugin {
         if (pm.getPlugin("Towny") != null) {
             townyHook = new TownyHook(this);
         }
+        // LogBlock Hook
         if(pm.getPlugin("LogBlock") != null && config.logBlock) {
         	lbHook = new LogBlockHook(this);
         }
+        // CoreProtect Hook
         if(pm.getPlugin("CoreProtect") != null && config.coreProtect) {
         	cpHook = new CoreProtectHook(this);
         }
+        if(pm.isPluginEnabled("MVdWPlaceholderAPI"))
+		{
+			if(new MVDWPAPIHook(this).trailsToggledOn()){
+				getLogger().info("Trails was successfully registered with mvdwPlaceholderAPI!");
+				getLogger().info("Successfully registered {trails_toggled_on}");
+			}
+		}
+		if (pm.isPluginEnabled("PlaceholderAPI"))
+		{
+			if(new PAPIHook(this).register()) {
+				getLogger().info("Trails was successfully registered with PlaceholderAPI!");
+				getLogger().info("Successfully registered %trails_toggled_on%");
+			}
+		}
         // Console enabled message
         Console.sendConsoleMessage(String.format("Trails v%s", this.getDescription().getVersion()), "updated to 1.15.2 by j10max", "created by ccrama & drkmatr1984", ChatColor.GREEN + "Thank you");
     }
