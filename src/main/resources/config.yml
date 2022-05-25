@@ -29,6 +29,10 @@ Plugin-Integration:
     Lands:
         PathsInWilderness: 'true'
         ApplyInSubAreas: 'true'
+    # GriefPrevention is automatically detected. If it is found, players must have Build permission to build in a claim. If 'PathsInWilderness' is set to true,
+    # then players will create paths in the Wilderness unless individually toggled off.
+    GriefPrevention:
+        PathsInWilderness: 'true'
     # WorldGuard is automatically detected. Regions with the Trails flag set to false will be protected from trails. Trails flag is trails-flag. Setting 
     # "checkBypass: 'true'" will allow OPs to use trails anywhere regardless of Region settings.
     WorldGuard:

@@ -76,6 +76,14 @@ public class MoveEventListener implements Listener {
     	        return;
         	}
         }
+        // Check GriefPrevention conditions
+        if(main.getGpHook() != null) {
+        	 if(!main.getGpHook().canMakeTrails(p, p.getLocation().subtract(0.0D, 1.0D, 0.0D))) {
+        		 if(main.getConfigManager().sendDenyMessage)
+         		    sendDelayedMessage(p);     			
+         	    return;
+             }
+        }      
         // Check worldguard conditions
         if (main.getWorldGuardHook() != null) {
         	if(!main.getWorldGuardHook().canCreateTrails(p, p.getLocation().subtract(0.0D, 1.0D, 0.0D))) {
@@ -127,10 +135,10 @@ public class MoveEventListener implements Listener {
                     block.setType(nextMat);
                     block.getState().update(true);
                     //log block changes in LogBlock and CoreProtect
-                    if(main.getLbHook()!=null) {
+                    if(main.getLbHook()!=null && main.getConfigManager().logBlock) {
                     	main.getLbHook().getLBConsumer().queueBlockReplace(new Actor(p.getName()), state, block.getState());
                     }
-                    if(main.getCpHook()!=null) {
+                    if(main.getCpHook()!=null && main.getConfigManager().coreProtect) {
                     	main.getCpHook().getAPI().logRemoval(p.getName(), block.getLocation(), type, data);
                     	main.getCpHook().getAPI().logPlacement(p.getName(), block.getLocation(), nextMat, block.getBlockData());
                     }

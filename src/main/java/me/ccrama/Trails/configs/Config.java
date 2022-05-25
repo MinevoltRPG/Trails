@@ -9,6 +9,7 @@ public class Config {
 	public boolean townyPathsWilderness = true;
 	public boolean townyPathsPerm = false;
 	public boolean landsPathsWilderness = true;
+	public boolean gpPathsWilderness = true;
 	public boolean applyInSubAreas = true;
 	public boolean logBlock = true;
 	public boolean coreProtect = true;
@@ -30,6 +31,7 @@ public class Config {
 		townyPathsWilderness = Boolean.valueOf(plugin.getConfig().getString("Plugin-Integration.Towny.PathsInWilderness"));
 		townyPathsPerm = Boolean.valueOf(plugin.getConfig().getString("Plugin-Integration.Towny.TownyPathsPerm"));
 		landsPathsWilderness = Boolean.valueOf(plugin.getConfig().getString("Plugin-Integration.Lands.PathsInWilderness"));
+		gpPathsWilderness = Boolean.valueOf(plugin.getConfig().getString("Plugin-Integration.GriefPrevention.PathsInWilderness"));
 		applyInSubAreas = Boolean.valueOf(plugin.getConfig().getString("Plugin-Integration.Lands.ApplyInSubAreas"));
 		logBlock = Boolean.valueOf(plugin.getConfig().getString("Plugin-Integration.LogBlock.LogPathBlocks"));
 		logBlock = Boolean.valueOf(plugin.getConfig().getString("Plugin-Integration.CoreProtect.LogPathBlocks"));

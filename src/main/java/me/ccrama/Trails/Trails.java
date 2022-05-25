@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.UUID;
 
 import me.ccrama.Trails.compatibility.CoreProtectHook;
+import me.ccrama.Trails.compatibility.GriefPreventionHook;
 import me.ccrama.Trails.compatibility.LandsAPIHook;
 import me.ccrama.Trails.compatibility.LogBlockHook;
 import me.ccrama.Trails.compatibility.MVDWPAPIHook;
@@ -38,6 +39,7 @@ public class Trails extends JavaPlugin {
 
     private TownyHook townyHook = null;
     private LandsAPIHook landsHook = null;
+    private GriefPreventionHook gpHook;
     private WorldGuardHook wgHook = null;
     private LogBlockHook lbHook = null;
     private CoreProtectHook cpHook = null;
@@ -81,8 +83,13 @@ public class Trails extends JavaPlugin {
         if (pm.getPlugin("Towny") != null) {
             townyHook = new TownyHook(this);
         }
+        // Lands Hook
         if (pm.getPlugin("Lands") != null) {
             landsHook = new LandsAPIHook(this);
+        }
+        // GriefPrevention Hook
+        if (pm.getPlugin("GriefPrevention") != null) {
+            gpHook = new GriefPreventionHook(this);
         }
         // LogBlock Hook
         if(pm.getPlugin("LogBlock") != null && config.logBlock) {
@@ -240,6 +247,10 @@ public class Trails extends JavaPlugin {
 
 	public LandsAPIHook getLandsHook() {
 		return landsHook;
+	}
+
+	public GriefPreventionHook getGpHook() {
+		return gpHook;
 	}
 
 }
