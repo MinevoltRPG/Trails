@@ -19,7 +19,7 @@ public class TownyHook
     private boolean isTownyPathsPerm = true;
 	
 	public TownyHook(Trails main) {
-		this.isPathsInWilderness = main.getConfigManager().pathsWilderness;
+		this.isPathsInWilderness = main.getConfigManager().townyPathsWilderness;
         this.isTownyPathsPerm =  main.getConfigManager().townyPathsPerm;
 	}
 	

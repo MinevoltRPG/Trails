@@ -14,4 +14,13 @@ messages:
   toggledOffOther: "%plugin_prefix% %name%'s &eTrails &fhave been toggle &cOff!"
   notPlayedBefore: "%plugin_prefix% %name% has not Played on this server before."
   cantCreateTrails: "%plugin_prefix% You can't create trails here."
+  saveMessage: "%plugin_prefix% has successfully saved data!"
+lands:
+  flag:
+    icon-material: DIRT_PATH
+    display-name: "&eTrails Flag"
+    description:
+      - "When Toggled on, this flag"
+      - "will allow players to leave"
+      - "trails in this Area"
   

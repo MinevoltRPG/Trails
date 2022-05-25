@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -71,7 +72,8 @@ public class BlockDataManager {
     }
     
     public void saveBlockList() {
-    	plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> saveBlockListAsync(walkedOver, data, dataFile)); 
+    	plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> saveBlockListAsync(walkedOver, data, dataFile));
+    	Bukkit.getConsoleSender().sendMessage(plugin.getCommands().getFormattedMessage(Bukkit.getConsoleSender().getName(), plugin.getLanguage().saveMessage));
     }
     
     private void saveBlockListAsync(List<TrailBlock> walkedOver, FileConfiguration data, File dataFile) {

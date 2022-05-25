@@ -5,7 +5,13 @@ General:
     ## this setting here in this file to zh or zh-CHS and it will load properly. If you create a new language file, please send it to me so I can include it in future
     ## updates of the project for all to enjoy! (Email: DrkMatr1984@aol.com)
     Language: en-US
-    
+    # SendDenyMessage: set to true will send players a message telling them they cannot create trails in the current area if their trails are toggled on
+    # and a protection plugin is blocking them. 
+    # The interval is to prevent message spamming. If they remain in an area where they can't create trails, the messages will be spaced apart by this interval,
+    # in seconds.
+Messages:
+    SendDenyMessage: 'true'
+    Interval: 10  
 Plugin-Integration:
     # Towny integration now works two ways. If 'PathsInWilderness' is set to true, then players will create
     # paths in the Wilderness unless individually toggled off. If TownyPathsPerm is set to true, players with 
@@ -17,6 +23,12 @@ Plugin-Integration:
     Towny:
         PathsInWilderness: 'true'
         TownyPathsPerm: 'false'
+    # Lands settings effect the Role Flag. Setting PathsInWilderness: 'true' will always allow paths in wilderness.
+    # Setting ApplyInSubAreas: 'true' cause the flag to also be applied in Sub Areas, not just the individual area you have toggled
+    # it on in. (Whole Towns/Lands versus individual plots)
+    Lands:
+        PathsInWilderness: 'true'
+        ApplyInSubAreas: 'true'
     # WorldGuard is automatically detected. Regions with the Trails flag set to false will be protected from trails. Trails flag is trails-flag. Setting 
     # "checkBypass: 'true'" will allow OPs to use trails anywhere regardless of Region settings.
     WorldGuard:
@@ -39,6 +51,6 @@ Trails:
     # 30% chance of counting. Finally, the COARSE_DIRT will turn into DIRT_PATH after no more than 10 walks. (The step counting system is a little strange
     # sometimes so you may have to tinker with these numbers to get your desired results. 
     SandPath: 'SAND:0:100>SANDSTONE:5:30'
-
+    # Data-Saving allows you to set, in minutes, how often you would like Trails to save it's internal data to disk. It saves async! :)
 Data-Saving:
     Interval: 5   

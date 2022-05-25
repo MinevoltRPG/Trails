@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.UUID;
 
 import me.ccrama.Trails.compatibility.CoreProtectHook;
+import me.ccrama.Trails.compatibility.LandsAPIHook;
 import me.ccrama.Trails.compatibility.LogBlockHook;
 import me.ccrama.Trails.compatibility.MVDWPAPIHook;
 import me.ccrama.Trails.compatibility.PAPIHook;
@@ -36,6 +37,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class Trails extends JavaPlugin {
 
     private TownyHook townyHook = null;
+    private LandsAPIHook landsHook = null;
     private WorldGuardHook wgHook = null;
     private LogBlockHook lbHook = null;
     private CoreProtectHook cpHook = null;
@@ -43,7 +45,7 @@ public class Trails extends JavaPlugin {
     private BlockDataManager blockData;
     private ToggleLists toggle;
     private Config config;
-    public List<UUID> wgPlayers;
+    public List<UUID> messagePlayers;
     private Language language;
     private Commands commands;
 
@@ -79,6 +81,9 @@ public class Trails extends JavaPlugin {
         if (pm.getPlugin("Towny") != null) {
             townyHook = new TownyHook(this);
         }
+        if (pm.getPlugin("Lands") != null) {
+            landsHook = new LandsAPIHook(this);
+        }
         // LogBlock Hook
         if(pm.getPlugin("LogBlock") != null && config.logBlock) {
         	lbHook = new LogBlockHook(this);
@@ -91,7 +96,6 @@ public class Trails extends JavaPlugin {
         if(pm.isPluginEnabled("MVdWPlaceholderAPI"))
 		{
 			if(new MVDWPAPIHook(this).trailsToggledOn()){
-				getLogger().info("Trails was successfully registered with mvdwPlaceholderAPI!");
 				getLogger().info("Successfully registered {trails_toggled_on}");
 			}
 		}
@@ -99,7 +103,6 @@ public class Trails extends JavaPlugin {
 		if (pm.isPluginEnabled("PlaceholderAPI"))
 		{
 			if(new PAPIHook(this).register()) {
-				getLogger().info("Trails was successfully registered with PlaceholderAPI!");
 				getLogger().info("Successfully registered %trails_toggled_on%");
 			}
 		}
@@ -112,7 +115,7 @@ public class Trails extends JavaPlugin {
     	// Worldguard Hook
         if (Bukkit.getServer().getPluginManager().getPlugin("WorldGuard") != null) {
             wgHook = new WorldGuardHook(this);
-            this.wgPlayers = new ArrayList<UUID>();
+            this.messagePlayers = new ArrayList<UUID>();
             Console.sendConsoleMessage(String.format(ChatColor.GRAY + "[" + ChatColor.YELLOW + "Trails" + ChatColor.GRAY + "]" 
             + ChatColor.GREEN + " hooked into worldguard! Flag trails-flag registered. Set trails-flag = DENY to deny trails in regions."));
         }
@@ -233,6 +236,10 @@ public class Trails extends JavaPlugin {
 
 	public CoreProtectHook getCpHook() {
 		return cpHook;
+	}
+
+	public LandsAPIHook getLandsHook() {
+		return landsHook;
 	}
 
 }

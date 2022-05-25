@@ -38,45 +38,58 @@ public class MoveEventListener implements Listener {
         if (main.getTownyHook() != null) {
             if (main.getTownyHook().isWilderness(p)){
             	if(!main.getTownyHook().isPathsInWilderness()) {
+            		if(main.getConfigManager().sendDenyMessage)
+            		    sendDelayedMessage(p);
                     return;
                 }
             }
             
             if (main.getTownyHook().isTownyPathsPerms()) {
                 if (main.getTownyHook().isInHomeNation(p) && !main.getTownyHook().hasNationPermission(p) && !main.getTownyHook().isInHomeTown(p)) {
+                	if(main.getConfigManager().sendDenyMessage)
+            		    sendDelayedMessage(p);
                     return;
                 }
                 if (main.getTownyHook().isInHomeTown(p) && !main.getTownyHook().hasTownPermission(p)) {
+                	if(main.getConfigManager().sendDenyMessage)
+            		    sendDelayedMessage(p);
                     return;
                 }
             }else {
             	if (main.getTownyHook().isInOtherNation(p)) {
+            		if(main.getConfigManager().sendDenyMessage)
+            		    sendDelayedMessage(p);
                     return;
                 }
                 if (main.getTownyHook().isInOtherTown(p)) {
+                	if(main.getConfigManager().sendDenyMessage)
+            		    sendDelayedMessage(p);
                     return;
                 }
             }
         }
+        // Check Lands conditions
+        if(main.getLandsHook() != null) {
+        	if(!main.getLandsHook().hasTrailsFlag(p, p.getLocation().subtract(0.0D, 1.0D, 0.0D))) {
+        		if(main.getConfigManager().sendDenyMessage)
+        		    sendDelayedMessage(p);    			
+    	        return;
+        	}
+        }
         // Check worldguard conditions
         if (main.getWorldGuardHook() != null) {
-        		if(!main.getWorldGuardHook().canCreateTrails(p, p.getLocation().subtract(0.0D, 1.0D, 0.0D))) {
-        			if(!main.wgPlayers.contains(p.getUniqueId())) {
-        				p.sendMessage(main.getCommands().getFormattedMessage(p.getName(), main.getLanguage().cantCreateTrails));
-        				main.wgPlayers.add(p.getUniqueId());
-        				Bukkit.getScheduler().runTaskLater(main, () -> delayWGMessage(p.getUniqueId()),20*10);           			
-        			}      			
-        	        return;
-        	    }
-        }           
+        	if(!main.getWorldGuardHook().canCreateTrails(p, p.getLocation().subtract(0.0D, 1.0D, 0.0D))) {
+        		if(main.getConfigManager().sendDenyMessage)
+        		    sendDelayedMessage(p);     			
+        	    return;
+        	}
+        }  
         makePath(p, e.getFrom().subtract(0.0D, 1.0D, 0.0D).getBlock());
-        //log blocks
     }
 
     private void makePath(Player p, Block block) {
-        Material type = block.getType();
         for (Link link : this.main.getConfigManager().getLinksConfig().getLinks()) {
-            if (link.getMat() == type) {
+            if (link.getMat() == block.getType()) {
                 double foo = Math.random() * 100.0D;
                 if (foo <= (double) link.chanceOccurance()) {
                     for (TrailBlock b : this.main.getBlockDataManager().getTrailBlocks()) {
@@ -126,9 +139,17 @@ public class MoveEventListener implements Listener {
         }
     }
     
+    private void sendDelayedMessage(Player p) {
+    	if(!main.messagePlayers.contains(p.getUniqueId())) {
+			p.sendMessage(main.getCommands().getFormattedMessage(p.getName(), main.getLanguage().cantCreateTrails));
+			main.messagePlayers.add(p.getUniqueId());
+			Bukkit.getScheduler().runTaskLater(main, () -> delayWGMessage(p.getUniqueId()),20*main.getConfigManager().messageInterval);           			
+		}
+    }
+    
     private void delayWGMessage(UUID id) {
-    	if(main.wgPlayers.contains(id)){
-    		main.wgPlayers.remove(id);
+    	if(main.messagePlayers.contains(id)){
+    		main.messagePlayers.remove(id);
 		}
     }
 

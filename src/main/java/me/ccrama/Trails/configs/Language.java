@@ -1,7 +1,9 @@
 package me.ccrama.Trails.configs;
 
 import java.io.File;
+import java.util.List;
 
+import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import me.ccrama.Trails.Trails;
@@ -24,6 +26,10 @@ public class Language
 	public String toggledOffOther = "%plugin_prefix% %name%'s &eTrails &fhave been toggle &cOff!";
 	public String notPlayedBefore = "%plugin_prefix% %name% has not Played on this server before.";
 	public String cantCreateTrails = "%plugin_prefix% You can't create trails here.";
+	public String saveMessage = "%plugin_prefix% has successfully saved data!";
+	public Material material = Material.DIRT_PATH;
+	public String displayName = "&eTrails Flag";
+	public List<String> description;
 	
 	private Trails plugin;
 	
@@ -64,5 +70,9 @@ public class Language
 		toggledOffOther = language.getString("messages.toggledOffOther");
 		notPlayedBefore = language.getString("messages.notPlayedBefore");
 		cantCreateTrails = language.getString("messages.cantCreateTrails");
+		saveMessage = language.getString("messages.saveMessage");
+		material = Material.matchMaterial(language.getString("lands.flag.icon-material"));
+		displayName = language.getString("lands.flag.display-name");
+		description = language.getStringList("lands.flag.description");
 	}
 }
