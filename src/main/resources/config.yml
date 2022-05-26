@@ -19,11 +19,11 @@ Plugin-Integration:
     # will create paths anywhere in their nation. Recommend setting these in Towny config permissions for 
     # Assistant, or create your own resident type "TrailMaker" and add perms to that. If TownyPathsPerm is set to false,
     # any player in their home town or nation will create trails in their own town or nation unless they have trails
-    # individually toggled off. Players will never create trails in towns that aren't their own or in their Nation.
+    # individually toggled off. Players will never create trails in towns that aren't their own town or in their Nation.
     Towny:
         PathsInWilderness: 'true'
         TownyPathsPerm: 'false'
-    # Lands settings effect the Role Flag. Setting PathsInWilderness: 'true' will always allow paths in wilderness.
+    # Lands settings affect the Role Flag. Setting PathsInWilderness: 'true' will always allow paths in wilderness.
     # Setting ApplyInSubAreas: 'true' cause the flag to also be applied in Sub Areas, not just the individual area you have toggled
     # it on in. (Whole Towns/Lands versus individual plots)
     Lands:
