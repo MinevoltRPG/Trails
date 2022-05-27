@@ -1,7 +1,7 @@
 command-name: "trails"
 plugin-prefix: "&7[&eTrails&7]&r"
 messages:
-  ## These are messages send in game when commands are used. There are some placeholders
+  ## These are messages sent in game when commands are used. There are some placeholders
   ## You have to use.
   ## %plugin_prefix% = plugin prefix you set above         %command% = Name of the command you set above
   ## %name% = name of person referred to

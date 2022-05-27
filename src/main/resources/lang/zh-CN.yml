@@ -1,0 +1,25 @@
+command-name: "trails"
+plugin-prefix: "&7[&e路径&7]&r"
+messages:
+  ## 这些是在游戏中使用命令时发送的消息.
+  ## 有一些占位符是你必须在消息中使用的.
+  ## %plugin_prefix% = 你在上面设置的插件前缀 %command% = 你在上面设置的指令全称
+  ## %name% = 你所指玩家的名称
+  noPerm: "%plugin_prefix% &c你没有权限开关路径生成."
+  noPermOthers: "%plugin_prefix% &c你没有权限开关其他人的路径生成."
+  consoleSpecify: "%plugin_prefix% &7在控制台&c中使用时必须指定&f玩家名称."
+  toggledOn: "%plugin_prefix% &f你的&e路径生成&f已被切换为&a开启!"
+  toggledOff: "%plugin_prefix% &f你的&e路径生成&f已被切换为&c关闭!"
+  toggledOnOther: "%plugin_prefix% %name%&7的&e路径生成&f已被切换为&a开启!"
+  toggledOffOther: "%plugin_prefix% %name%&7的&e路径生成&f已被切换为&c关闭!"
+  notPlayedBefore: "%plugin_prefix% %name%&7此前未在此服务器游玩过."
+  cantCreateTrails: "%plugin_prefix% 你不能在此处创建路径."
+  saveMessage: "%plugin_prefix% 已成功保存了路径数据!"
+lands:
+  flag:
+    icon-material: DIRT_PATH
+    display-name: "&e路径生成Flag"
+    description:
+    - "启用该flag时"
+    - "将允许玩家在这个区域"
+    - "留下路径"
