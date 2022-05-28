@@ -72,7 +72,10 @@ public class BlockDataManager {
     }
     
     public void saveBlockList() {
-    	plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> saveBlockListAsync(walkedOver, data, dataFile));
+    	if(this.plugin.isEnabled())
+    	    plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> saveBlockListAsync(walkedOver, data, dataFile));
+    	else
+    		saveBlockListAsync(walkedOver, data, dataFile);
     	Bukkit.getConsoleSender().sendMessage(plugin.getCommands().getFormattedMessage(Bukkit.getConsoleSender().getName(), plugin.getLanguage().saveMessage));
     }
     

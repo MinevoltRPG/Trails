@@ -41,6 +41,15 @@ public class WorldGuardHook
 				// hopefully this never actually happens
 			}
 		}
+		catch (java.lang.IllegalStateException ex) {
+			Flag<?> existing = registry.get("trails-flag");
+			if (existing instanceof StateFlag) {
+				TRAILS_FLAG = (StateFlag) existing;
+			} else {
+				// types don't match - this is bad news! some other plugin conflicts with you
+				// hopefully this never actually happens
+			}
+		}
 		
 	}
 

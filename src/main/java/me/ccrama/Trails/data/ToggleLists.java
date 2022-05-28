@@ -60,7 +60,10 @@ public class ToggleLists{
 	}
 	
 	public void saveUserList() {
-		plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> saveUserListAsync(toggledPlayers, users, usersFile)); 
+		if(this.plugin.isEnabled())
+		    plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> saveUserListAsync(toggledPlayers, users, usersFile));
+		else
+			saveUserListAsync(toggledPlayers, users, usersFile);
 	}
 	  
 	private void saveUserListAsync(List<String> toggledPlayers, FileConfiguration users, File usersFile){

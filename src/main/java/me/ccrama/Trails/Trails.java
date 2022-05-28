@@ -135,7 +135,6 @@ public class Trails extends JavaPlugin {
     	unRegisterCommands();
         this.blockData.saveBlockList();
         this.getToggles().saveUserList();
-        this.getPluginLoader().disablePlugin(this);
     }
     
     public CommandMap getCommandMap() {
