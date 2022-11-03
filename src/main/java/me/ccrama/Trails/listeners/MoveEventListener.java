@@ -108,7 +108,9 @@ public class MoveEventListener implements Listener {
         for (Link link : this.main.getConfigManager().getLinksConfig().getLinks()) {
             if (link.getMat() == block.getType()) {
                 double foo = Math.random() * 100.0D;
-                double bar = (double) link.chanceOccurance()*main.getConfigManager().runModifier;
+                double bar = (double) link.chanceOccurance();
+                if(p.isSprinting()) bar*=main.getConfigManager().runModifier;
+
                 if (foo > bar) return;
 
                 PersistentDataContainer container = new CustomBlockData(block, main);
