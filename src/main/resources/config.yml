@@ -9,6 +9,8 @@ General:
     # and a protection plugin is blocking them. 
     # The interval is to prevent message spamming. If they remain in an area where they can't create trails, the messages will be spaced apart by this interval,
     # in seconds.
+    Run-Modifier: 1.5
+    Sneak-Bypass: true
 Messages:
     SendDenyMessage: 'true'
     Interval: 10  

@@ -15,11 +15,9 @@ import me.ccrama.Trails.compatibility.TownyHook;
 import me.ccrama.Trails.compatibility.WorldGuardHook;
 import me.ccrama.Trails.configs.Config;
 import me.ccrama.Trails.configs.Language;
-import me.ccrama.Trails.data.BlockDataManager;
 import me.ccrama.Trails.data.ToggleLists;
 import me.ccrama.Trails.listeners.MoveEventListener;
 import me.ccrama.Trails.util.Console;
-import me.drkmatr1984.customevents.CustomEvents;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -43,8 +41,7 @@ public class Trails extends JavaPlugin {
     private WorldGuardHook wgHook = null;
     private LogBlockHook lbHook = null;
     private CoreProtectHook cpHook = null;
-    private CustomEvents customEvents;
-    private BlockDataManager blockData;
+
     private ToggleLists toggle;
     private Config config;
     public List<UUID> messagePlayers;
@@ -64,15 +61,7 @@ public class Trails extends JavaPlugin {
         this.config = new Config(this);
         this.language = new Language(this);
         // Wrapper for custom bukkit events
-        this.customEvents = new CustomEvents((JavaPlugin) this,
-                false,
-                false,
-                true,
-                false,
-                false);
-        // Initalise events
-        this.customEvents.initializeLib();
-        this.blockData = new BlockDataManager(this);      
+        //this.blockData = new BlockDataManager(this);
         this.toggle = new ToggleLists(this);
         // Register Move Listener
         pm.registerEvents(new MoveEventListener(this), this);
@@ -133,7 +122,6 @@ public class Trails extends JavaPlugin {
      */
     public void onDisable() {
     	unRegisterCommands();
-        this.blockData.saveBlockList();
         this.getToggles().saveUserList();
     }
     
@@ -208,9 +196,6 @@ public class Trails extends JavaPlugin {
           } 
     }
 
-    public BlockDataManager getBlockDataManager() {
-        return this.blockData;
-    }
 
     public WorldGuardHook getWorldGuardHook() {
         return this.wgHook;

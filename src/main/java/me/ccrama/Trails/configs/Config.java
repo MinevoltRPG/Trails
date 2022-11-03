@@ -18,6 +18,8 @@ public class Config {
 	public int messageInterval = 10;
 	public int saveInterval = 5;
 	public String langType;
+	public boolean sneakBypass = true;
+	public double runModifier = 1.0;
 	
 	public Config(Trails plugin) {
 		plugin.saveDefaultConfig();
@@ -39,6 +41,8 @@ public class Config {
 		sendDenyMessage = Boolean.valueOf(plugin.getConfig().getString("Messages.SendDenyMessage"));
 		messageInterval = plugin.getConfig().getInt("Messages.Interval");
 		langType = plugin.getConfig().getString("General.Language");
+		sneakBypass = plugin.getConfig().getBoolean("General.Sneak-Bypass", true);
+		runModifier = plugin.getConfig().getDouble("General.Run-Modifier", 1.0);
 		
 		saveInterval = plugin.getConfig().getInt("Data-Saving.Interval");
 	}
