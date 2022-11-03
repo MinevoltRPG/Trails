@@ -99,11 +99,12 @@ public class MoveEventListener implements Listener {
         	    return;
         	}
         }
-        // Substract 0.1 because PATH is not a full block
+        // Substract 0.1 because sometimes it is not a full block (e.g. Path)
         makePath(p, e.getFrom().subtract(0.0D, 0.1D, 0.0D).getBlock());
     }
 
     private void makePath(Player p, Block block) {
+        // Maybe remove this loop too? Store links data in a format of some HashMap with material as a key
         for (Link link : this.main.getConfigManager().getLinksConfig().getLinks()) {
             if (link.getMat() == block.getType()) {
                 double foo = Math.random() * 100.0D;
@@ -113,19 +114,18 @@ public class MoveEventListener implements Listener {
                 PersistentDataContainer container = new CustomBlockData(block, main);
                 int walked = 0;
 
-                NamespacedKey namespacedKey = new NamespacedKey(main, "walks");
-
-                if(container.has(namespacedKey, PersistentDataType.INTEGER))
-                    container.get(namespacedKey, PersistentDataType.INTEGER);
+                if(container.has(new NamespacedKey(main, "walks"), PersistentDataType.INTEGER)) walked = container.get(new NamespacedKey(main, "walks"), PersistentDataType.INTEGER);
 
                 if(walked >= link.decayNumber()){
-                    container.remove(namespacedKey);
+                    container.remove(new NamespacedKey(main, "walks"));
                     try {
                         this.changeNext(p, block);
                     } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
                         e.printStackTrace();
                     }
-                } else container.set(namespacedKey, PersistentDataType.INTEGER, walked+1);
+                } else container.set(new NamespacedKey(main, "walks"), PersistentDataType.INTEGER, walked+1);
+
+                return;
             }
         }
     }

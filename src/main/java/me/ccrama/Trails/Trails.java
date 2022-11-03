@@ -16,6 +16,7 @@ import me.ccrama.Trails.compatibility.WorldGuardHook;
 import me.ccrama.Trails.configs.Config;
 import me.ccrama.Trails.configs.Language;
 import me.ccrama.Trails.data.ToggleLists;
+import me.ccrama.Trails.listeners.BreakBlockListener;
 import me.ccrama.Trails.listeners.MoveEventListener;
 import me.ccrama.Trails.util.Console;
 import org.bukkit.Bukkit;
@@ -65,6 +66,8 @@ public class Trails extends JavaPlugin {
         this.toggle = new ToggleLists(this);
         // Register Move Listener
         pm.registerEvents(new MoveEventListener(this), this);
+        //Register Block Break listener
+        pm.registerEvents(new BreakBlockListener(this), this);
         // Register commands
         this.commands = new Commands(this);
         RegisterCommands();
