@@ -2,7 +2,6 @@ package me.ccrama.Trails.listeners;
 
 import com.jeff_media.customblockdata.CustomBlockData;
 import me.ccrama.Trails.Trails;
-import me.ccrama.Trails.configs.Config;
 import me.ccrama.Trails.objects.Link;
 
 import org.bukkit.Bukkit;

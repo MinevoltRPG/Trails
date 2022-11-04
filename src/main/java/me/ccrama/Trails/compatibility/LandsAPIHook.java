@@ -35,6 +35,7 @@ public class LandsAPIHook
     			(plugin.getLanguage().pluginPrefix + ChatColor.GREEN + " hooked into " + ChatColor.YELLOW + "Lands!")));
 		Bukkit.getServer().getConsoleSender().sendMessage(plugin.getCommands().getFormattedMessage(Bukkit.getConsoleSender().getName(),
     			(plugin.getLanguage().pluginPrefix + ChatColor.YELLOW + " ALLOW_TRAILS " + ChatColor.GREEN + "Role Flag registered!")));
+		landsIntegration.registerFlag(roleflag);
 	}
 
 	public LandsIntegration getLandsIntegration() {

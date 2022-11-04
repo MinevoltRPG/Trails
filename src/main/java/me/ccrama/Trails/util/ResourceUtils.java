@@ -41,7 +41,7 @@ public final class ResourceUtils {
 		          if (name.startsWith(path)) files.add(name.substring(path.length() + 1));
 		        }
 		      }
-
+              jar.close();
 		      return files;
 		    }
 
