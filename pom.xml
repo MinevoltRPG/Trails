@@ -53,6 +53,10 @@
             <id>placeholderapi</id>
             <url>https://repo.extendedclip.com/content/repositories/placeholderapi/</url>
         </repository>
+        <repository>
+            <id>jeff-media-gbr</id>
+            <url>https://hub.jeff-media.com/nexus/repository/jeff-media-public/</url>
+        </repository>
 		<repository>
             <id>mvdw-software</id>
             <name>MVdW Public Repositories</name>
@@ -66,6 +70,12 @@
             <artifactId>spigot</artifactId>
             <version>1.19.2-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.jeff_media</groupId>
+            <artifactId>CustomBlockData</artifactId>
+            <version>2.1.0</version>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.github.TownyAdvanced</groupId>
@@ -96,16 +106,6 @@
             <artifactId>core</artifactId>
             <version>7.3.0-SNAPSHOT</version>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.yaml</groupId>
-            <artifactId>snakeyaml</artifactId>
-            <version>1.33</version>
-        </dependency>
-        <dependency>
-            <groupId>me.drkmatr1984</groupId>
-            <artifactId>customevents</artifactId>
-            <version>0.15</version>
         </dependency>
         <dependency>
             <groupId>com.github.angeschossen</groupId>
@@ -160,20 +160,21 @@
             <plugin>
               <groupId>org.apache.maven.plugins</groupId>
               <artifactId>maven-shade-plugin</artifactId>
-              <version>2.2</version>
+              <version>3.3.0</version>
+                <configuration>
+                    <relocations>
+                        <relocation>
+                            <pattern>com.jeff_media.customblockdata</pattern>
+                            <shadedPattern>me.ccrama.Trails.customblockdata</shadedPattern>
+                        </relocation>
+                    </relocations>
+                </configuration>
               <executions>
                 <execution>
                   <phase>package</phase>
                     <goals>
                       <goal>shade</goal>
                     </goals>
-                    <configuration>
-                      <artifactSet>
-                        <includes>
-                          <include>me.drkmatr1984:customevents</include>
-                        </includes>
-                      </artifactSet>
-                    </configuration>
                 </execution>
               </executions>
             </plugin>

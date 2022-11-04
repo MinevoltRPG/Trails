@@ -1,13 +1,13 @@
 package me.ccrama.Trails.listeners;
 
+import com.jeff_media.customblockdata.CustomBlockData;
 import me.ccrama.Trails.Trails;
+import me.ccrama.Trails.configs.Config;
 import me.ccrama.Trails.objects.Link;
-import me.ccrama.Trails.objects.TrailBlock;
-import me.ccrama.Trails.objects.WrappedLocation;
-import me.drkmatr1984.customevents.moveEvents.SignificantPlayerMoveEvent;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.data.BlockData;
@@ -16,6 +16,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 import de.diddiz.LogBlock.Actor;
+import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.persistence.PersistentDataContainer;
+import org.bukkit.persistence.PersistentDataType;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.UUID;
@@ -29,7 +32,11 @@ public class MoveEventListener implements Listener {
     }
 
     @EventHandler
-    public void walk(SignificantPlayerMoveEvent e) {
+    public void walk(PlayerMoveEvent e) {
+        if(e.getFrom().getBlock().equals(e.getTo().getBlock())) return;
+
+        if(main.getConfigManager().sneakBypass && e.getPlayer().isSneaking()) return;
+
         Player p = e.getPlayer();
         if (main.getToggles().isDisabled(p)) {
             return;
@@ -91,35 +98,36 @@ public class MoveEventListener implements Listener {
         		    sendDelayedMessage(p);     			
         	    return;
         	}
-        }  
-        makePath(p, e.getFrom().subtract(0.0D, 1.0D, 0.0D).getBlock());
+        }
+        // Substract 0.1 because sometimes it is not a full block (e.g. Path)
+        makePath(p, e.getFrom().subtract(0.0D, 0.1D, 0.0D).getBlock());
     }
 
     private void makePath(Player p, Block block) {
+        // Maybe remove this loop too? Store links data in a format of some HashMap with material as a key
         for (Link link : this.main.getConfigManager().getLinksConfig().getLinks()) {
             if (link.getMat() == block.getType()) {
                 double foo = Math.random() * 100.0D;
-                if (foo <= (double) link.chanceOccurance()) {
-                    for (TrailBlock b : this.main.getBlockDataManager().getTrailBlocks()) {
-                        if (b.getWrappedLocation().isLocation(block.getLocation())) {
-                            int walked = b.getWalks();
-                            if (walked >= link.decayNumber()) {
-                                this.main.getBlockDataManager().removeTrailBlock(b);
-                                try {
-                                    this.changeNext(p, block);
-                                } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
-                                    e.printStackTrace();
-                                }
-                                return;
-                            } else {
-                                this.main.getBlockDataManager().removeTrailBlock(b);
-                                this.main.getBlockDataManager().addTrailBlock(new TrailBlock(b.getWrappedLocation(), (walked + 1)));
-                                return;
-                            }
-                        }
+                double bar = (double) link.chanceOccurance();
+                if(p.isSprinting()) bar*=main.getConfigManager().runModifier;
+
+                if (foo > bar) return;
+
+                PersistentDataContainer container = new CustomBlockData(block, main);
+                int walked = 0;
+
+                if(container.has(new NamespacedKey(main, "walks"), PersistentDataType.INTEGER)) walked = container.get(new NamespacedKey(main, "walks"), PersistentDataType.INTEGER);
+
+                if(walked >= link.decayNumber()){
+                    container.remove(new NamespacedKey(main, "walks"));
+                    try {
+                        this.changeNext(p, block);
+                    } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+                        e.printStackTrace();
                     }
-                    this.main.getBlockDataManager().walkedOver.add(new TrailBlock(new WrappedLocation(block.getLocation()), 1));
-                }
+                } else container.set(new NamespacedKey(main, "walks"), PersistentDataType.INTEGER, walked+1);
+
+                return;
             }
         }
     }
