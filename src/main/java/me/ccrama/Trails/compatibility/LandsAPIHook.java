@@ -20,8 +20,10 @@ public class LandsAPIHook
 {
 	private final LandsIntegration landsIntegration;
 	private final RoleFlag roleflag;
+	private Trails plugin;
 
 	public LandsAPIHook(Trails plugin) {
+		this.plugin = plugin;
 		this.landsIntegration = new LandsIntegration(plugin);
 		//seems like should use RoleFlag instead of LandFlag
 		this.roleflag = (RoleFlag) new RoleFlag(plugin, Category.ACTION, "ALLOW_TRAILS", plugin.getConfigManager().applyInSubAreas, plugin.getConfigManager().landsPathsWilderness);
@@ -72,7 +74,13 @@ public class LandsAPIHook
 	
 	//looks like correct method
 	public boolean hasTrailsFlag(Player player, Location location) {
-		return getArea(location).hasFlag(player.getUniqueId(), roleflag);
+		if(getArea(location) != null)
+		    return getArea(location).hasFlag(player.getUniqueId(), roleflag);
+		else if(isWilderness(location) && plugin.getConfigManager().landsPathsWilderness)
+            return true;
+		else
+			return false;
+
 	}
 
 }
