@@ -120,7 +120,7 @@ public class Trails extends JavaPlugin {
     @Override
     public void onLoad() {
     	// Worldguard Hook
-        if (Bukkit.getServer().getPluginManager().getPlugin("WorldGuard") != null) {
+        if (Bukkit.getServer().getPluginManager().getPlugin("WorldGuard") != null && getConfig().getBoolean("Plugin-Integration.WorldGuard.IntegrationEnabled", true)) {
             wgHook = new WorldGuardHook(this);
             this.messagePlayers = new ArrayList<UUID>();
             Console.sendConsoleMessage(String.format(ChatColor.GRAY + "[" + ChatColor.YELLOW + "Trails" + ChatColor.GRAY + "]" 

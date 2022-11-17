@@ -15,6 +15,8 @@ General:
     Speed-Boost-Step: 0.004
     Speed-Boost-Only-Trails: true
     Use-Permission-For-Trails: false
+    Enabled-Worlds:
+    - 'all'
 Messages:
     SendDenyMessage: 'true'
     Interval: 10  
@@ -42,6 +44,7 @@ Plugin-Integration:
     # WorldGuard is automatically detected. Regions with the Trails flag set to false will be protected from trails. Trails flag is trails-flag. Setting 
     # "checkBypass: 'true'" will allow OPs to use trails anywhere regardless of Region settings.
     WorldGuard:
+        IntegrationEnabled: true
         CheckBypass: 'false'
     # LogBlock and CoreProtect settings both work the same. If set to true and LogBlock and/or CoreProtect are installed, Trails will create rollback data
     # when blocks change using Trails. 

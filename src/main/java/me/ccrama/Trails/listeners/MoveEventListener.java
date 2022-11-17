@@ -23,10 +23,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class MoveEventListener implements Listener {
 
@@ -41,7 +38,8 @@ public class MoveEventListener implements Listener {
 
     @EventHandler
     public void walk(PlayerMoveEvent e) {
-        if (e.getFrom().getBlock().equals(e.getTo().getBlock())) return;
+        if (e.getFrom().getBlock().equals(e.getTo().getBlock()) || e.getPlayer().isFlying()) return;
+        if(!main.getConfigManager().allWorldsEnabled && !main.getConfigManager().enabledWorlds.contains(e.getTo().getWorld().getName())) return;
 
         Block block = e.getFrom().subtract(0.0D, 0.1D, 0.0D).getBlock();
         Link link = this.main.getConfigManager().getLinksConfig().getLinks().getFromMat(block.getType());
@@ -73,19 +71,19 @@ public class MoveEventListener implements Listener {
                 if (boosterTask == null || boosterTask.isCancelled()) boosterTask = new BukkitRunnable() {
                     @Override
                     public void run() {
+                        ArrayList<UUID> toRemove = new ArrayList<>();
                         for (Map.Entry<UUID, Booster> entry : speedBoostedPlayers.entrySet()) {
                             Player player = entry.getValue().getPlayer();
-                            if (player == null) removeBoostedPlayer(player.getUniqueId(), true);
-                            else {
                                 if (entry.getValue().getTargetSpeed() > player.getWalkSpeed())
                                     player.setWalkSpeed(Math.min(player.getWalkSpeed() + main.getConfigManager().speedBoostStep, entry.getValue().getTargetSpeed()));
                                 else
                                     player.setWalkSpeed(Math.max(player.getWalkSpeed() - main.getConfigManager().speedBoostStep, entry.getValue().getTargetSpeed()));
-                            }
 
                             if (player.getWalkSpeed() == entry.getValue().getTargetSpeed())
-                                removeBoostedPlayer(entry.getKey(), false);
+                                toRemove.add(entry.getKey());
                         }
+
+                        for(UUID uuid : toRemove) removeBoostedPlayer(uuid, false);
                     }
                 }.runTaskTimer(main, 0L, main.getConfigManager().speedBoostInterval);
             }
