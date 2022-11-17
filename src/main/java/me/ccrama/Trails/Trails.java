@@ -18,6 +18,7 @@ import me.ccrama.Trails.configs.Language;
 import me.ccrama.Trails.data.ToggleLists;
 import me.ccrama.Trails.listeners.BreakBlockListener;
 import me.ccrama.Trails.listeners.MoveEventListener;
+import me.ccrama.Trails.listeners.PlayerLeaveListener;
 import me.ccrama.Trails.util.Console;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -25,6 +26,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandMap;
 import org.bukkit.command.CommandSender;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -52,11 +54,15 @@ public class Trails extends JavaPlugin {
 	private static CommandMap cmap;   
     private CCommand command;
 
+    private static Plugin plugin;
+
     /**
      * On Plugin Enable
      */
     @Override
     public void onEnable() {
+        plugin = this;
+
     	PluginManager pm = Bukkit.getServer().getPluginManager();
         // Activate plugin config
         this.config = new Config(this);
@@ -68,6 +74,8 @@ public class Trails extends JavaPlugin {
         pm.registerEvents(new MoveEventListener(this), this);
         //Register Block Break listener
         pm.registerEvents(new BreakBlockListener(this), this);
+        // Register plater quit listener
+        pm.registerEvents(new PlayerLeaveListener(this), this);
         // Register commands
         this.commands = new Commands(this);
         RegisterCommands();
@@ -199,6 +207,7 @@ public class Trails extends JavaPlugin {
           } 
     }
 
+    public static Plugin getInstance(){ return plugin; }
 
     public WorldGuardHook getWorldGuardHook() {
         return this.wgHook;

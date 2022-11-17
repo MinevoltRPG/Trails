@@ -7,12 +7,14 @@ public class Link {
    private final int decay;
    private final int id;
    private final int chanceoccur;
+   private final float speedBoost;
    private final Link next;
 
-   public Link(Material material, int decaynum, int chance, int linknumb, Link nextlink) {
+   public Link(Material material, int decaynum, int chance, float speedBoost, int linknumb, Link nextlink) {
       this.mat = material;
       this.decay = decaynum;
       this.id = linknumb;
+      this.speedBoost = speedBoost;
       this.chanceoccur = chance;
       this.next = nextlink;
    }
@@ -20,6 +22,8 @@ public class Link {
    public Material getMat() {
       return this.mat;
    }
+
+   public float getSpeedBoost(){ return this.speedBoost;}
 
    public int decayNumber() {
       return this.decay;

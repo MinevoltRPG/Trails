@@ -2,6 +2,7 @@ package me.ccrama.Trails.compatibility;
 
 import java.util.UUID;
 
+import me.angeschossen.lands.api.flags.types.LandFlag;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;

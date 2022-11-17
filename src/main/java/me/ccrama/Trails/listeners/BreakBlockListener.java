@@ -20,8 +20,8 @@ public class BreakBlockListener implements Listener {
     @EventHandler
     public void breakBlock(BlockBreakEvent event) {
         final PersistentDataContainer customBlockData = new CustomBlockData(event.getBlock(), main);
-        if (!customBlockData.has(new NamespacedKey(main, "walks"), PersistentDataType.INTEGER)) return;
-        customBlockData.remove(new NamespacedKey(main, "walks"));
+        if (customBlockData.has(new NamespacedKey(main, "walks"), PersistentDataType.INTEGER)) customBlockData.remove(new NamespacedKey(main, "walks"));
+        if (customBlockData.has(new NamespacedKey(main, "trail"), PersistentDataType.BYTE)) customBlockData.remove(new NamespacedKey(main, "trail"));
     }
 
 }
