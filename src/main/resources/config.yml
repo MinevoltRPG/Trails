@@ -12,7 +12,7 @@ General:
     Run-Modifier: 1.5
     Sneak-Bypass: true
     Speed-Boost-Interval: 1L
-    Speed-Boost-Step: 0.008
+    Speed-Boost-Step: 0.004
     Speed-Boost-Only-Trails: true
     Use-Permission-For-Trails: false
 Messages:
