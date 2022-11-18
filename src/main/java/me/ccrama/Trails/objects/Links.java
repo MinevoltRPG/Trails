@@ -1,6 +1,7 @@
 package me.ccrama.Trails.objects;
 
 import java.util.AbstractList;
+import java.util.HashMap;
 
 import org.bukkit.Material;
 
@@ -8,6 +9,7 @@ public class Links extends AbstractList<Link>
 {
 	private Link[] list = new Link[10];
     private int size = 0;
+    private final HashMap<Material, Link> linkHashMap = new HashMap<>();
 
     public Link get(int i){
         if(i >= size) throw new IndexOutOfBoundsException("duh!");
@@ -21,6 +23,7 @@ public class Links extends AbstractList<Link>
             list = newList;
         }
         list[size] = e;
+        linkHashMap.put(e.getMat(), e);
         size++;
         return true;
     }
@@ -30,14 +33,7 @@ public class Links extends AbstractList<Link>
     }
     
     public Link getFromMat(Material mat) {
-  	  	if(size!=0){
-  		  	for(Link link : list) {
-  			  	if(link.getMat() == mat) {
-  				  	return link;
-  			  	}
-  		  	}
-  	  	}
-  	  	return null;
+  	  	return linkHashMap.get(mat);
     }
     
 }
