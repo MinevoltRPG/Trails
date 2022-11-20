@@ -24,6 +24,8 @@ public class Language
 	public String consoleSpecify = "%plugin_prefix% &cYou must specify a &fname &cwhen running from &7Console";
 	public String toggledOn = "%plugin_prefix% &fYour &eTrails &fhave been toggle &aOn!";
 	public String toggledOff = "%plugin_prefix% &fYour &eTrails &fhave been toggle &cOff!";
+	public String boostOn = "%plugin_prefix% &fYour &eBoost &fhave been toggle &aOn!";
+	public String boostOff = "%plugin_prefix% &fYour &eBoost &fhave been toggle &cOff!";
 	public String toggledOnOther = "%plugin_prefix% %name%'s &eTrails &fhave been toggle &aOn!";
 	public String toggledOffOther = "%plugin_prefix% %name%'s &eTrails &fhave been toggle &cOff!";
 	public String notPlayedBefore = "%plugin_prefix% %name% has not Played on this server before.";
@@ -31,6 +33,8 @@ public class Language
 	public String saveMessage = "%plugin_prefix% has successfully saved data!";
 	public Material material = Material.DIRT_PATH;
 	public String displayName = "&eTrails Flag";
+	public String alreadyOff = "%plugin_prefix% &fYour &eTrails &fare already toggled &cOff!";
+	public String alreadyOn = "%plugin_prefix% &fYour &eTrails &fare already toggled &aOn!";
 	public List<String> description;
 	
 	private Trails plugin;

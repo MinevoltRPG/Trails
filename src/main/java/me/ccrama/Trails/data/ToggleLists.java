@@ -2,12 +2,13 @@ package me.ccrama.Trails.data;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 import java.util.UUID;
 
 import javax.annotation.Nonnull;
 
+import me.ccrama.Trails.listeners.MoveEventListener;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -20,13 +21,13 @@ public class ToggleLists{
 	private final File dataFolder;
 	private FileConfiguration users;
 	
-	private List<String> toggledPlayers; 
+	private HashMap<String, HashMap<String, Object>> toggledPlayers;
 	
 	private final Trails plugin;
 	
 	public ToggleLists(Trails plugin){		
 		this.plugin = plugin;
-		dataFolder = new File(this.plugin.getDataFolder() +"/data");
+		dataFolder = new File(this.plugin.getDataFolder() + "");
 		initLists();
 	}
 		
@@ -44,19 +45,32 @@ public class ToggleLists{
 			dataFolder.mkdir();
 		}
 	    if (usersFile == null) {
-	        usersFile = new File(dataFolder, "toggles.yml");
+	        usersFile = new File(dataFolder, "players.yml");
 	    }
-	    if (!usersFile.exists()) {           
-	        plugin.saveResource("data/toggles.yml", false);
+	    if (!usersFile.exists()) {
+			try {
+				usersFile.createNewFile();
+			} catch (Exception ex){
+				ex.printStackTrace();
+			}
+
 	    }
     }
 	  
 	public void loadUserList(){
 		//pickup toggle users
-		toggledPlayers = new ArrayList<>();
+		toggledPlayers = new HashMap<>();
 		users = YamlConfiguration.loadConfiguration(usersFile);
-		if(users.getStringList("EnabledPlayers")!=null && !users.getStringList("EnabledPlayers").isEmpty())
-			toggledPlayers = users.getStringList("EnabledPlayers");
+		ConfigurationSection section = users.getConfigurationSection("players");
+		if(section!=null){
+			for(String uuid : section.getKeys(false)){
+				HashMap<String, Object> temp = new HashMap<>();
+				for(String key : section.getConfigurationSection(uuid).getKeys(false)){
+					temp.put(key, section.get(uuid+"."+key));
+				}
+				toggledPlayers.put(uuid, temp);
+			}
+		}
 	}
 	
 	public void saveUserList() {
@@ -66,11 +80,11 @@ public class ToggleLists{
 			saveUserListAsync(toggledPlayers, users, usersFile);
 	}
 	  
-	private void saveUserListAsync(List<String> toggledPlayers, FileConfiguration users, File usersFile){
+	private void saveUserListAsync(HashMap<String, HashMap<String, Object>> toggledPlayers, FileConfiguration users, File usersFile){
 		//pickup toggle users
 		if(toggledPlayers!=null)
 		{
-			users.set("EnabledPlayers",toggledPlayers);
+			users.set("players",toggledPlayers);
 		}
 		if(usersFile.exists())
 			usersFile.delete();
@@ -87,47 +101,62 @@ public class ToggleLists{
 			e.printStackTrace();
 		}
 	}
-
-	public boolean isDisabled(@Nonnull Player p) {
-		return isDisabled(p.getUniqueId().toString());
-	}
 	
-	public boolean isDisabled(@Nonnull UUID id) {
-		return isDisabled(id.toString());
-	}
-	
-	private boolean isDisabled(@Nonnull String s) {
-		if(this.toggledPlayers == null)
-			return true;
-		return !this.toggledPlayers.contains(s);
-	}
-	
-	public void enablePlayer(@Nonnull Player p) {
-		enablePlayer(p.getUniqueId().toString());
-	}
-	
-    public void enablePlayer(@Nonnull UUID id) {
-		enablePlayer(id.toString());
-	}
-    
-    private void enablePlayer(@Nonnull String s) {
-		this.toggledPlayers.add(s);
-	}
-    
-    public boolean disablePlayer(@Nonnull Player p) {
-    	return disablePlayer(p.getUniqueId().toString());
-    }
-    
-    public boolean disablePlayer(@Nonnull UUID id) {
-    	return disablePlayer(id.toString());
-    }
-    
-    private boolean disablePlayer(@Nonnull String s) {
-		if(!isDisabled(s)) {
-			this.toggledPlayers.remove(s);
-			return true;
+	public boolean isDisabled(@Nonnull String uuid) {
+		HashMap<String, Object> playerInfo = this.toggledPlayers.get(uuid);
+		if(this.toggledPlayers == null || playerInfo == null || playerInfo.get("enable") == null) {
+			return !plugin.getConfigManager().enabledDefault;
 		}
-		return false;
+		return !((boolean) playerInfo.get("enable"));
+	}
+
+	public boolean isBoost(@Nonnull String uuid) {
+		HashMap<String, Object> playerInfo = this.toggledPlayers.get(uuid);
+		if(this.toggledPlayers == null || playerInfo == null || playerInfo.get("boost") == null) {
+			return plugin.getConfigManager().boostEnabledDefault;
+		}
+		return (boolean) playerInfo.get("boost");
+	}
+    
+    public void enablePlayer(@Nonnull String s) {
+		if(!this.toggledPlayers.containsKey(s) || this.toggledPlayers.get(s) == null){
+			HashMap<String, Object> playerInfo = new HashMap<>();
+			playerInfo.put("enable", true);
+			this.toggledPlayers.put(s, playerInfo);
+		} else {
+			this.toggledPlayers.get(s).put("enable", true);
+		}
+	}
+    
+    public void disablePlayer(@Nonnull String s) {
+		if(!this.toggledPlayers.containsKey(s) || this.toggledPlayers.get(s) == null){
+			HashMap<String, Object> playerInfo = new HashMap<>();
+			playerInfo.put("enable", false);
+			this.toggledPlayers.put(s, playerInfo);
+		} else {
+			this.toggledPlayers.get(s).put("enable", false);
+		}
+	}
+
+	public void enableBoost(@Nonnull String s) {
+		if(!this.toggledPlayers.containsKey(s) || this.toggledPlayers.get(s) == null){
+			HashMap<String, Object> playerInfo = new HashMap<>();
+			playerInfo.put("boost", true);
+			this.toggledPlayers.put(s, playerInfo);
+		} else {
+			this.toggledPlayers.get(s).put("boost", true);
+		}
+	}
+
+	public void disableBoost(@Nonnull String s) {
+		MoveEventListener.removeBoostedPlayer(UUID.fromString(s), true);
+		if(!this.toggledPlayers.containsKey(s) || this.toggledPlayers.get(s) == null){
+			HashMap<String, Object> playerInfo = new HashMap<>();
+			playerInfo.put("boost", false);
+			this.toggledPlayers.put(s, playerInfo);
+		} else {
+			this.toggledPlayers.get(s).put("boost", false);
+		}
 	}
 	
 }

@@ -27,14 +27,16 @@ public class Commands implements CommandExecutor
 				{   
 				    if (sender instanceof Player) {
 					    Player p = (Player) sender;
+						String uuid = p.getUniqueId().toString();
 						if(p.hasPermission("trails.toggle")){
-						    if(this.plugin.getToggles().isDisabled(p)) {
-							    this.plugin.getToggles().enablePlayer(p);
+						    if(this.plugin.getToggles().isDisabled(uuid)) {
+							    this.plugin.getToggles().enablePlayer(uuid);
 								p.sendMessage(getFormattedMessage(p.getName(),plugin.getLanguage().toggledOn)); //send toggled on message to player
 							}else {
-							    this.plugin.getToggles().disablePlayer(p);
+							    this.plugin.getToggles().disablePlayer(uuid);
 							    p.sendMessage(getFormattedMessage(p.getName(),plugin.getLanguage().toggledOff)); //send toggled off message to player
 							}
+							return true;
 						}else{
 							p.sendMessage(getFormattedMessage(p.getName(), plugin.getLanguage().noPerm));
 							return false;
@@ -43,33 +45,88 @@ public class Commands implements CommandExecutor
 						sender.sendMessage(getFormattedMessage(sender.getName(), plugin.getLanguage().consoleSpecify));
 						return false;
 					}									
-				}else if(args.length > 0){
+				}else if(args.length == 1){
+					if(sender instanceof Player){
+						Player p = (Player) sender;
+						String uuid = p.getUniqueId().toString();
+						if(args[0].equalsIgnoreCase("on")){
+							if(p.hasPermission("trails.toggle")){
+								if(this.plugin.getToggles().isDisabled(uuid)) {
+									this.plugin.getToggles().enablePlayer(uuid);
+									p.sendMessage(getFormattedMessage(p.getName(),plugin.getLanguage().toggledOn)); //send toggled on message to player
+								}else {
+									p.sendMessage(getFormattedMessage(p.getName(),plugin.getLanguage().alreadyOn)); //send toggled off message to player
+								}
+								return true;
+							}else{
+								p.sendMessage(getFormattedMessage(p.getName(), plugin.getLanguage().noPerm));
+								return false;
+							}
+						} else if(args[0].equalsIgnoreCase("off")){
+							if(p.hasPermission("trails.toggle")){
+								if(this.plugin.getToggles().isDisabled(uuid)) {
+									p.sendMessage(getFormattedMessage(p.getName(),plugin.getLanguage().alreadyOff)); //send toggled on message to player
+								}else {
+									this.plugin.getToggles().disablePlayer(uuid);
+									p.sendMessage(getFormattedMessage(p.getName(),plugin.getLanguage().toggledOff)); //send toggled off message to player
+								}
+								return true;
+							}else{
+								p.sendMessage(getFormattedMessage(p.getName(), plugin.getLanguage().noPerm));
+								return false;
+							}
+						} else if(args[0].equalsIgnoreCase("boost")){
+							if(p.hasPermission("trails.toggle-boost")){
+								if(this.plugin.getToggles().isBoost(uuid)) {
+									this.plugin.getToggles().disableBoost(uuid);
+									p.sendMessage(getFormattedMessage(p.getName(),plugin.getLanguage().boostOff)); //send toggled on message to player
+								}else {
+									this.plugin.getToggles().enableBoost(uuid);
+									p.sendMessage(getFormattedMessage(p.getName(),plugin.getLanguage().boostOn)); //send toggled off message to player
+								}
+								return true;
+							}else{
+								p.sendMessage(getFormattedMessage(p.getName(), plugin.getLanguage().noPerm));
+								return false;
+							}
+						} else if(args[0].equalsIgnoreCase("reload")){
+							if(p.hasPermission("trails.reload")){
+								plugin.reloadConfig();
+								plugin.onDisable();
+								plugin.onEnable();
+								plugin.onLoad();
+								p.sendMessage("Plugin reloaded");
+								return true;
+							}
+						}
+					}
 				   	if(sender.hasPermission("trails.other") || sender instanceof ConsoleCommandSender) {
-					    for(String s : args){
-						    if(getOfflinePlayerUUID(s)!=null) {
-						    	UUID id = getOfflinePlayerUUID(s);
-						    	if(this.plugin.getToggles().isDisabled(id)) {
-									this.plugin.getToggles().enablePlayer(id);
-									sender.sendMessage(getFormattedMessage(s ,plugin.getLanguage().toggledOnOther));
-									if(Bukkit.getOfflinePlayer(id).isOnline()) {
-										Bukkit.getOfflinePlayer(id).getPlayer().sendMessage(getFormattedMessage(Bukkit.getOfflinePlayer(id).getPlayer().getName(),plugin.getLanguage().toggledOn));
+					    String playerName = args[0];
+						    if(getOfflinePlayerUUID(playerName)!=null) {
+						    	UUID uuid = getOfflinePlayerUUID(playerName);
+						    	if(this.plugin.getToggles().isDisabled(uuid.toString())) {
+									this.plugin.getToggles().enablePlayer(uuid.toString());
+									sender.sendMessage(getFormattedMessage(playerName ,plugin.getLanguage().toggledOnOther));
+									if(Bukkit.getOfflinePlayer(uuid).isOnline()) {
+										Bukkit.getOfflinePlayer(uuid).getPlayer().sendMessage(getFormattedMessage(Bukkit.getOfflinePlayer(uuid).getPlayer().getName(),plugin.getLanguage().toggledOn));
 								    }
 								}else {
-									this.plugin.getToggles().disablePlayer(id);
-									sender.sendMessage(getFormattedMessage(s, plugin.getLanguage().toggledOffOther));
-									if(Bukkit.getOfflinePlayer(id).isOnline()) {
-										Bukkit.getOfflinePlayer(id).getPlayer().sendMessage(getFormattedMessage(Bukkit.getOfflinePlayer(id).getPlayer().getName(),plugin.getLanguage().toggledOff));
+									this.plugin.getToggles().disablePlayer(uuid.toString());
+									sender.sendMessage(getFormattedMessage(playerName, plugin.getLanguage().toggledOffOther));
+									if(Bukkit.getOfflinePlayer(uuid).isOnline()) {
+										Bukkit.getOfflinePlayer(uuid).getPlayer().sendMessage(getFormattedMessage(Bukkit.getOfflinePlayer(uuid).getPlayer().getName(),plugin.getLanguage().toggledOff));
 								    }
 								}
 						    }else {
-						    	sender.sendMessage(getFormattedMessage(s, plugin.getLanguage().notPlayedBefore));
+						    	sender.sendMessage(getFormattedMessage(playerName, plugin.getLanguage().notPlayedBefore));
 						    	return false;
 						    }
-					    }
 				    }else {
 				    	sender.sendMessage(getFormattedMessage(sender.getName(), plugin.getLanguage().noPermOthers));
 				    	return false;
 				    }
+				} else{
+					sender.sendMessage("Too many args");
 				}
 			}		
 		}catch (Exception e) {

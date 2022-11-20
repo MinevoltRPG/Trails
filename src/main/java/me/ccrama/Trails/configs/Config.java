@@ -1,6 +1,7 @@
 package me.ccrama.Trails.configs;
 
 import me.ccrama.Trails.Trails;
+import org.bukkit.Material;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,9 +27,15 @@ public class Config {
 	public long speedBoostInterval = 5L;
 	public float speedBoostStep = 0.025F;
 	public boolean usePermission = false;
+	public boolean usePermissionBoost = false;
 	public boolean onlyTrails = true;
 	public List<String> enabledWorlds = new ArrayList<>();
 	public boolean allWorldsEnabled = false;
+	public boolean enabledDefault = true;
+	public boolean boostEnabledDefault = true;
+	public boolean immediatelyRemoveBoost = false;
+	public Material trailTool = Material.IRON_SHOVEL;
+	public Material infoTool = Material.STICK;
 	
 	public Config(Trails plugin) {
 		plugin.saveDefaultConfig();
@@ -54,16 +61,32 @@ public class Config {
 		runModifier = plugin.getConfig().getDouble("General.Run-Modifier", 1.0);
 		speedBoostInterval = plugin.getConfig().getLong("General.Speed-Boost-Interval", 5L);
 		speedBoostStep = (float)plugin.getConfig().getDouble("General.Speed-Boost-Step", 0.025);
-		usePermission = plugin.getConfig().getBoolean("General.Use-Permission-For-Trails", false);
+		usePermission = plugin.getConfig().getBoolean("General.use-permission-for-trails", false);
+		usePermissionBoost = plugin.getConfig().getBoolean("General.use-permission-for-boost", false);
 		onlyTrails = plugin.getConfig().getBoolean("General.Speed-Boost-Only-Trails", true);
+		immediatelyRemoveBoost = plugin.getConfig().getBoolean("General.immediately-remove-boost", false);
 		enabledWorlds = (ArrayList<String>) plugin.getConfig().getList("General.Enabled-Worlds", new ArrayList<>());
 		saveInterval = plugin.getConfig().getInt("Data-Saving.Interval");
+		enabledDefault = plugin.getConfig().getBoolean("General.enabled-by-default", true);
+		boostEnabledDefault = plugin.getConfig().getBoolean("General.boost-enabled-by-default", true);
 
 		for(String s : enabledWorlds){
 			if(s.equalsIgnoreCase("all")){
 				allWorldsEnabled=true;
 				break;
 			}
+		}
+
+		try {
+			trailTool = Material.getMaterial(plugin.getConfig().getString("General.trail-tool").toUpperCase());
+		} catch (Exception ex){
+			ex.printStackTrace();
+		}
+
+		try {
+			infoTool = Material.getMaterial(plugin.getConfig().getString("General.info-tool").toUpperCase());
+		} catch (Exception ex){
+			ex.printStackTrace();
 		}
 	}
 	
