@@ -93,8 +93,8 @@ public class Commands implements CommandExecutor
 							if(p.hasPermission("trails.reload")){
 								plugin.reloadConfig();
 								plugin.onDisable();
-								plugin.onEnable();
 								plugin.onLoad();
+								plugin.onEnable();
 								p.sendMessage("Plugin reloaded");
 								return true;
 							}

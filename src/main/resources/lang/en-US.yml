@@ -5,6 +5,7 @@ messages:
   ## You have to use.
   ## %plugin_prefix% = plugin prefix you set above         %command% = Name of the command you set above
   ## %name% = name of person referred to
+  alreadyMaxLevel: "%plugin_prefix% &fYour &eTrail &fis already max level!"
   noPerm: "%plugin_prefix% &cYou do not have permission to toggle Trails."
   noPermOthers: "%plugin_prefix% &cYou do not have permission to toggle other peoples' Trails."
   consoleSpecify: "%plugin_prefix% &cYou must specify a &fname &cwhen running from &7Console."
@@ -17,10 +18,10 @@ messages:
   saveMessage: "%plugin_prefix% has successfully saved data!"
 lands:
   flag:
-    icon-material: DIRT_PATH
-    display-name: "&eTrails Flag"
+    icon-material: "DIRT_PATH"
+    display-name: "&6Trails Flag"
     description:
-      - "When Toggled on, this flag"
-      - "will allow players to leave"
-      - "trails in this Area"
+      - "&7When Toggled on, this flag"
+      - "&7will allow players to leave"
+      - "&7trails in this Area"
   
