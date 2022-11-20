@@ -247,6 +247,7 @@ public class MoveEventListener implements Listener {
                 main.getCpHook().getAPI().logRemoval(p.getName(), block.getLocation(), type, data);
                 main.getCpHook().getAPI().logPlacement(p.getName(), block.getLocation(), nextMat, block.getBlockData());
             }
+            main.triggerUpdate(block.getLocation());
         }
     }
 

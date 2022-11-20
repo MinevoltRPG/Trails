@@ -22,6 +22,7 @@ import me.ccrama.Trails.listeners.PlayerLeaveListener;
 import me.ccrama.Trails.util.Console;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandMap;
@@ -29,6 +30,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.dynmap.DynmapAPI;
 
 /**
  * Trails Plugin V0.7
@@ -44,6 +46,7 @@ public class Trails extends JavaPlugin {
     private WorldGuardHook wgHook = null;
     private LogBlockHook lbHook = null;
     private CoreProtectHook cpHook = null;
+    private DynmapAPI dynmapAPI = null;
 
     private ToggleLists toggle;
     private Config config;
@@ -108,6 +111,9 @@ public class Trails extends JavaPlugin {
         // CoreProtect Hook
         if(pm.getPlugin("CoreProtect") != null && config.coreProtect && cpHook == null) {
         	cpHook = new CoreProtectHook(this);
+        }
+        if(pm.getPlugin("Dynmap") != null &&dynmapAPI == null){
+            dynmapAPI = (DynmapAPI) Bukkit.getServer().getPluginManager().getPlugin("Dynmap");
         }
         // PlaceholderAPI Support
 		if (pm.isPluginEnabled("PlaceholderAPI"))
@@ -217,6 +223,10 @@ public class Trails extends JavaPlugin {
               Bukkit.getConsoleSender().sendMessage(this.commands.getFormattedMessage(Bukkit.getConsoleSender().getName(), (language.pluginPrefix + " &ccould not be unloaded, is this even Spigot or CraftBukkit?")));
               setEnabled(false);
           } 
+    }
+
+    public void triggerUpdate(Location location){
+        if(dynmapAPI != null) dynmapAPI.triggerRenderOfBlock(location.getWorld().getName(), location.getBlockX(), location.getBlockY(), location.getBlockZ());
     }
 
     public static Plugin getInstance(){ return plugin; }

@@ -95,7 +95,7 @@ public class PlayerInteractListener implements Listener {
 
     private void makePath(Player p, Block block, Link link) {
         if(link.getNext() == null){
-            p.sendMessage(plugin.getLanguage().alreadyMaxLevel);
+            p.sendMessage(plugin.getCommands().getFormattedMessage(p.getName(),plugin.getLanguage().alreadyMaxLevel));
             return;
         }
         PersistentDataContainer container = new CustomBlockData(block, plugin);
@@ -125,6 +125,7 @@ public class PlayerInteractListener implements Listener {
                 plugin.getCpHook().getAPI().logRemoval(p.getName(), block.getLocation(), type, data);
                 plugin.getCpHook().getAPI().logPlacement(p.getName(), block.getLocation(), nextMat, block.getBlockData());
             }
+            plugin.triggerUpdate(block.getLocation());
         }
     }
 
