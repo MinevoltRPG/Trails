@@ -9,7 +9,6 @@ import me.ccrama.Trails.compatibility.CoreProtectHook;
 import me.ccrama.Trails.compatibility.GriefPreventionHook;
 import me.ccrama.Trails.compatibility.LandsAPIHook;
 import me.ccrama.Trails.compatibility.LogBlockHook;
-import me.ccrama.Trails.compatibility.MVDWPAPIHook;
 import me.ccrama.Trails.compatibility.PAPIHook;
 import me.ccrama.Trails.compatibility.TownyHook;
 import me.ccrama.Trails.compatibility.WorldGuardHook;
@@ -18,6 +17,7 @@ import me.ccrama.Trails.configs.Language;
 import me.ccrama.Trails.data.ToggleLists;
 import me.ccrama.Trails.listeners.BreakBlockListener;
 import me.ccrama.Trails.listeners.MoveEventListener;
+import me.ccrama.Trails.listeners.PlayerInteractListener;
 import me.ccrama.Trails.listeners.PlayerLeaveListener;
 import me.ccrama.Trails.util.Console;
 import org.bukkit.Bukkit;
@@ -55,6 +55,11 @@ public class Trails extends JavaPlugin {
     private CCommand command;
 
     private static Plugin plugin;
+    private PluginManager pm;
+    private MoveEventListener moveEventListener = null;
+    private BreakBlockListener breakBlockListener = null;
+    private PlayerLeaveListener playerLeaveListener = null;
+    private PlayerInteractListener playerInteractListener = null;
 
     /**
      * On Plugin Enable
@@ -63,7 +68,7 @@ public class Trails extends JavaPlugin {
     public void onEnable() {
         plugin = this;
 
-    	PluginManager pm = Bukkit.getServer().getPluginManager();
+    	pm = Bukkit.getServer().getPluginManager();
         // Activate plugin config
         this.config = new Config(this);
         this.language = new Language(this);
@@ -71,11 +76,25 @@ public class Trails extends JavaPlugin {
         //this.blockData = new BlockDataManager(this);
         this.toggle = new ToggleLists(this);
         // Register Move Listener
-        pm.registerEvents(new MoveEventListener(this), this);
+        if(moveEventListener == null) {
+            moveEventListener = new MoveEventListener(this);
+            pm.registerEvents(moveEventListener, this);
+        }
         //Register Block Break listener
-        pm.registerEvents(new BreakBlockListener(this), this);
+        if(breakBlockListener == null) {
+            breakBlockListener = new BreakBlockListener(this);
+            pm.registerEvents(breakBlockListener, this);
+        }
         // Register plater quit listener
-        pm.registerEvents(new PlayerLeaveListener(this), this);
+        if(playerLeaveListener == null) {
+            playerLeaveListener = new PlayerLeaveListener(this);
+            pm.registerEvents(playerLeaveListener, this);
+        }
+
+        if(playerInteractListener == null) {
+            playerInteractListener = new PlayerInteractListener(this);
+            pm.registerEvents(playerInteractListener, this);
+        }
         // Register commands
         this.commands = new Commands(this);
         RegisterCommands();
@@ -99,13 +118,6 @@ public class Trails extends JavaPlugin {
         if(pm.getPlugin("CoreProtect") != null && config.coreProtect) {
         	cpHook = new CoreProtectHook(this);
         }
-        // MVdWPlaceholderAPI Hook
-        if(pm.isPluginEnabled("MVdWPlaceholderAPI"))
-		{
-			if(new MVDWPAPIHook(this).trailsToggledOn()){
-				getLogger().info("Successfully registered {trails_toggled_on}");
-			}
-		}
         // PlaceholderAPI Support
 		if (pm.isPluginEnabled("PlaceholderAPI"))
 		{
@@ -134,6 +146,8 @@ public class Trails extends JavaPlugin {
     public void onDisable() {
     	unRegisterCommands();
         this.getToggles().saveUserList();
+
+        MoveEventListener.disableBoostTask();
     }
     
     public CommandMap getCommandMap() {

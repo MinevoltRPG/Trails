@@ -42,7 +42,7 @@ public class PAPIHook extends PlaceholderExpansion {
 	public String onPlaceholderRequest(Player player, String identifier){
 		if(player != null){
 			if(identifier.equals("toggled_on")){
-	        	if(!plugin.getToggles().isDisabled(player))
+	        	if(!plugin.getToggles().isDisabled(player.getUniqueId().toString()))
 	        		return "true";
 	        	else
 	        		return "false";
