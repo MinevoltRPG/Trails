@@ -20,7 +20,7 @@ General:
     # Speed increment which is applied. Base speed = 0.2
     speed-boost-step: 0.006
     # Some blocks may have the same material as a trail, but it was not created as one. Should speed boost be applied only on true trail blocks?
-    speed-boost-only-rrails: true
+    speed-boost-only-trails: true
     # If this is enabled players with "trails.create-trails" permission will create trails.
     use-permission-for-trails: false
     # If this is enabled players with "trails.boost" will be boosted
