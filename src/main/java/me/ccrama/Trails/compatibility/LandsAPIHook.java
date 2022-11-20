@@ -6,6 +6,7 @@ import me.angeschossen.lands.api.flags.types.LandFlag;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -22,20 +23,20 @@ public class LandsAPIHook
 	private final LandsIntegration landsIntegration;
 	private final RoleFlag roleflag;
 	private Trails plugin;
+	private ItemStack icon;
 
 	public LandsAPIHook(Trails plugin) {
 		this.plugin = plugin;
+		icon = new ItemStack(plugin.getLanguage().material, 1);
 		this.landsIntegration = new LandsIntegration(plugin);
 		//seems like should use RoleFlag instead of LandFlag
-		this.roleflag = (RoleFlag) new RoleFlag(plugin, Category.ACTION, "ALLOW_TRAILS", plugin.getConfigManager().applyInSubAreas, plugin.getConfigManager().landsPathsWilderness);
+		this.roleflag = new RoleFlag(plugin, Category.ACTION, "ALLOW_TRAILS", plugin.getConfigManager().applyInSubAreas, plugin.getConfigManager().landsPathsWilderness);
 		roleflag.setDisplayName(plugin.getLanguage().displayName);
-		roleflag.setIcon(new ItemStack(plugin.getLanguage().material));
+		roleflag.setIcon(icon);
 		roleflag.setDescription(plugin.getLanguage().description);		
 		roleflag.setDisplay(true);
-		Bukkit.getServer().getConsoleSender().sendMessage(plugin.getCommands().getFormattedMessage(Bukkit.getConsoleSender().getName(),
-    			(plugin.getLanguage().pluginPrefix + ChatColor.GREEN + " hooked into " + ChatColor.YELLOW + "Lands!")));
-		Bukkit.getServer().getConsoleSender().sendMessage(plugin.getCommands().getFormattedMessage(Bukkit.getConsoleSender().getName(),
-    			(plugin.getLanguage().pluginPrefix + ChatColor.YELLOW + " ALLOW_TRAILS " + ChatColor.GREEN + "Role Flag registered!")));
+		plugin.getLogger().info(plugin.getLanguage().pluginPrefix + ChatColor.GREEN + " hooked into " + ChatColor.YELLOW + "Lands!");
+		plugin.getLogger().info(plugin.getLanguage().pluginPrefix + ChatColor.YELLOW + " ALLOW_TRAILS " + ChatColor.GREEN + "Role Flag registered!");
 		landsIntegration.registerFlag(roleflag);
 	}
 

@@ -46,26 +46,26 @@ public class Config {
 	private void loadConfig(Trails plugin) {
 		
 		// Plugin Integrations
-		townyPathsWilderness = Boolean.valueOf(plugin.getConfig().getString("Plugin-Integration.Towny.PathsInWilderness"));
-		townyPathsPerm = Boolean.valueOf(plugin.getConfig().getString("Plugin-Integration.Towny.TownyPathsPerm"));
-		landsPathsWilderness = Boolean.valueOf(plugin.getConfig().getString("Plugin-Integration.Lands.PathsInWilderness"));
-		gpPathsWilderness = Boolean.valueOf(plugin.getConfig().getString("Plugin-Integration.GriefPrevention.PathsInWilderness"));
-		applyInSubAreas = Boolean.valueOf(plugin.getConfig().getString("Plugin-Integration.Lands.ApplyInSubAreas"));
-		logBlock = Boolean.valueOf(plugin.getConfig().getString("Plugin-Integration.LogBlock.LogPathBlocks"));
-		logBlock = Boolean.valueOf(plugin.getConfig().getString("Plugin-Integration.CoreProtect.LogPathBlocks"));
-		checkBypass = Boolean.valueOf(plugin.getConfig().getString("Plugin-Integration.WorldGuard.CheckBypass"));
-		sendDenyMessage = Boolean.valueOf(plugin.getConfig().getString("Messages.SendDenyMessage"));
+		townyPathsWilderness = plugin.getConfig().getBoolean("Plugin-Integration.Towny.PathsInWilderness");
+		townyPathsPerm = plugin.getConfig().getBoolean("Plugin-Integration.Towny.TownyPathsPerm");
+		landsPathsWilderness = plugin.getConfig().getBoolean("Plugin-Integration.Lands.PathsInWilderness");
+		gpPathsWilderness = plugin.getConfig().getBoolean("Plugin-Integration.GriefPrevention.PathsInWilderness");
+		applyInSubAreas = plugin.getConfig().getBoolean("Plugin-Integration.Lands.ApplyInSubAreas");
+		logBlock = plugin.getConfig().getBoolean("Plugin-Integration.LogBlock.LogPathBlocks");
+		logBlock = plugin.getConfig().getBoolean("Plugin-Integration.CoreProtect.LogPathBlocks");
+		checkBypass = plugin.getConfig().getBoolean("Plugin-Integration.WorldGuard.CheckBypass");
+		sendDenyMessage = plugin.getConfig().getBoolean("Messages.SendDenyMessage");
 		messageInterval = plugin.getConfig().getInt("Messages.Interval");
 		langType = plugin.getConfig().getString("General.Language");
-		sneakBypass = plugin.getConfig().getBoolean("General.Sneak-Bypass", true);
-		runModifier = plugin.getConfig().getDouble("General.Run-Modifier", 1.0);
-		speedBoostInterval = plugin.getConfig().getLong("General.Speed-Boost-Interval", 5L);
-		speedBoostStep = (float)plugin.getConfig().getDouble("General.Speed-Boost-Step", 0.025);
+		sneakBypass = plugin.getConfig().getBoolean("General.sneak-bypass", true);
+		runModifier = plugin.getConfig().getDouble("General.run-modifier", 1.0);
+		speedBoostInterval = plugin.getConfig().getLong("General.speed-boost-interval", 5L);
+		speedBoostStep = (float)plugin.getConfig().getDouble("General.speed-boost-step", 0.025);
 		usePermission = plugin.getConfig().getBoolean("General.use-permission-for-trails", false);
 		usePermissionBoost = plugin.getConfig().getBoolean("General.use-permission-for-boost", false);
-		onlyTrails = plugin.getConfig().getBoolean("General.Speed-Boost-Only-Trails", true);
+		onlyTrails = plugin.getConfig().getBoolean("General.speed-boost-only-trails", true);
 		immediatelyRemoveBoost = plugin.getConfig().getBoolean("General.immediately-remove-boost", false);
-		enabledWorlds = (ArrayList<String>) plugin.getConfig().getList("General.Enabled-Worlds", new ArrayList<>());
+		enabledWorlds = (ArrayList<String>) plugin.getConfig().getList("General.enabled-worlds", new ArrayList<>());
 		saveInterval = plugin.getConfig().getInt("Data-Saving.Interval");
 		enabledDefault = plugin.getConfig().getBoolean("General.enabled-by-default", true);
 		boostEnabledDefault = plugin.getConfig().getBoolean("General.boost-enabled-by-default", true);

@@ -67,11 +67,6 @@ public class Trails extends JavaPlugin {
     @Override
     public void onEnable() {
         plugin = this;
-
-    	pm = Bukkit.getServer().getPluginManager();
-        // Activate plugin config
-        this.config = new Config(this);
-        this.language = new Language(this);
         // Wrapper for custom bukkit events
         //this.blockData = new BlockDataManager(this);
         this.toggle = new ToggleLists(this);
@@ -99,23 +94,19 @@ public class Trails extends JavaPlugin {
         this.commands = new Commands(this);
         RegisterCommands();
         // Towny hook
-        if (pm.getPlugin("Towny") != null) {
+        if (pm.getPlugin("Towny") != null && townyHook == null) {
             townyHook = new TownyHook(this);
         }
-        // Lands Hook
-        if (pm.getPlugin("Lands") != null) {
-            landsHook = new LandsAPIHook(this);
-        }
         // GriefPrevention Hook
-        if (pm.getPlugin("GriefPrevention") != null) {
+        if (pm.getPlugin("GriefPrevention") != null && gpHook == null) {
             gpHook = new GriefPreventionHook(this);
         }
         // LogBlock Hook
-        if(pm.getPlugin("LogBlock") != null && config.logBlock) {
+        if(pm.getPlugin("LogBlock") != null && config.logBlock && lbHook == null) {
         	lbHook = new LogBlockHook(this);
         }
         // CoreProtect Hook
-        if(pm.getPlugin("CoreProtect") != null && config.coreProtect) {
+        if(pm.getPlugin("CoreProtect") != null && config.coreProtect && cpHook == null) {
         	cpHook = new CoreProtectHook(this);
         }
         // PlaceholderAPI Support
@@ -131,12 +122,19 @@ public class Trails extends JavaPlugin {
     
     @Override
     public void onLoad() {
+        pm = Bukkit.getServer().getPluginManager();
+        this.config = new Config(this);
+        this.language = new Language(this);
     	// Worldguard Hook
-        if (Bukkit.getServer().getPluginManager().getPlugin("WorldGuard") != null && getConfig().getBoolean("Plugin-Integration.WorldGuard.IntegrationEnabled", true)) {
+        if (pm.getPlugin("WorldGuard") != null && getConfig().getBoolean("Plugin-Integration.WorldGuard.IntegrationEnabled", true) && wgHook == null) {
             wgHook = new WorldGuardHook(this);
             this.messagePlayers = new ArrayList<UUID>();
             Console.sendConsoleMessage(String.format(ChatColor.GRAY + "[" + ChatColor.YELLOW + "Trails" + ChatColor.GRAY + "]" 
             + ChatColor.GREEN + " hooked into worldguard! Flag trails-flag registered. Set trails-flag = DENY to deny trails in regions."));
+        }
+        // Lands Hook
+        if (pm.getPlugin("Lands") != null && landsHook == null) {
+            landsHook = new LandsAPIHook(this);
         }
     }
 

@@ -25,50 +25,68 @@ public class PlayerInteractListener implements Listener {
 
     Trails plugin;
 
-    public PlayerInteractListener(Trails plugin){
+    public PlayerInteractListener(Trails plugin) {
         this.plugin = plugin;
     }
 
     @EventHandler
-    public void PlayerInteract(PlayerInteractEvent event){
-        if(!event.hasBlock() || !(event.getHand() == EquipmentSlot.HAND) || !event.hasItem()) return;
-        if(event.getItem().getType() == plugin.getConfigManager().trailTool && event.getPlayer().hasPermission("trails.trail-tool")){
+    public void PlayerInteract(PlayerInteractEvent event) {
+        if (!event.hasBlock() || !(event.getHand() == EquipmentSlot.HAND) || !event.hasItem()) return;
+        if (event.getItem().getType() == plugin.getConfigManager().trailTool && event.getPlayer().hasPermission("trails.trail-tool")) {
             Block block = event.getClickedBlock();
             Link link = getLink(block);
-            if(link != null && (event.getPlayer().hasPermission("trails.trail-tool.bypass-protection") || checkConditions(event.getPlayer()))){
+            if (link != null && (event.getPlayer().hasPermission("trails.trail-tool.bypass-protection") || checkConditions(event.getPlayer()))) {
                 makePath(event.getPlayer(), block, link);
             }
+            Material material = event.getItem().getType();
+            if (material == Material.DIAMOND_SHOVEL || material == Material.IRON_SHOVEL || material == Material.GOLDEN_SHOVEL || material == Material.WOODEN_SHOVEL || material == Material.NETHERITE_SHOVEL || material == Material.STONE_SHOVEL)
+                event.setCancelled(true);
         } else if (event.getItem().getType() == plugin.getConfigManager().infoTool && event.getPlayer().hasPermission("trails.info-tool")) {
             Block block = event.getClickedBlock();
             PersistentDataContainer container = new CustomBlockData(block, plugin);
             Integer walks = container.get(new NamespacedKey(plugin, "w"), PersistentDataType.INTEGER);
             String trailName = container.get(new NamespacedKey(plugin, "n"), PersistentDataType.STRING);
-            event.getPlayer().sendMessage(walks+"\n"+trailName);
+            if(walks == null) walks = 0;
+            if(trailName == null) trailName = "None";
+            event.getPlayer().sendMessage("Amount of walks: "+walks + "\nTrail name: " + trailName);
+            Material material = event.getItem().getType();
+            if (material == Material.DIAMOND_SHOVEL || material == Material.IRON_SHOVEL || material == Material.GOLDEN_SHOVEL || material == Material.WOODEN_SHOVEL || material == Material.NETHERITE_SHOVEL || material == Material.STONE_SHOVEL)
+                event.setCancelled(true);
         }
     }
 
-    private Link getLink(Block block){
+    private Link getLink(Block block) {
         ArrayList<Link> links = plugin.getConfigManager().getLinksConfig().getLinks().getFromMat(block.getType());
         Link link = null;
 
         if (links != null && links.size() == 1) link = links.get(0);
-        else if(links != null) {
+        else if (links != null) {
             PersistentDataContainer container = new CustomBlockData(block, plugin);
-            String[] blockTrailName = container.get(new NamespacedKey(plugin, "n"), PersistentDataType.STRING).split(":");
-            Integer id = null;
-            try{
-                id = Integer.parseInt(blockTrailName[1]);
-            } catch (Exception ex){
-                ex.printStackTrace();
+            if(!container.has(new NamespacedKey(plugin, "n"), PersistentDataType.STRING)){
+                Link minLink = null;
+                for(Link link1 : links){
+                    if(minLink == null || link1.identifier() < minLink.identifier()) minLink = link1;
+                }
+                link = minLink;
             }
-            for (Link lnk : links) {
-                if (lnk.getTrailName().equals(blockTrailName[0])) {
-                    if((id == null || lnk.identifier() == id) || (link == null && lnk.identifier() > id)){
-                        link = lnk;
-                        break;
+            else {
+                String[] blockTrailName = container.get(new NamespacedKey(plugin, "n"), PersistentDataType.STRING).split(":");
+                Integer id = null;
+                try {
+                    id = Integer.parseInt(blockTrailName[1]);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+                link = links.get(0);
+                for (Link lnk : links) {
+                    //System.out.println(lnk.getTrailName()+"\n"+blockTrailName[0]+"\n"+id+"\n"+lnk.identifier());
+                    if (lnk.getTrailName().equals(blockTrailName[0])) {
+                        if(id != null && lnk.identifier() == id){
+                            link = lnk;
+                            break;
+                        }
+                        if(lnk.identifier() < link.identifier()) link = lnk;
                     }
-                    else if(link != null && lnk.identifier() > id) break;
-                    else link = lnk;
                 }
             }
         }
@@ -76,9 +94,13 @@ public class PlayerInteractListener implements Listener {
     }
 
     private void makePath(Player p, Block block, Link link) {
+        if(link.getNext() == null){
+            p.sendMessage(plugin.getLanguage().alreadyMaxLevel);
+            return;
+        }
         PersistentDataContainer container = new CustomBlockData(block, plugin);
         container.set(new NamespacedKey(plugin, "w"), PersistentDataType.INTEGER, 0);
-        container.set(new NamespacedKey(plugin, "n"), PersistentDataType.STRING, link.getTrailName()+":"+link.identifier());
+        container.set(new NamespacedKey(plugin, "n"), PersistentDataType.STRING, link.getTrailName() + ":" + link.getNext().identifier());
         try {
             this.changeNext(p, block, link);
         } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
@@ -106,7 +128,7 @@ public class PlayerInteractListener implements Listener {
         }
     }
 
-    private boolean checkConditions(Player p){
+    private boolean checkConditions(Player p) {
         // Check towny conditions
         if (plugin.getTownyHook() != null) {
             if (plugin.getTownyHook().isWilderness(p)) {
@@ -168,7 +190,7 @@ public class PlayerInteractListener implements Listener {
         return true;
     }
 
-    private void sendDenyMessage(Player p){
-        p.sendMessage("You are not allowed to do it here.");
+    private void sendDenyMessage(Player p) {
+        p.sendMessage(plugin.getCommands().getFormattedMessage(p.getName(),plugin.getLanguage().cantCreateTrails));
     }
 }

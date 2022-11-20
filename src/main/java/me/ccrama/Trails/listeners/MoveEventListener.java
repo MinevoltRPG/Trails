@@ -57,29 +57,36 @@ public class MoveEventListener implements Listener {
             //System.out.println("Link is 1");
             link = links.get(0);
             //System.out.println(link.getMat() + " | " + link.getTrailName());
-        } else if(links != null) {
+        } else if (links != null) {
             //System.out.println("Link amount > 1");
             container = new CustomBlockData(block, main);
-            String[] blockTrailName = container.get(trailNameKey, PersistentDataType.STRING).split(":");
-            Integer id = null;
-            try{
-                id = Integer.parseInt(blockTrailName[1]);
-            } catch (Exception ignored){}
-            for (Link lnk : links) {
-                Integer closestId = null;
-                if (lnk.getTrailName().equals(blockTrailName[0])) {
-                    //System.out.println("Link was found!");
-                    if((id == null || lnk.identifier() == id) || (link == null && lnk.identifier() > id)){
-                        link = lnk;
-                        break;
+            if (!container.has(trailNameKey, PersistentDataType.STRING)) {
+                Link minLink = null;
+                for (Link link1 : links) {
+                    if (minLink == null || link1.identifier() < minLink.identifier()) minLink = link1;
+                }
+                link = minLink;
+            } else {
+                String[] blockTrailName = container.get(trailNameKey, PersistentDataType.STRING).split(":");
+                Integer id = null;
+                try {
+                    id = Integer.parseInt(blockTrailName[1]);
+                } catch (Exception ignored) {
+                }
+                link = links.get(0);
+                for (Link lnk : links) {
+                    if (lnk.getTrailName().equals(blockTrailName[0])) {
+                        if (id != null && lnk.identifier() == id) {
+                            link = lnk;
+                            break;
+                        }
+                        if (lnk.identifier() < link.identifier()) link = lnk;
                     }
-                    else if(link != null && lnk.identifier() > id) break;
-                    else link = lnk;
                 }
             }
         }
         Player p = e.getPlayer();
-        System.out.println(p.getWalkSpeed());
+        //System.out.println(p.getWalkSpeed());
 
         //System.out.println(p.getWalkSpeed());
 
@@ -119,7 +126,7 @@ public class MoveEventListener implements Listener {
                             for (Map.Entry<UUID, Booster> entry : speedBoostedPlayers.entrySet()) {
                                 Player player = entry.getValue().getPlayer();
                                 //System.out.println("boosting: "+player);
-                                if(entry.getValue().immediately) player.setWalkSpeed(entry.getValue().targetSpeed);
+                                if (entry.getValue().immediately) player.setWalkSpeed(entry.getValue().targetSpeed);
                                 else if (entry.getValue().getTargetSpeed() > player.getWalkSpeed())
                                     player.setWalkSpeed(Math.min(player.getWalkSpeed() + main.getConfigManager().speedBoostStep, entry.getValue().getTargetSpeed()));
                                 else
@@ -138,7 +145,6 @@ public class MoveEventListener implements Listener {
         }
 
         if ((main.getConfigManager().sneakBypass && e.getPlayer().isSneaking()) || link == null) return;
-        //System.out.println("asd");
         if ((!main.getConfigManager().usePermission && main.getToggles().isDisabled(p.getUniqueId().toString())) || (main.getConfigManager().usePermission && !p.hasPermission("trails.create-trails"))) {
             return;
         }
@@ -214,9 +220,9 @@ public class MoveEventListener implements Listener {
         Integer walked = container.get(walksKey, PersistentDataType.INTEGER);
         if (walked == null) walked = 0;
         //System.out.println(walked);
-        if (walked >= link.decayNumber()) {
+        if (walked >= link.decayNumber() && link.getNext() != null) {
             container.set(walksKey, PersistentDataType.INTEGER, 0);
-            container.set(trailNameKey, PersistentDataType.STRING, link.getTrailName()+":"+link.identifier());
+            container.set(trailNameKey, PersistentDataType.STRING, link.getTrailName() + ":" + link.getNext().identifier());
             try {
                 this.changeNext(p, block, link);
             } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {

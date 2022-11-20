@@ -2,6 +2,7 @@ package me.ccrama.Trails.configs;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -13,6 +14,7 @@ import net.md_5.bungee.api.ChatColor;
 
 public class Language
 {
+	public String alreadyMaxLevel = "%plugin_prefix% &fYour &eTrail &fis already max level!";
 	private File languageFile;
 	private FileConfiguration language;
 	private File languageFolder;
@@ -92,9 +94,15 @@ public class Language
 			notPlayedBefore = language.getString("messages.notPlayedBefore");
 			cantCreateTrails = language.getString("messages.cantCreateTrails");
 			saveMessage = language.getString("messages.saveMessage");
-			material = Material.matchMaterial(language.getString("lands.flag.icon-material"));
-			displayName = language.getString("lands.flag.display-name");
+			material = Material.matchMaterial(language.getString("lands.flag.icon-material", "DIRT_PATH").toUpperCase());
+			displayName = ChatColor.translateAlternateColorCodes('&',language.getString("lands.flag.display-name"));
 			description = language.getStringList("lands.flag.description");
+			alreadyMaxLevel = language.getString("messages.alreadyMaxLevel");
+			ArrayList<String> temp = new ArrayList<>();
+			for(String s : description){
+				temp.add(ChatColor.translateAlternateColorCodes('&',s));
+			}
+			description = temp;
 		}else {
 			Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&e[Trails] &cCannot find " + languageFile.getName()));
 			Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&e[Trails] &cCheck Trails/lang/ folder and make sure that"));
