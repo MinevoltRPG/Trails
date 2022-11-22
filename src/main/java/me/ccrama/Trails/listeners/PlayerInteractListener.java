@@ -4,6 +4,7 @@ import com.jeff_media.customblockdata.CustomBlockData;
 import de.diddiz.LogBlock.Actor;
 import me.ccrama.Trails.Trails;
 import me.ccrama.Trails.objects.Link;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
@@ -12,6 +13,7 @@ import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -31,11 +33,11 @@ public class PlayerInteractListener implements Listener {
 
     @EventHandler
     public void PlayerInteract(PlayerInteractEvent event) {
-        if (!event.hasBlock() || !(event.getHand() == EquipmentSlot.HAND) || !event.hasItem()) return;
+        if (!event.hasBlock() || !(event.getHand() == EquipmentSlot.HAND) || !event.hasItem() || !event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) return;
         if (event.getItem().getType() == plugin.getConfigManager().trailTool && event.getPlayer().hasPermission("trails.trail-tool")) {
             Block block = event.getClickedBlock();
             Link link = getLink(block);
-            if (link != null && (event.getPlayer().hasPermission("trails.trail-tool.bypass-protection") || checkConditions(event.getPlayer()))) {
+            if (link != null && (event.getPlayer().hasPermission("trails.trail-tool.bypass-protection") || checkConditions(event.getPlayer(), event.getClickedBlock().getLocation()))) {
                 makePath(event.getPlayer(), block, link);
             }
             Material material = event.getItem().getType();
@@ -95,7 +97,7 @@ public class PlayerInteractListener implements Listener {
 
     private void makePath(Player p, Block block, Link link) {
         if(link.getNext() == null){
-            p.sendMessage(plugin.getLanguage().alreadyMaxLevel);
+            p.sendMessage(plugin.getCommands().getFormattedMessage(p.getName(),plugin.getLanguage().alreadyMaxLevel));
             return;
         }
         PersistentDataContainer container = new CustomBlockData(block, plugin);
@@ -125,13 +127,14 @@ public class PlayerInteractListener implements Listener {
                 plugin.getCpHook().getAPI().logRemoval(p.getName(), block.getLocation(), type, data);
                 plugin.getCpHook().getAPI().logPlacement(p.getName(), block.getLocation(), nextMat, block.getBlockData());
             }
+            plugin.triggerUpdate(block.getLocation());
         }
     }
 
-    private boolean checkConditions(Player p) {
+    private boolean checkConditions(Player p, Location location) {
         // Check towny conditions
         if (plugin.getTownyHook() != null) {
-            if (plugin.getTownyHook().isWilderness(p)) {
+            if (plugin.getTownyHook().isWilderness(location)) {
                 if (!plugin.getTownyHook().isPathsInWilderness()) {
                     if (plugin.getConfigManager().sendDenyMessage)
                         sendDenyMessage(p);
@@ -165,7 +168,7 @@ public class PlayerInteractListener implements Listener {
         }
         // Check Lands conditions
         if (plugin.getLandsHook() != null) {
-            if (!plugin.getLandsHook().hasTrailsFlag(p, p.getLocation().subtract(0.0D, 1.0D, 0.0D))) {
+            if (!plugin.getLandsHook().hasTrailsFlag(p, location)) {
                 if (plugin.getConfigManager().sendDenyMessage)
                     sendDenyMessage(p);
                 return false;
@@ -173,7 +176,7 @@ public class PlayerInteractListener implements Listener {
         }
         // Check GriefPrevention conditions
         if (plugin.getGpHook() != null) {
-            if (!plugin.getGpHook().canMakeTrails(p, p.getLocation().subtract(0.0D, 1.0D, 0.0D))) {
+            if (!plugin.getGpHook().canMakeTrails(p, location)) {
                 if (plugin.getConfigManager().sendDenyMessage)
                     sendDenyMessage(p);
                 return false;
@@ -181,7 +184,7 @@ public class PlayerInteractListener implements Listener {
         }
         // Check worldguard conditions
         if (plugin.getWorldGuardHook() != null) {
-            if (!plugin.getWorldGuardHook().canCreateTrails(p, p.getLocation().subtract(0.0D, 1.0D, 0.0D))) {
+            if (!plugin.getWorldGuardHook().canCreateTrails(p, location)) {
                 if (plugin.getConfigManager().sendDenyMessage)
                     sendDenyMessage(p);
                 return false;
