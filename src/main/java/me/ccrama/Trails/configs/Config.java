@@ -34,6 +34,7 @@ public class Config {
 	public boolean enabledDefault = true;
 	public boolean boostEnabledDefault = true;
 	public boolean immediatelyRemoveBoost = false;
+	public boolean dynmapRender = true;
 	public Material trailTool = Material.IRON_SHOVEL;
 	public Material infoTool = Material.STICK;
 	
@@ -69,6 +70,7 @@ public class Config {
 		saveInterval = plugin.getConfig().getInt("Data-Saving.Interval");
 		enabledDefault = plugin.getConfig().getBoolean("General.enabled-by-default", true);
 		boostEnabledDefault = plugin.getConfig().getBoolean("General.boost-enabled-by-default", true);
+		dynmapRender = plugin.getConfig().getBoolean("Plugin-Integration.Dynmap.trails-trigger-render", true);
 
 		for(String s : enabledWorlds){
 			if(s.equalsIgnoreCase("all")){

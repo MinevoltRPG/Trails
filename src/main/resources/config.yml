@@ -75,6 +75,8 @@ Plugin-Integration:
         LogPathBlocks: true
     CoreProtect:
         LogPathBlocks: true
+    Dynmap:
+        trails-trigger-render: true
     
   ##  Trails are composed of "Links" separated by a ">". Each link comprises 4 numbers: the material, walks to degrade to the next link,
   ## the percent chance of it occurring, and speed boost (1.0 if not specified). They should follow the following format "material:walks:chance:speed_boost".

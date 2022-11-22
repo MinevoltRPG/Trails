@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import com.avaje.ebean.validation.NotNull;
 import me.ccrama.Trails.compatibility.CoreProtectHook;
 import me.ccrama.Trails.compatibility.GriefPreventionHook;
 import me.ccrama.Trails.compatibility.LandsAPIHook;
@@ -23,14 +24,14 @@ import me.ccrama.Trails.util.Console;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandMap;
-import org.bukkit.command.CommandSender;
+import org.bukkit.command.*;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.dynmap.DynmapAPI;
+
+import javax.annotation.Nullable;
 
 /**
  * Trails Plugin V0.7
@@ -160,6 +161,7 @@ public class Trails extends JavaPlugin {
       
     public class CCommand extends Command {
         private CommandExecutor exe = null;
+        private TabCompleter tab = null;
         
         protected CCommand(String name) {
           super(name);
@@ -170,10 +172,30 @@ public class Trails extends JavaPlugin {
                 this.exe.onCommand(sender, this, commandLabel, args); 
             return false;
         }
-        
+
+        public List<String> tabComplete(CommandSender sender, String alias, String[] args) throws IllegalArgumentException {
+            List<String> tabs = new ArrayList<>();
+
+            if(sender instanceof Player){
+                if(args.length == 0){
+                    tabs.add("on");
+                    tabs.add("off");
+                    tabs.add("boost");
+                } else if (args.length==1) {
+                    if("on".indexOf(args[0]) == 0) tabs.add("on");
+                    if("off".indexOf(args[0]) == 0) tabs.add("off");
+                    if("boost".indexOf(args[0]) == 0) tabs.add("boost");
+                }
+
+            }
+
+            return tabs;
+        }
+
         public void setExecutor(CommandExecutor exe) {
             this.exe = exe;
         }
+        public void setTab(TabCompleter tab) {this.tab = tab;}
         
     }
     
@@ -185,7 +207,7 @@ public class Trails extends JavaPlugin {
             Field f = clazz.getDeclaredField("commandMap");
             f.setAccessible(true);
             cmap = (CommandMap)f.get(Bukkit.getServer());
-            if (!language.command.equals(null)) {
+            if (language.command != null) {
               this.command = new CCommand(language.command);
               if(!cmap.register("paths", this.command)) {
             	  Bukkit.getConsoleSender().sendMessage(this.commands.getFormattedMessage(Bukkit.getConsoleSender().getName(), (language.pluginPrefix + " &aCommand " + language.command
@@ -212,7 +234,7 @@ public class Trails extends JavaPlugin {
                   Field f = clazz.getDeclaredField("commandMap");
                   f.setAccessible(true);
                   cmap = (CommandMap)f.get(Bukkit.getServer());
-                  if (!this.command.equals(null)) {
+                  if (this.command != null) {
                       this.command.unregister(cmap);
                       Bukkit.getConsoleSender().sendMessage(this.commands.getFormattedMessage(Bukkit.getConsoleSender().getName(), (language.pluginPrefix + " &aCommand " + language.command + " Unregistered!")));
                   } 
@@ -226,8 +248,14 @@ public class Trails extends JavaPlugin {
     }
 
     public void triggerUpdate(Location location){
-        if(dynmapAPI != null) dynmapAPI.triggerRenderOfBlock(location.getWorld().getName(), location.getBlockX(), location.getBlockY(), location.getBlockZ());
-    }
+        try {
+            if (dynmapAPI != null && config.dynmapRender)
+                dynmapAPI.triggerRenderOfBlock(location.getWorld().getName(), location.getBlockX(), location.getBlockY(), location.getBlockZ());
+        } catch (NullPointerException ex){
+            getLogger().warning("World of the location is null.");
+            ex.printStackTrace();
+        }
+        }
 
     public static Plugin getInstance(){ return plugin; }
 
