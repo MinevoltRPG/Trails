@@ -6,13 +6,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.avaje.ebean.validation.NotNull;
-import me.ccrama.Trails.compatibility.CoreProtectHook;
-import me.ccrama.Trails.compatibility.GriefPreventionHook;
-import me.ccrama.Trails.compatibility.LandsAPIHook;
-import me.ccrama.Trails.compatibility.LogBlockHook;
-import me.ccrama.Trails.compatibility.PAPIHook;
-import me.ccrama.Trails.compatibility.TownyHook;
-import me.ccrama.Trails.compatibility.WorldGuardHook;
+import me.ccrama.Trails.compatibility.*;
 import me.ccrama.Trails.configs.Config;
 import me.ccrama.Trails.configs.Language;
 import me.ccrama.Trails.data.ToggleLists;
@@ -48,6 +42,7 @@ public class Trails extends JavaPlugin {
     private LogBlockHook lbHook = null;
     private CoreProtectHook cpHook = null;
     private DynmapAPI dynmapAPI = null;
+    private PlayerPlotHook playerPlotHook = null;
 
     private ToggleLists toggle;
     private Config config;
@@ -123,6 +118,10 @@ public class Trails extends JavaPlugin {
 				getLogger().info("Successfully registered %trails_toggled_on%");
 			}
 		}
+        // PlayerPlotAPI
+        if(pm.isPluginEnabled("PlayerPlot") && playerPlotHook == null && config.playerPlotIntegration){
+            playerPlotHook = new PlayerPlotHook(this);
+        }
         // Console enabled message
         Console.sendConsoleMessage(String.format("Trails v%s", this.getDescription().getVersion()), "updated to 1.15.2 by j10max", "created by ccrama & drkmatr1984", ChatColor.GREEN + "Thank you");
     }
@@ -150,7 +149,7 @@ public class Trails extends JavaPlugin {
      */
     public void onDisable() {
     	unRegisterCommands();
-        this.getToggles().saveUserList();
+        this.getToggles().saveUserList(false);
 
         MoveEventListener.disableBoostTask();
     }
@@ -190,6 +189,7 @@ public class Trails extends JavaPlugin {
                     if (hasPermission && "on".indexOf(args[0]) == 0) tabs.add("on");
                     if (hasPermission && "off".indexOf(args[0]) == 0) tabs.add("off");
                     if (sender.hasPermission("trails.toggle-boost") && "boost".indexOf(args[0]) == 0) tabs.add("boost");
+                    if (sender.hasPermission("trails.reload") && "reload".indexOf(args[0]) == 0) tabs.add("reload");
                 } else if (args.length == 2) {
                     if (sender.hasPermission("trails.other") && (args[0].equalsIgnoreCase("on") || args[0].equalsIgnoreCase("off"))) {
                         for (Player p : Bukkit.getOnlinePlayers()) {
@@ -279,6 +279,11 @@ public class Trails extends JavaPlugin {
             ex.printStackTrace();
         }
         }
+
+
+    public PlayerPlotHook getPlayerPlotHook() {
+        return playerPlotHook;
+    }
 
     public static Plugin getInstance(){ return plugin; }
 

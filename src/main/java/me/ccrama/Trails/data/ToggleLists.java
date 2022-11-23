@@ -35,7 +35,7 @@ public class ToggleLists{
 		saveDefaultUserList();
 		loadUserList();
 		//Start save task
-		plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, () -> saveUserList(), 20*60*plugin.getConfigManager().saveInterval, 20*60*plugin.getConfigManager().saveInterval);
+		plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, () -> saveUserList(false), 20*60*plugin.getConfigManager().saveInterval, 20*60*plugin.getConfigManager().saveInterval);
 	}
 	
     ////////////////////////////////////////////////////////////
@@ -73,8 +73,8 @@ public class ToggleLists{
 		}
 	}
 	
-	public void saveUserList() {
-		if(this.plugin.isEnabled())
+	public void saveUserList(boolean async) {
+		if(this.plugin.isEnabled() && async)
 		    plugin.getServer().getScheduler().runTaskAsynchronously(plugin, () -> saveUserListAsync(toggledPlayers, users, usersFile));
 		else
 			saveUserListAsync(toggledPlayers, users, usersFile);
@@ -101,6 +101,7 @@ public class ToggleLists{
 			e.printStackTrace();
 		}
 	}
+
 	
 	public boolean isDisabled(@Nonnull String uuid) {
 		HashMap<String, Object> playerInfo = this.toggledPlayers.get(uuid);
