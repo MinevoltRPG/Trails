@@ -1,0 +1,42 @@
+command-name: "trails"
+plugin-prefix: "&eТропы &7»"
+messages:
+  ## These are messages sent in game when commands are used. There are some placeholders
+  ## You have to use.
+  ## %plugin_prefix% = plugin prefix you set above         %command% = Name of the command you set above
+  ## %name% = name of person referred to
+  alreadyMaxLevel: "%plugin_prefix% &6Ваша тропа уже имеет максимальный уровень!"
+  noPerm: "%plugin_prefix% &cУ вас нет разрешения на это!"
+  noPermBoost: "%plugin_prefix% &cУ вас нет разрешения на это!"
+  noPermOthers: "%plugin_prefix% &cУ вас нет разрешения на переключения настроек других игроков."
+  consoleSpecify: "%plugin_prefix% &cВы должны указать имя игрока."
+  toggledOn: "%plugin_prefix% &6Ваши тропы были &aвключены!"
+  toggledOff: "%plugin_prefix% &6Ваши тропы были &cотключены!"
+  boostOn: "%plugin_prefix% &6Ваше ускорение было &aвключено!"
+  boostOff: "%plugin_prefix% &6Ваше ускорение было &cвыключено!"
+  toggledOnOther: "%plugin_prefix% &6Тропы &e%name% &6были &aвключены!"
+  toggledOffOther: "%plugin_prefix% &6Тропы &e%name% &6были &aвыключены!"
+  notPlayedBefore: "%plugin_prefix% &cИгрок &e%name% &cне был найден."
+  cantCreateTrails: "%plugin_prefix% &cВы не можете создавать тропы здесь."
+  saveMessage: "%plugin_prefix% данные успешно сохранены!"
+  alreadyOff: "%plugin_prefix% &6Ваши тропы &cуже отключены!"
+  alreadyOn: "%plugin_prefix% &6Ваши тропы &aуже включены!"
+  alreadyOffBoost: "%plugin_prefix% &6Ваше ускорение &cуже отключено!"
+  alreadyOnBoost: "%plugin_prefix% &6Ваше ускорение &cуже включено!"
+  reload: "%plugin_prefix% &6Плагин успешно перезагружен!"
+  reloadNoPerm: "%plugin_prefix% &cУ вас нет на это разрешения!"
+  tooManyArgs: "%plugin_prefix% &cСлишком много аргументов!"
+  wrongArgs: "%plugin_prefix% &cНеверная команда!"
+  alreadyOnBoostOther: "%plugin_prefix% &6Ускорение &e%name% &aуже включено!"
+  alreadyOffBoostOther: "%plugin_prefix% &6Ускорение &e%name% &cуже выключено!"
+  toggledOnBoostOther: "%plugin_prefix% &6Ускорение &e%name% &aвключено!"
+  toggledOffBoostOther: "%plugin_prefix% &6Ускорение &e%name% &cвыключено!"
+lands:
+  flag:
+    icon-material: DIRT_PATH
+    display-name: "&6Создание Троп"
+    description:
+      - "&7Когда включен, этот флаг"
+      - "&7позволит игрокам отсавлять"
+      - "&7тропинки на этой земле."
+  

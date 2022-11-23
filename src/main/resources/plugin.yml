@@ -10,12 +10,3 @@ permissions:
     trails.toggle:
         description: Toggles a player's trails on/off
         default: true
-    trails.other:
-        description: Toggles a different player's trails on/off
-        default: false
-    trails.towny.town:
-        description: Can assign to Town roles to allow them to make trails (Enable TownyPathsPerms in config)
-        default: false
-    trails.towny.nation:
-        description: Can assign to Nation roles to allow them to make trails (Enable TownyPathsPerms in config)
-        default: false
