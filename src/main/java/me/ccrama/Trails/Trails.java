@@ -176,18 +176,42 @@ public class Trails extends JavaPlugin {
         public List<String> tabComplete(CommandSender sender, String alias, String[] args) throws IllegalArgumentException {
             List<String> tabs = new ArrayList<>();
 
-            if(sender instanceof Player){
-                if(args.length == 0){
+                if (args.length == 0) {
                     tabs.add("on");
                     tabs.add("off");
                     tabs.add("boost");
-                } else if (args.length==1) {
-                    if("on".indexOf(args[0]) == 0) tabs.add("on");
-                    if("off".indexOf(args[0]) == 0) tabs.add("off");
-                    if("boost".indexOf(args[0]) == 0) tabs.add("boost");
+                } else if (args.length == 1) {
+                    if (sender.hasPermission("trails.other")) {
+                        for (Player p : Bukkit.getOnlinePlayers()) {
+                            if (p.getName().indexOf(args[0]) == 0) tabs.add(p.getName());
+                        }
+                    }
+                    boolean hasPermission = sender.hasPermission("trails.toggle");
+                    if (hasPermission && "on".indexOf(args[0]) == 0) tabs.add("on");
+                    if (hasPermission && "off".indexOf(args[0]) == 0) tabs.add("off");
+                    if (sender.hasPermission("trails.toggle-boost") && "boost".indexOf(args[0]) == 0) tabs.add("boost");
+                } else if (args.length == 2) {
+                    if (sender.hasPermission("trails.other") && (args[0].equalsIgnoreCase("on") || args[0].equalsIgnoreCase("off"))) {
+                        for (Player p : Bukkit.getOnlinePlayers()) {
+                            if (p.getName().indexOf(args[1]) == 0) tabs.add(p.getName());
+                        }
+                    } else if (sender.hasPermission("trails.toggle-boost.other") && args[0].equalsIgnoreCase("boost")) {
+                        for (Player p : Bukkit.getOnlinePlayers()) {
+                            if (p.getName().indexOf(args[1]) == 0) tabs.add(p.getName());
+                        }
+                    }
+                    if(args[0].equalsIgnoreCase("boost")){
+                        boolean hasPermission = sender.hasPermission("trails.toggle-boost");
+                        if (hasPermission && "on".indexOf(args[1]) == 0) tabs.add("on");
+                        if (hasPermission && "off".indexOf(args[1]) == 0) tabs.add("off");
+                    }
+                } else if (args.length == 3) {
+                    if (args[0].equalsIgnoreCase("boost") && (args[1].equalsIgnoreCase("on") || args[1].equalsIgnoreCase("off")) && sender.hasPermission("trails.toggle-boost.other")) {
+                        for (Player p : Bukkit.getOnlinePlayers()) {
+                            if (p.getName().indexOf(args[2]) == 0) tabs.add(p.getName());
+                        }
+                    }
                 }
-
-            }
 
             return tabs;
         }
@@ -195,7 +219,6 @@ public class Trails extends JavaPlugin {
         public void setExecutor(CommandExecutor exe) {
             this.exe = exe;
         }
-        public void setTab(TabCompleter tab) {this.tab = tab;}
         
     }
     
@@ -299,4 +322,7 @@ public class Trails extends JavaPlugin {
 		return gpHook;
 	}
 
+    public MoveEventListener getMoveEventListener() {
+        return moveEventListener;
+    }
 }

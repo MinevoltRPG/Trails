@@ -7,18 +7,33 @@ messages:
   ## %name% = name of person referred to
   alreadyMaxLevel: "%plugin_prefix% &fYour &eTrail &fis already max level!"
   noPerm: "%plugin_prefix% &cYou do not have permission to toggle Trails."
+  noPermBoost: "%plugin_prefix% &cYou do not have permission to toggle boost"
   noPermOthers: "%plugin_prefix% &cYou do not have permission to toggle other peoples' Trails."
   consoleSpecify: "%plugin_prefix% &cYou must specify a &fname &cwhen running from &7Console."
   toggledOn: "%plugin_prefix% &fYour &eTrails &fhave been toggle &aOn!"
   toggledOff: "%plugin_prefix% &fYour &eTrails &fhave been toggle &cOff!"
+  boostOn: "%plugin_prefix% &fYour &eBoost &fhas been toggle &aOn!"
+  boostOff: "%plugin_prefix% &fYour &eBoost &fhas been toggle &cOff!"
   toggledOnOther: "%plugin_prefix% %name%'s &eTrails &fhave been toggle &aOn!"
   toggledOffOther: "%plugin_prefix% %name%'s &eTrails &fhave been toggle &cOff!"
   notPlayedBefore: "%plugin_prefix% %name% has not played on this server before."
   cantCreateTrails: "%plugin_prefix% You can't create trails here."
   saveMessage: "%plugin_prefix% has successfully saved data!"
+  alreadyOff: "%plugin_prefix% &fYour &eTrails &fare already toggled &cOff!"
+  alreadyOn: "%plugin_prefix% &fYour &eTrails &fare already toggled &aOn!"
+  alreadyOffBoost: "%plugin_prefix% &fYour &eBoost &fis already toggled &cOff!"
+  alreadyOnBoost: "%plugin_prefix% &fYour &eBoost &fis already toggled &aOn!"
+  reload: "%plugin_prefix% &6Plugin reloaded!"
+  reloadNoPerm: "%plugin_prefix% &cYou don't have permissions to do this!"
+  tooManyArgs: "%plugin_prefix% &cToo many arguments!"
+  wrongArgs: "%plugin_prefix% &cWrong command arguments!"
+  alreadyOnBoostOther: "%plugin_prefix% &f%name%'s &eBoost &fis already toggled &aOn!";
+  alreadyOffBoostOther: "%plugin_prefix% &f%name%'s &eBoost &fis already toggled &cOff!";
+  toggledOnBoostOther: "%plugin_prefix% %name%'s &eBoost &fhas been toggle &aOn!";
+  toggledOffBoostOther: "%plugin_prefix% %name%'s &eBoost &fhas been toggle &cOff!";
 lands:
   flag:
-    icon-material: "DIRT_PATH"
+    icon-material: DIRT_PATH
     display-name: "&6Trails Flag"
     description:
       - "&7When Toggled on, this flag"

@@ -5,16 +5,32 @@ messages:
   ## 有一些占位符是你必须在消息中使用的.
   ## %plugin_prefix% = 你在上面设置的插件前缀 %command% = 你在上面设置的指令全称
   ## %name% = 你所指玩家的名称
+  alreadyMaxLevel: "%plugin_prefix% &fYour &eTrail &fis already max level!"
   noPerm: "%plugin_prefix% &c你没有权限开关路径生成."
+  noPermBoost: "%plugin_prefix% &cYou do not have permission to toggle boost"
   noPermOthers: "%plugin_prefix% &c你没有权限开关其他人的路径生成."
   consoleSpecify: "%plugin_prefix% &7在控制台&c中使用时必须指定&f玩家名称."
   toggledOn: "%plugin_prefix% &f你的&e路径生成&f已被切换为&a开启!"
   toggledOff: "%plugin_prefix% &f你的&e路径生成&f已被切换为&c关闭!"
+  boostOn: "%plugin_prefix% &fYour &eBoost &fhave been toggle &aOn!"
+  boostOff: "%plugin_prefix% &fYour &eBoost &fhave been toggle &cOff!"
   toggledOnOther: "%plugin_prefix% %name%&7的&e路径生成&f已被切换为&a开启!"
   toggledOffOther: "%plugin_prefix% %name%&7的&e路径生成&f已被切换为&c关闭!"
   notPlayedBefore: "%plugin_prefix% %name%&7此前未在此服务器游玩过."
   cantCreateTrails: "%plugin_prefix% 你不能在此处创建路径."
   saveMessage: "%plugin_prefix% 已成功保存了路径数据!"
+  alreadyOff: "%plugin_prefix% &fYour &eTrails &fare already toggled &cOff!"
+  alreadyOn: "%plugin_prefix% &fYour &eTrails &fare already toggled &aOn!"
+  alreadyOffBoost: "%plugin_prefix% &fYour &eBoost &fis already toggled &cOff!"
+  alreadyOnBoost: "%plugin_prefix% &fYour &eBoost &fis already toggled &aOn!"
+  reload: "%plugin_prefix% &6Plugin reloaded!"
+  reloadNoPerm: "%plugin_prefix% &cYou don't have permissions to do this!"
+  tooManyArgs: "%plugin_prefix% &cToo many arguments!"
+  wrongArgs: "%plugin_prefix% &cWrong command arguments!"
+  alreadyOnBoostOther: "%plugin_prefix% &f%name%'s &eBoost &fis already toggled &aOn!";
+  alreadyOffBoostOther: "%plugin_prefix% &f%name%'s &eBoost &fis already toggled &cOff!";
+  toggledOnBoostOther: "%plugin_prefix% %name%'s &eBoost &fhas been toggle &aOn!";
+  toggledOffBoostOther: "%plugin_prefix% %name%'s &eBoost &fhas been toggle &cOff!";
 lands:
   flag:
     icon-material: DIRT_PATH
