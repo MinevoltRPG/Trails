@@ -246,9 +246,17 @@ public class MoveEventListener implements Listener {
             }
         }
         // Check worldguard conditions
-        if (main.getWorldGuardHook() != null) {
+        if (main.getWorldGuardHook() != null && main.getConfigManager().wgIntegration) {
             if (!main.getWorldGuardHook().canCreateTrails(p, location)) {
                 if (main.getConfigManager().sendDenyMessage)
+                    sendDelayedMessage(p);
+                return false;
+            }
+        }
+        // Check PlayerPlot conditions
+        if(main.getPlayerPlotHook() != null && main.getConfigManager().playerPlotIntegration){
+            if(!main.getPlayerPlotHook().canMakeTrails(p, location)){
+                if(main.getConfigManager().sendDenyMessage)
                     sendDelayedMessage(p);
                 return false;
             }

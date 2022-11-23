@@ -27,10 +27,10 @@ messages:
   reloadNoPerm: "%plugin_prefix% &cYou don't have permissions to do this!"
   tooManyArgs: "%plugin_prefix% &cToo many arguments!"
   wrongArgs: "%plugin_prefix% &cWrong command arguments!"
-  alreadyOnBoostOther: "%plugin_prefix% &f%name%'s &eBoost &fis already toggled &aOn!";
-  alreadyOffBoostOther: "%plugin_prefix% &f%name%'s &eBoost &fis already toggled &cOff!";
-  toggledOnBoostOther: "%plugin_prefix% %name%'s &eBoost &fhas been toggle &aOn!";
-  toggledOffBoostOther: "%plugin_prefix% %name%'s &eBoost &fhas been toggle &cOff!";
+  alreadyOnBoostOther: "%plugin_prefix% &f%name%'s &eBoost &fis already toggled &aOn!"
+  alreadyOffBoostOther: "%plugin_prefix% &f%name%'s &eBoost &fis already toggled &cOff!"
+  toggledOnBoostOther: "%plugin_prefix% %name%'s &eBoost &fhas been toggle &aOn!"
+  toggledOffBoostOther: "%plugin_prefix% %name%'s &eBoost &fhas been toggle &cOff!"
 lands:
   flag:
     icon-material: DIRT_PATH

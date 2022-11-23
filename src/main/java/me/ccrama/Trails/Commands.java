@@ -30,13 +30,16 @@ public class Commands implements CommandExecutor {
                     else sender.sendMessage(getFormattedMessage(sender.getName(), plugin.getLanguage().consoleSpecify));
                     return true;
                 } else if (args.length == 1) {
+                    if(args[0].equalsIgnoreCase("reload")){
+                        reload(sender);
+                        return true;
+                    }
                     if (sender instanceof Player) {
                         Player p = (Player) sender;
                         if (args[0].equalsIgnoreCase("on")) switchTrails(p, true);
                         else if (args[0].equalsIgnoreCase("off")) switchTrails(p, false);
                         else if (args[0].equalsIgnoreCase("boost"))
                             switchBoost(p, !plugin.getToggles().isBoost(p.getUniqueId().toString()));
-                        else if (args[0].equalsIgnoreCase("reload")) reload(p);
                         else {
                             String playerName = args[0];
                             UUID uuid = getOfflinePlayerUUID(playerName);
@@ -89,6 +92,7 @@ public class Commands implements CommandExecutor {
             Bukkit.getConsoleSender().sendMessage(getFormattedMessage("", "%plugin_prefix% has encountered a serious error."));
             Bukkit.getConsoleSender().sendMessage(getFormattedMessage("", "%plugin_prefix% Please report to the author"));
             Bukkit.getConsoleSender().sendMessage(e.getMessage());
+            e.printStackTrace();
             return false;
         }
         return true;
@@ -258,8 +262,9 @@ public class Commands implements CommandExecutor {
     }
 
 
-    public void reload(Player p) {
+    public void reload(CommandSender p) {
         if (p.hasPermission("trails.reload")) {
+            plugin.getToggles().saveUserList(false);
             plugin.reloadConfig();
             plugin.onDisable();
             plugin.onLoad();

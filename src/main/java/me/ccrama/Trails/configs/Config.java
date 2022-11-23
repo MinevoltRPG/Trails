@@ -35,6 +35,8 @@ public class Config {
 	public boolean boostEnabledDefault = true;
 	public boolean immediatelyRemoveBoost = false;
 	public boolean dynmapRender = true;
+	public boolean playerPlotIntegration = true;
+	public boolean wgIntegration = true;
 	public Material trailTool = Material.IRON_SHOVEL;
 	public Material infoTool = Material.STICK;
 	
@@ -71,6 +73,8 @@ public class Config {
 		enabledDefault = plugin.getConfig().getBoolean("General.enabled-by-default", true);
 		boostEnabledDefault = plugin.getConfig().getBoolean("General.boost-enabled-by-default", true);
 		dynmapRender = plugin.getConfig().getBoolean("Plugin-Integration.Dynmap.trails-trigger-render", true);
+		playerPlotIntegration = plugin.getConfig().getBoolean("Plugin-Integration.PlayerPlot.integration-enabled", playerPlotIntegration);
+		wgIntegration = plugin.getConfig().getBoolean("Plugin-Integration.WorldGuard.IntegrationEnabled", true);
 
 		for(String s : enabledWorlds){
 			if(s.equalsIgnoreCase("all")){

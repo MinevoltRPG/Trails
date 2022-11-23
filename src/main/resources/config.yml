@@ -75,6 +75,8 @@ Plugin-Integration:
         LogPathBlocks: true
     CoreProtect:
         LogPathBlocks: true
+    PlayerPlot:
+        integration-enabled: true
     Dynmap:
         trails-trigger-render: true
     
