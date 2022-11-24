@@ -10,14 +10,12 @@ import me.ccrama.Trails.compatibility.*;
 import me.ccrama.Trails.configs.Config;
 import me.ccrama.Trails.configs.Language;
 import me.ccrama.Trails.data.ToggleLists;
-import me.ccrama.Trails.listeners.BreakBlockListener;
-import me.ccrama.Trails.listeners.MoveEventListener;
-import me.ccrama.Trails.listeners.PlayerInteractListener;
-import me.ccrama.Trails.listeners.PlayerLeaveListener;
+import me.ccrama.Trails.listeners.*;
 import me.ccrama.Trails.util.Console;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.NamespacedKey;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -59,6 +57,8 @@ public class Trails extends JavaPlugin {
     private BreakBlockListener breakBlockListener = null;
     private PlayerLeaveListener playerLeaveListener = null;
     private PlayerInteractListener playerInteractListener = null;
+    private BlockSpreadListener blockSpreadListener = null;
+    private DecayTask decayTask;
 
     /**
      * On Plugin Enable
@@ -66,6 +66,10 @@ public class Trails extends JavaPlugin {
     @Override
     public void onEnable() {
         plugin = this;
+
+        DecayTask.setPlugin(this);
+        DecayTask.setTrailKey(new NamespacedKey(this, "n"));
+        DecayTask.setWalksKey(new NamespacedKey(this, "w"));
         // Wrapper for custom bukkit events
         //this.blockData = new BlockDataManager(this);
         this.toggle = new ToggleLists(this);
@@ -88,6 +92,11 @@ public class Trails extends JavaPlugin {
         if(playerInteractListener == null) {
             playerInteractListener = new PlayerInteractListener(this);
             pm.registerEvents(playerInteractListener, this);
+        }
+
+        if(blockSpreadListener == null) {
+            blockSpreadListener = new BlockSpreadListener(this);
+            pm.registerEvents(blockSpreadListener, this);
         }
         // Register commands
         this.commands = new Commands(this);
@@ -124,6 +133,8 @@ public class Trails extends JavaPlugin {
         }
         // Console enabled message
         Console.sendConsoleMessage(String.format("Trails v%s", this.getDescription().getVersion()), "updated to 1.15.2 by j10max", "created by ccrama & drkmatr1984", ChatColor.GREEN + "Thank you");
+
+        if(config.trailDecay) this.decayTask = new DecayTask(this);
     }
     
     @Override
@@ -148,6 +159,10 @@ public class Trails extends JavaPlugin {
      * On plugin disable
      */
     public void onDisable() {
+        if(this.decayTask != null){
+            this.decayTask.stopTask();
+            this.decayTask = null;
+        }
     	unRegisterCommands();
         this.getToggles().saveUserList(false);
 
@@ -315,7 +330,7 @@ public class Trails extends JavaPlugin {
 		return lbHook;
 	}
 
-	public CoreProtectHook getCpHook() {
+    public CoreProtectHook getCpHook() {
 		return cpHook;
 	}
 

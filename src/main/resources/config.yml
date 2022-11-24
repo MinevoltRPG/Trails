@@ -32,6 +32,23 @@ General:
     trail-tool: iron_shovel
     # Tool to check block status. Right click a block to see. Requires "trails.info-tool" permission
     info-tool: stick
+    # Should trails naturally decay? Trails will decay only in loaded chunks
+    trail-decay: true
+    # Percentage of trail blocks which should decay in each selected chunk
+    decay-fraction: 0.05
+    # Chance to select a chunk for decay of its trails
+    chunk-chance: 0.2
+    # How often decay task should run? 20 ticks = 1 second. Default = 1200 (1 minute)
+    decay-timer: 1200
+    # Minimal distance between trail block and player for a block to decay. When a player is on top of a dirt path block,
+    # for example, on its decay he can fall through the block due to height change
+    decay-distance: 5
+    # Fraction of step count to decay each time. If you have a block which is travelled a lot on it will
+    # have hundreds of step counts and natural decay will take ages. With this value you can speed it up.
+    # Decay will take 1 or more steps from block: Math.max(1, (int)(fraction*steps))
+    # Set it to 0 to always subtract 1 step
+    # values from 0 to 1 would make sense
+    step-decay-fraction: 0.1
     # Worlds where trails functionality will be enabled. Put 'all' int this list to enable all worlds
     enabled-worlds:
     - 'all'
@@ -69,6 +86,8 @@ Plugin-Integration:
     WorldGuard:
         IntegrationEnabled: true
         CheckBypass: false
+        # Should we create trails decay flag and check it before natural decay?
+        decay-flag: false
     # LogBlock and CoreProtect settings both work the same. If set to true and LogBlock and/or CoreProtect are installed, Trails will create rollback data
     # when blocks change using Trails. 
     LogBlock:
