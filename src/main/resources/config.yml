@@ -10,7 +10,7 @@ General:
     enabled-by-default: true
     # The same for speed boost on trails. /trails boost to switch
     boost-enabled-by-default: true
-    # Chance to increment amount of walks = modifier * base chance
+    # Chance to increment amount of walks while running = modifier * base chance
     run-modifier: 1.5
     # Do not create trails while sneaking
     sneak-bypass: true
@@ -49,6 +49,9 @@ General:
     # Set it to 0 to always subtract 1 step
     # values from 0 to 1 would make sense
     step-decay-fraction: 0.1
+    # Enforce strict trail links which means that trails must start from a first material in a link. By default
+    # you can make DIRT PATH from COARSE DIRT even if coarse dirt was not a trail block before.
+    strict-links: false
     # Worlds where trails functionality will be enabled. Put 'all' int this list to enable all worlds
     enabled-worlds:
     - 'all'

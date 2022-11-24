@@ -37,7 +37,7 @@ public class PlayerInteractListener implements Listener {
         if (event.getItem().getType() == plugin.getConfigManager().trailTool && event.getPlayer().hasPermission("trails.trail-tool")) {
             Block block = event.getClickedBlock();
             Link link = plugin.getMoveEventListener().getLink(block);
-            if (link != null && (event.getPlayer().hasPermission("trails.trail-tool.bypass-protection") || plugin.getMoveEventListener().checkConditions(event.getPlayer(), event.getClickedBlock().getLocation()))) {
+            if (link != null && (plugin.getMoveEventListener().checkConditions(event.getPlayer(), event.getClickedBlock().getLocation()) || event.getPlayer().hasPermission("trails.trail-tool.bypass-protection"))) {
                 plugin.getMoveEventListener().makePath(event.getPlayer(), block, link, true);
             }
             Material material = event.getItem().getType();

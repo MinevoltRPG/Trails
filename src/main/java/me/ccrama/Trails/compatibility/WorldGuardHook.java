@@ -104,7 +104,7 @@ public class WorldGuardHook
 	}
 
 	public boolean canDecay(Location location) {
-		if(!plugin.getConfigManager().wgDecayFlag) return true;
+		if(!plugin.getConfigManager().wgDecayFlag || !plugin.getConfigManager().wgIntegration) return true;
 		//return wg.canBuild(player, location);
 		RegionQuery query = WorldGuard.getInstance().getPlatform().getRegionContainer().createQuery();
 		com.sk89q.worldedit.util.Location loc = BukkitAdapter.adapt(location);

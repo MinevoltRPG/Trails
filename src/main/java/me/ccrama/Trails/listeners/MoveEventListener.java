@@ -113,17 +113,25 @@ public class MoveEventListener implements Listener {
     public Link getLink(Block block) {
         ArrayList<Link> links = this.main.getConfigManager().getLinksConfig().getLinks().getFromMat(block.getType());
         Link link = null;
-        PersistentDataContainer container;
+        PersistentDataContainer container = null;
 
         if (block.getType() == Material.AIR) return null;
-        if (links != null && links.size() == 1) link = links.get(0);
+        if (links != null && links.size() == 1){
+            link = links.get(0);
+        }
         else if (links != null) {
             container = new CustomBlockData(block, main);
             if (!container.has(trailNameKey, PersistentDataType.STRING)) {
                 Link minLink = null;
+                ArrayList<Link> startLinks = new ArrayList<>();
                 for (Link link1 : links) {
                     if (minLink == null || link1.identifier() < minLink.identifier()) minLink = link1;
+                    if(link1.identifier() == 0) startLinks.add(link1);
                 }
+                if(startLinks.size() > 1){
+                    Random random = new Random();
+                    return startLinks.get(random.nextInt(startLinks.size()));
+                } else if(startLinks.size() == 0 && main.getConfigManager().strictLinks) return null;
                 link = minLink;
             } else {
                 String[] blockTrailName = container.get(trailNameKey, PersistentDataType.STRING).split(":");
@@ -144,6 +152,13 @@ public class MoveEventListener implements Listener {
                 }
             }
         }
+
+        if(main.getConfigManager().strictLinks){
+            if(container == null) container = new CustomBlockData(block, main);
+            String s = container.get(trailNameKey, PersistentDataType.STRING);
+            if(s == null && link != null && link.getPrevious() != null) return null;
+        }
+
         return link;
     }
 
