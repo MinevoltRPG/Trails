@@ -46,6 +46,7 @@ public class Config {
 	public double decayDistance = 5.0;
 	public double stepDecayFraction = 0.1;
 	public boolean wgDecayFlag = true;
+	public boolean strictLinks = false;
 	
 	public Config(Trails plugin) {
 		plugin.saveDefaultConfig();
@@ -89,6 +90,7 @@ public class Config {
 		decayDistance = plugin.getConfig().getDouble("General.decay-distance", decayDistance);
 		stepDecayFraction = plugin.getConfig().getDouble("General.step-decay-fraction", stepDecayFraction);
 		wgDecayFlag = plugin.getConfig().getBoolean("Plugin-Integration.WorldGuard.decay-flag", wgDecayFlag);
+		strictLinks = plugin.getConfig().getBoolean("General.strict-links", strictLinks);
 
 
 		for(String s : enabledWorlds){
