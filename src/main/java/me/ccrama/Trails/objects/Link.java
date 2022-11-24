@@ -9,6 +9,7 @@ public class Link {
    private final int chance;
    private final float speedBoost;
    private final Link next;
+   private Link previous = null;
    private String trailName;
 
    public Link(Material material, int decaynum, int chance, float speedBoost, int linknumb, Link nextlink, String trailName) {
@@ -33,6 +34,14 @@ public class Link {
 
    public int identifier() {
       return this.id;
+   }
+
+   public Link getPrevious() {
+      return previous;
+   }
+
+   public void setPrevious(Link previous) {
+      this.previous = previous;
    }
 
    public Link getNext() {

@@ -56,6 +56,9 @@ public class LinksConfig {
 
                 Link link2 = new Link(mat, wearTimes - 1, chance, speedBoost, linkLength, lastLink, trailName);
                 links.add(link2);
+                if(lastLink != null){
+                    lastLink.setPrevious(link2);
+                }
                 lastLink = link2;
                 if(mat != null)
                     Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.YELLOW + "[Trails] " + ChatColor.GREEN + "added: Link material = " + mat.name() + " wear = " + wearTimes + " chance = " + chance + " percent");

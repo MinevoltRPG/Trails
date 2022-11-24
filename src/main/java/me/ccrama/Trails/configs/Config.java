@@ -39,6 +39,13 @@ public class Config {
 	public boolean wgIntegration = true;
 	public Material trailTool = Material.IRON_SHOVEL;
 	public Material infoTool = Material.STICK;
+	public boolean trailDecay = true;
+	public double chunkChance = 1.0;
+	public double decayFraction = 1.0;
+	public long decayTimer = 1200L;
+	public double decayDistance = 5.0;
+	public double stepDecayFraction = 0.1;
+	public boolean wgDecayFlag = true;
 	
 	public Config(Trails plugin) {
 		plugin.saveDefaultConfig();
@@ -75,6 +82,14 @@ public class Config {
 		dynmapRender = plugin.getConfig().getBoolean("Plugin-Integration.Dynmap.trails-trigger-render", true);
 		playerPlotIntegration = plugin.getConfig().getBoolean("Plugin-Integration.PlayerPlot.integration-enabled", playerPlotIntegration);
 		wgIntegration = plugin.getConfig().getBoolean("Plugin-Integration.WorldGuard.IntegrationEnabled", true);
+		trailDecay = plugin.getConfig().getBoolean("General.trail-decay", trailDecay);
+		decayFraction = plugin.getConfig().getDouble("General.decay-fraction", decayFraction);
+		decayTimer = plugin.getConfig().getLong("General.decay-timer", decayTimer);
+		chunkChance = plugin.getConfig().getDouble("General.chunk-chance", chunkChance);
+		decayDistance = plugin.getConfig().getDouble("General.decay-distance", decayDistance);
+		stepDecayFraction = plugin.getConfig().getDouble("General.step-decay-fraction", stepDecayFraction);
+		wgDecayFlag = plugin.getConfig().getBoolean("Plugin-Integration.WorldGuard.decay-flag", wgDecayFlag);
+
 
 		for(String s : enabledWorlds){
 			if(s.equalsIgnoreCase("all")){
