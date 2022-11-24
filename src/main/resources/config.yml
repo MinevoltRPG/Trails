@@ -112,10 +112,13 @@ Trails:
     # 30% chance of counting. Finally, the COARSE_DIRT will turn into DIRT_PATH after no more than 10 walks. (The step counting system is a little strange
     # sometimes so you may have to tinker with these numbers to get your desired results. The last number represents speed boost. Dirt path gives 130% of base speed.
     SandPath: 'SAND:5:100:1.0 > SANDSTONE:5:30:1.3'
-    # Data-Saving allows you to set, in minutes, how often you would like Trails to save it's internal data to disk. It saves async! :)
     # Link may contain the same material entries
-    # But DO NOT have 2 links which start with THE SAME block material. Because it is dumb.
     # You can inspect a trail block by clicking on it with info tool. If you have 2 links with the same material it may be useful
     # DirtPath2: 'GRASS_BLOCK:5:100:1.0 > GRASS_BLOCK:5:100:1.0 > GRASS_BLOCK:5:100:1.0'
+    # You can have 2 links starting with the same material:
+    # DirtPath3: 'GRASS_BLOCK:5:100:1.0 > DIAMOND_BLOCK:5:100:1.7 > COARSE_DIRT:7:30:1.9 > DIRT_PATH:10:100:1.3'
+    # This is an example, DONT USE IT! If you do it path link will be chosen randomly with equal probability. That way you can make diverse paths with dirt path and gravel for example.
+# Data-Saving allows you to set, in minutes, how often you would like Trails to save it's internal data to disk. It saves async! :)
+# Interval in minutes. It only saves player toggles like /trails on or /trails boost on
 Data-Saving:
     Interval: 5   
