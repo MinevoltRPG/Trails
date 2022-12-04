@@ -12,6 +12,7 @@ import me.ccrama.Trails.configs.Language;
 import me.ccrama.Trails.data.ToggleLists;
 import me.ccrama.Trails.listeners.*;
 import me.ccrama.Trails.util.Console;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -70,6 +71,10 @@ public class Trails extends JavaPlugin {
         DecayTask.setPlugin(this);
         DecayTask.setTrailKey(new NamespacedKey(this, "n"));
         DecayTask.setWalksKey(new NamespacedKey(this, "w"));
+
+        int pluginId = 16930;
+        Metrics metrics = new Metrics(this, pluginId);
+
         // Wrapper for custom bukkit events
         //this.blockData = new BlockDataManager(this);
         this.toggle = new ToggleLists(this);

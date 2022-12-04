@@ -40,8 +40,8 @@ public class Config {
 	public Material trailTool = Material.IRON_SHOVEL;
 	public Material infoTool = Material.STICK;
 	public boolean trailDecay = true;
-	public double chunkChance = 1.0;
-	public double decayFraction = 1.0;
+	public double chunkChance = 0.2;
+	public double decayFraction = 0.03;
 	public long decayTimer = 1200L;
 	public double decayDistance = 5.0;
 	public double stepDecayFraction = 0.1;
