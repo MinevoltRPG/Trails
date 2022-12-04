@@ -35,7 +35,7 @@ General:
     # Should trails naturally decay? Trails will decay only in loaded chunks
     trail-decay: true
     # Percentage of trail blocks which should decay in each selected chunk
-    decay-fraction: 0.05
+    decay-fraction: 0.03
     # Chance to select a chunk for decay of its trails
     chunk-chance: 0.2
     # How often decay task should run? 20 ticks = 1 second. Default = 1200 (1 minute)

@@ -57,7 +57,7 @@ public class MoveEventListener implements Listener {
     }
 
     public void makePath(Player p, Block block, Link link, boolean skip) {
-        if(!skip) {
+        if (!skip) {
             double foo = Math.random() * 100.0D;
             double bar = link.chanceOccurance();
             if (p.isSprinting()) bar *= main.getConfigManager().runModifier;
@@ -76,8 +76,8 @@ public class MoveEventListener implements Listener {
                     e.printStackTrace();
                 }
             } else container.set(walksKey, PersistentDataType.INTEGER, walked + 1);
-        } else{
-            if(link.getNext() != null){
+        } else {
+            if (link.getNext() != null) {
                 PersistentDataContainer container = new CustomBlockData(block, main);
                 container.set(walksKey, PersistentDataType.INTEGER, 0);
                 container.set(trailNameKey, PersistentDataType.STRING, link.getTrailName() + ":" + link.getNext().identifier());
@@ -116,22 +116,21 @@ public class MoveEventListener implements Listener {
         PersistentDataContainer container = null;
 
         if (block.getType() == Material.AIR) return null;
-        if (links != null && links.size() == 1){
+        if (links != null && links.size() == 1) {
             link = links.get(0);
-        }
-        else if (links != null) {
+        } else if (links != null) {
             container = new CustomBlockData(block, main);
             if (!container.has(trailNameKey, PersistentDataType.STRING)) {
                 Link minLink = null;
                 ArrayList<Link> startLinks = new ArrayList<>();
                 for (Link link1 : links) {
                     if (minLink == null || link1.identifier() < minLink.identifier()) minLink = link1;
-                    if(link1.identifier() == 0) startLinks.add(link1);
+                    if (link1.identifier() == 0) startLinks.add(link1);
                 }
-                if(startLinks.size() > 1){
+                if (startLinks.size() > 1) {
                     Random random = new Random();
                     return startLinks.get(random.nextInt(startLinks.size()));
-                } else if(startLinks.size() == 0 && main.getConfigManager().strictLinks) return null;
+                } else if (startLinks.size() == 0 && main.getConfigManager().strictLinks) return null;
                 link = minLink;
             } else {
                 String[] blockTrailName = container.get(trailNameKey, PersistentDataType.STRING).split(":");
@@ -153,16 +152,16 @@ public class MoveEventListener implements Listener {
             }
         }
 
-        if(main.getConfigManager().strictLinks){
-            if(container == null) container = new CustomBlockData(block, main);
+        if (main.getConfigManager().strictLinks) {
+            if (container == null) container = new CustomBlockData(block, main);
             String s = container.get(trailNameKey, PersistentDataType.STRING);
-            if(s == null && link != null && link.getPrevious() != null) return null;
+            if (s == null && link != null && link.getPrevious() != null) return null;
         }
 
         return link;
     }
 
-    public void speedBoost(Player p, Link link, Block block){
+    public void speedBoost(Player p, Link link, Block block) {
         PersistentDataContainer container = null;
         if (main.getToggles().isBoost(p.getUniqueId().toString()) || (main.getConfigManager().usePermissionBoost && p.hasPermission("trails.boost"))) {
             boolean changeImmediately = false;
@@ -269,9 +268,9 @@ public class MoveEventListener implements Listener {
             }
         }
         // Check PlayerPlot conditions
-        if(main.getPlayerPlotHook() != null && main.getConfigManager().playerPlotIntegration){
-            if(!main.getPlayerPlotHook().canMakeTrails(p, location)){
-                if(main.getConfigManager().sendDenyMessage)
+        if (main.getPlayerPlotHook() != null && main.getConfigManager().playerPlotIntegration) {
+            if (!main.getPlayerPlotHook().canMakeTrails(p, location)) {
+                if (main.getConfigManager().sendDenyMessage)
                     sendDelayedMessage(p);
                 return false;
             }

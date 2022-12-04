@@ -49,7 +49,8 @@ public class LandsAPIHook
 	}
 	
 	public boolean isClaimed(Location location) {
-		return landsIntegration.isClaimed(location);
+		if(location == null || location.getWorld() == null) return false;
+		return landsIntegration.isClaimed(location.getWorld(), location.getBlockX(), location.getBlockZ());
 	}
 	
 	public LandPlayer getLandPlayer(UUID id) {
@@ -57,7 +58,8 @@ public class LandsAPIHook
 	}
 	
 	private Land getLand(Location location) {
-		return landsIntegration.getLand(location);
+		if(location == null || location.getWorld() == null) return null;
+		return landsIntegration.getLand(location.getWorld(), location.getBlockX(), location.getBlockZ());
 	}
 	
 	public boolean isClaimedbyCurrentPlayer(Location location, Player player) {
