@@ -2,15 +2,22 @@ package me.ccrama.Trails.configs;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import me.ccrama.Trails.Trails;
-import me.ccrama.Trails.util.ResourceUtils;
 import net.md_5.bungee.api.ChatColor;
+import org.reflections.Reflections;
+import org.reflections.scanners.Scanners;
 
 public class Language
 {
@@ -63,29 +70,35 @@ public class Language
 	}
 	
 	public File saveDefaultLanguageFile(String languageType) {
-		this.languageFolder = new File(this.plugin.getDataFolder().toString() + "/lang");
+		this.languageFolder = new File(this.plugin.getDataFolder().toString()+ File.separator + "lang");
 		if (!this.languageFolder.exists())
-		      this.languageFolder.mkdir();
+		      this.languageFolder.mkdirs();
 		if (languageFile == null) {
 			languageFile = new File(this.languageFolder, languageType);
 	    }
 		
 	    if (!languageFile.exists()) {
 	    	Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&e[Trails] &aSaving default language files..."));
-	    	List<String> files;
-			try {
-				files = ResourceUtils.listFiles(plugin.getClass(), "/lang");
-				if(files!=null) {
-					for(String file : files) {
-						plugin.saveResource("lang/" + file, false);
-						Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&e[Trails] " + "&aTrails/lang/" + file + " saved"));
-			    	}
-				}				
-			} catch (IOException e) {
-				e.printStackTrace();
+	    	Reflections reflections = new Reflections("lang", Scanners.Resources);
+			Set<String> set = reflections.getResources(".*").stream().map(s -> '/' + s).collect(Collectors.toSet());
+			String path = plugin.getDataFolder()+File.separator;
+			for(String s : set){
+				copy(plugin.getClass().getResourceAsStream(s), (path + s));
 			}
 	    }
 	    return languageFile;
+	}
+
+	public void copy(InputStream source, String destination) {
+		try {
+			File file = new File(destination);
+			if (!file.exists()) {
+				file.getParentFile().mkdirs();
+				Files.copy(source, Paths.get(destination));
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
 	}
 	
 	
