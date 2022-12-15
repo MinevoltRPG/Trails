@@ -59,7 +59,7 @@ public class LandsAPIHook
 	
 	private Land getLand(Location location) {
 		if(location == null || location.getWorld() == null) return null;
-		return landsIntegration.getLand(location.getWorld(), location.getBlockX(), location.getBlockZ());
+		return landsIntegration.getLand(location.getWorld(), location.getChunk().getX(), location.getChunk().getZ());
 	}
 	
 	public boolean isClaimedbyCurrentPlayer(Location location, Player player) {
