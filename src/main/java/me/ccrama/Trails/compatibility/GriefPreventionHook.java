@@ -2,6 +2,7 @@ package me.ccrama.Trails.compatibility;
 
 import java.util.function.Supplier;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
@@ -22,6 +23,13 @@ public class GriefPreventionHook {
 	}
 	
 	public boolean canMakeTrails(Player p, Location location) {
+		if(this.prevent == null){
+			if(GriefPrevention.instance == null){
+				plugin.getLogger().severe("Grief prevention instance is NULL?!");
+				plugin.getLogger().info("Is GP enabled?: "+Bukkit.getPluginManager().isPluginEnabled("GriefPrevention"));
+				return true;
+			} else this.prevent = GriefPrevention.instance;
+		}
 		PlayerData playerData = prevent.dataStore.getPlayerData(p.getUniqueId());
 		Claim claim = prevent.dataStore.getClaimAt(location, false, null);
 		if (claim != null)
