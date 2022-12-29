@@ -4,6 +4,7 @@ import com.jeff_media.customblockdata.CustomBlockData;
 import me.ccrama.Trails.Trails;
 import me.ccrama.Trails.objects.Link;
 
+import me.ccrama.Trails.util.RoadUtils;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -39,9 +40,21 @@ public class MoveEventListener implements Listener {
 
     @EventHandler
     public void walk(PlayerMoveEvent e) {
-        if (e.getFrom().getBlock().equals(e.getTo().getBlock()) || e.getPlayer().isFlying()) return;
+        boolean createRoad = Trails.roadMap.containsKey(e.getPlayer());
+        if(e.getTo() == null || e.getPlayer().isFlying()){
+            return;
+        }
+        if (e.getFrom().getBlock().equals(e.getTo().getBlock())){
+            return;
+        }
+
         if (!main.getConfigManager().allWorldsEnabled && !main.getConfigManager().enabledWorlds.contains(e.getTo().getWorld().getName()))
             return;
+
+        if(Trails.roadMap.containsKey(e.getPlayer())){
+            createRoad(e.getPlayer(), e.getFrom(), e.getTo());
+            return;
+        }
 
         Block block = e.getFrom().subtract(0.0D, 0.1D, 0.0D).getBlock();
         Link link = getLink(block);
@@ -309,6 +322,39 @@ public class MoveEventListener implements Listener {
             player.setWalkSpeed(0.2F);
         }
         boosterTask.cancel();
+    }
+
+    public void createRoad(Player player, Location from, Location to){
+        Location locBelow = firstSolid(from);
+        if(locBelow == null) return;
+        CustomBlockData toData = new CustomBlockData(locBelow.getBlock(), main);
+        if(toData.has(new NamespacedKey(main, "road"))){
+            System.out.println("Already road");
+            return;
+        }
+
+        int x1 = from.getBlockX();
+        int x2 = to.getBlockX();
+        int z1 = from.getBlockZ();
+        int z2 = to.getBlockZ();
+        RoadUtils.Direction direction = null;
+        if(x1 > x2) direction = RoadUtils.Direction.EAST;
+        else if (x1 < x2) direction = RoadUtils.Direction.WEST;
+        else if(z1 > z2) direction = RoadUtils.Direction.SOUTH;
+        else if (z1 < z2) direction = RoadUtils.Direction.NORTH;
+        if(direction != null) RoadUtils.placeRoad(player, locBelow, direction, null);
+
+
+    }
+
+    public Location firstSolid(Location location){
+        Location loc = location.clone();
+        loc.add(0,-0.05, 0);
+        if(loc.getBlock().getType().isSolid()) return loc;
+        for(int i=0;i<5;i++){
+            if(loc.add(0,-1,0).getBlock().getType().isSolid()) return loc;
+        }
+        return null;
     }
 
     public static class Booster {

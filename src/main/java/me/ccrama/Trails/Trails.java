@@ -1,9 +1,7 @@
 package me.ccrama.Trails;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import com.avaje.ebean.validation.NotNull;
 import me.ccrama.Trails.compatibility.*;
@@ -60,6 +58,7 @@ public class Trails extends JavaPlugin {
     private PlayerInteractListener playerInteractListener = null;
     private BlockSpreadListener blockSpreadListener = null;
     private DecayTask decayTask;
+    public static Map<Player, String> roadMap = new HashMap<>();
 
     /**
      * On Plugin Enable
@@ -140,6 +139,7 @@ public class Trails extends JavaPlugin {
         Console.sendConsoleMessage(String.format("Trails v%s", this.getDescription().getVersion()), "updated to 1.15.2 by j10max", "created by ccrama & drkmatr1984", ChatColor.GREEN + "Thank you");
 
         if(config.trailDecay) this.decayTask = new DecayTask(this);
+        getCommand("road").setExecutor(new RoadCommand());
     }
     
     @Override
