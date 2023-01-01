@@ -45,10 +45,6 @@
             <id>jeff-media-gbr</id>
             <url>https://hub.jeff-media.com/nexus/repository/jeff-media-public/</url>
         </repository>
-        <repository>
-            <id>local-maven-repo</id>
-            <url>file://C:/Users/Grocer/.m2/repository</url>
-        </repository>
     </repositories>
     <!-- Dependencies -->
     <dependencies>
@@ -75,6 +71,11 @@
             <artifactId>Towny</artifactId>
             <version>0.97.2.0</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>xyz.xenondevs</groupId>
+            <artifactId>particle</artifactId>
+            <version>1.8.3</version>
         </dependency>
         <dependency>
             <groupId>com.sk89q.worldguard</groupId>

@@ -2,6 +2,7 @@ package me.ccrama.Trails.util;
 
 import com.jeff_media.customblockdata.CustomBlockData;
 import me.ccrama.Trails.Trails;
+import me.ccrama.Trails.roads.Road;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;

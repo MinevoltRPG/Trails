@@ -1,8 +1,10 @@
 package me.ccrama.Trails;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
+import me.ccrama.Trails.util.ParticleUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -11,11 +13,12 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
+import xyz.xenondevs.particle.ParticleEffect;
 
-public class Commands implements CommandExecutor {
+public class TrailCommand implements CommandExecutor {
     private Trails plugin;
 
-    public Commands(Trails plugin) {
+    public TrailCommand(Trails plugin) {
         this.plugin = plugin;
     }
 
@@ -32,6 +35,16 @@ public class Commands implements CommandExecutor {
                 } else if (args.length == 1) {
                     if(args[0].equalsIgnoreCase("reload")){
                         reload(sender);
+                        return true;
+                    }
+                    if(args[0].equalsIgnoreCase("show")){
+                        if(sender instanceof Player) {
+                            ParticleUtil.showTrailBlocks((Player) sender, ((Player)sender).getLocation(), 30.0, ParticleEffect.FLAME);
+                            sender.sendMessage("Showing trails in 30 block radius.");
+                        }
+                        else{
+                            sender.sendMessage("Only for players!");
+                        }
                         return true;
                     }
                     if (sender instanceof Player) {
@@ -60,6 +73,22 @@ public class Commands implements CommandExecutor {
                     wrongArgs(sender);
                 } else if (args.length == 2) {
                     if (args[0].equalsIgnoreCase("on")) switchTrails(sender, getUUIDString(args[1]), args[1], true);
+                    else if (args[0].equalsIgnoreCase("show")){
+                        if(sender instanceof Player) {
+                            double rad = 30.0;
+                            try {
+                                rad = Double.parseDouble(args[1]);
+                            } catch (Exception ex) {
+                                ex.printStackTrace();
+                                sender.sendMessage("Second argument is not double :(");
+                            }
+
+                            ParticleUtil.showTrailBlocks((Player) sender,((Player) sender).getLocation(),  rad, ParticleEffect.FLAME);
+                        } else {
+                            sender.sendMessage("Only for players!");
+                        }
+                        return true;
+                    }
                     else if (args[0].equalsIgnoreCase("off")) switchTrails(sender, getUUIDString(args[1]), args[1], false);
                     else if (args[0].equalsIgnoreCase("boost")){
                         if(sender instanceof Player){

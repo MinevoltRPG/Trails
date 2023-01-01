@@ -3,7 +3,6 @@ package me.ccrama.Trails;
 import java.lang.reflect.Field;
 import java.util.*;
 
-import com.avaje.ebean.validation.NotNull;
 import me.ccrama.Trails.compatibility.*;
 import me.ccrama.Trails.configs.Config;
 import me.ccrama.Trails.configs.Language;
@@ -21,8 +20,6 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.dynmap.DynmapAPI;
-
-import javax.annotation.Nullable;
 
 /**
  * Trails Plugin V0.7
@@ -45,7 +42,7 @@ public class Trails extends JavaPlugin {
     private Config config;
     public List<UUID> messagePlayers;
     private Language language;
-    private Commands commands;
+    private TrailCommand trailCommand;
 
 	private static CommandMap cmap;   
     private CCommand command;
@@ -103,7 +100,7 @@ public class Trails extends JavaPlugin {
             pm.registerEvents(blockSpreadListener, this);
         }
         // Register commands
-        this.commands = new Commands(this);
+        this.trailCommand = new TrailCommand(this);
         RegisterCommands();
         // Towny hook
         if (pm.getPlugin("Towny") != null && townyHook == null) {
@@ -253,18 +250,18 @@ public class Trails extends JavaPlugin {
             if (language.command != null) {
               this.command = new CCommand(language.command);
               if(!cmap.register("paths", this.command)) {
-            	  Bukkit.getConsoleSender().sendMessage(this.commands.getFormattedMessage(Bukkit.getConsoleSender().getName(), (language.pluginPrefix + " &aCommand " + language.command
+            	  Bukkit.getConsoleSender().sendMessage(this.trailCommand.getFormattedMessage(Bukkit.getConsoleSender().getName(), (language.pluginPrefix + " &aCommand " + language.command
             			  + " command has already been taken. Defaulting to 'paths' for Trails command.")));
               }else {
-            	  Bukkit.getConsoleSender().sendMessage(this.commands.getFormattedMessage(Bukkit.getConsoleSender().getName(), (language.pluginPrefix + " &aCommand " + language.command + " command Registered!")));
+            	  Bukkit.getConsoleSender().sendMessage(this.trailCommand.getFormattedMessage(Bukkit.getConsoleSender().getName(), (language.pluginPrefix + " &aCommand " + language.command + " command Registered!")));
               }
-              this.command.setExecutor(this.commands);        
+              this.command.setExecutor(this.trailCommand);
             } 
           } catch (Exception e) {
             e.printStackTrace();
           } 
         } catch (ClassNotFoundException e) {
-          Bukkit.getConsoleSender().sendMessage(this.commands.getFormattedMessage(Bukkit.getConsoleSender().getName(), (language.pluginPrefix + " &ccould not be loaded, is this even Spigot or CraftBukkit?")));
+          Bukkit.getConsoleSender().sendMessage(this.trailCommand.getFormattedMessage(Bukkit.getConsoleSender().getName(), (language.pluginPrefix + " &ccould not be loaded, is this even Spigot or CraftBukkit?")));
           setEnabled(false);
         } 
       }
@@ -279,13 +276,13 @@ public class Trails extends JavaPlugin {
                   cmap = (CommandMap)f.get(Bukkit.getServer());
                   if (this.command != null) {
                       this.command.unregister(cmap);
-                      Bukkit.getConsoleSender().sendMessage(this.commands.getFormattedMessage(Bukkit.getConsoleSender().getName(), (language.pluginPrefix + " &aCommand " + language.command + " Unregistered!")));
+                      Bukkit.getConsoleSender().sendMessage(this.trailCommand.getFormattedMessage(Bukkit.getConsoleSender().getName(), (language.pluginPrefix + " &aCommand " + language.command + " Unregistered!")));
                   } 
               } catch (Exception e) {
               e.printStackTrace();
               } 
           } catch (ClassNotFoundException e) {
-              Bukkit.getConsoleSender().sendMessage(this.commands.getFormattedMessage(Bukkit.getConsoleSender().getName(), (language.pluginPrefix + " &ccould not be unloaded, is this even Spigot or CraftBukkit?")));
+              Bukkit.getConsoleSender().sendMessage(this.trailCommand.getFormattedMessage(Bukkit.getConsoleSender().getName(), (language.pluginPrefix + " &ccould not be unloaded, is this even Spigot or CraftBukkit?")));
               setEnabled(false);
           } 
     }
@@ -327,8 +324,8 @@ public class Trails extends JavaPlugin {
     	return language;
     }
     
-    public Commands getCommands() {
-		return this.commands;
+    public TrailCommand getCommands() {
+		return this.trailCommand;
 	}
 
 	public LogBlockHook getLbHook() {
