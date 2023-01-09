@@ -25,7 +25,7 @@ public class BlockSpreadListener implements Listener {
     @EventHandler
     public void onBlockSpread(BlockSpreadEvent event){
         if(event.getNewState().getType() != Material.GRASS_BLOCK) return;
-        if(plugin.getConfigManager().getLinksConfig().getLinks().getFromMat(Material.DIRT) == null) return;
+        if(Trails.config.getLinksConfig().getLinks().getFromMat(Material.DIRT) == null) return;
 
         Block block = event.getBlock();
         PersistentDataContainer container = new CustomBlockData(block, plugin);

@@ -1,17 +1,16 @@
 package me.ccrama.Trails;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
-import com.avaje.ebean.validation.NotNull;
 import me.ccrama.Trails.compatibility.*;
 import me.ccrama.Trails.configs.Config;
 import me.ccrama.Trails.configs.Language;
 import me.ccrama.Trails.data.ToggleLists;
 import me.ccrama.Trails.listeners.*;
+import me.ccrama.Trails.roads.Road;
 import me.ccrama.Trails.util.Console;
+import me.ccrama.Trails.util.JsonStorage;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -23,8 +22,6 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.dynmap.DynmapAPI;
-
-import javax.annotation.Nullable;
 
 /**
  * Trails Plugin V0.7
@@ -42,12 +39,14 @@ public class Trails extends JavaPlugin {
     private CoreProtectHook cpHook = null;
     private DynmapAPI dynmapAPI = null;
     private PlayerPlotHook playerPlotHook = null;
+    private static PAPIHook papiHook = null;
+    private RedProtectHook redProtectHook = null;
 
     private ToggleLists toggle;
-    private Config config;
+    public static Config config;
     public List<UUID> messagePlayers;
     private Language language;
-    private Commands commands;
+    private TrailCommand trailCommand;
 
 	private static CommandMap cmap;   
     private CCommand command;
@@ -60,6 +59,7 @@ public class Trails extends JavaPlugin {
     private PlayerInteractListener playerInteractListener = null;
     private BlockSpreadListener blockSpreadListener = null;
     private DecayTask decayTask;
+    public static Map<Player, Road> roadMap = new HashMap<>();
 
     /**
      * On Plugin Enable
@@ -67,13 +67,17 @@ public class Trails extends JavaPlugin {
     @Override
     public void onEnable() {
         plugin = this;
+        config = new Config(this);
+        this.language = new Language(this);
 
         DecayTask.setPlugin(this);
         DecayTask.setTrailKey(new NamespacedKey(this, "n"));
         DecayTask.setWalksKey(new NamespacedKey(this, "w"));
 
         int pluginId = 16930;
-        Metrics metrics = new Metrics(this, pluginId);
+        new Metrics(this, pluginId);
+
+        JsonStorage.loadData();
 
         // Wrapper for custom bukkit events
         //this.blockData = new BlockDataManager(this);
@@ -104,7 +108,7 @@ public class Trails extends JavaPlugin {
             pm.registerEvents(blockSpreadListener, this);
         }
         // Register commands
-        this.commands = new Commands(this);
+        this.trailCommand = new TrailCommand(this);
         RegisterCommands();
         // Towny hook
         if (pm.getPlugin("Towny") != null && townyHook == null) {
@@ -122,13 +126,19 @@ public class Trails extends JavaPlugin {
         if(pm.getPlugin("CoreProtect") != null && config.coreProtect && cpHook == null) {
         	cpHook = new CoreProtectHook(this);
         }
+        // RedProtect Hook
+        if(pm.getPlugin("RedProtect") != null && config.redProtect && redProtectHook == null) {
+            redProtectHook = new RedProtectHook();
+        }
+        // Dynmap Hook
         if(pm.getPlugin("Dynmap") != null &&dynmapAPI == null){
             dynmapAPI = (DynmapAPI) Bukkit.getServer().getPluginManager().getPlugin("Dynmap");
         }
         // PlaceholderAPI Support
-		if (pm.isPluginEnabled("PlaceholderAPI"))
+		if (pm.isPluginEnabled("PlaceholderAPI") && papiHook == null)
 		{
-			if(new PAPIHook(this).register()) {
+            papiHook = new PAPIHook(this);
+			if(papiHook.register()) {
 				getLogger().info("Successfully registered %trails_toggled_on%");
 			}
 		}
@@ -137,16 +147,16 @@ public class Trails extends JavaPlugin {
             playerPlotHook = new PlayerPlotHook(this);
         }
         // Console enabled message
-        Console.sendConsoleMessage(String.format("Trails v%s", this.getDescription().getVersion()), "updated to 1.15.2 by j10max", "created by ccrama & drkmatr1984", ChatColor.GREEN + "Thank you");
+        Console.sendConsoleMessage(String.format("Trails v%s", this.getDescription().getVersion()), "updated to 1.15.2 by j10max", "created by ccrama & drkmatr1984", "maintained by GrocerMC", ChatColor.GREEN + "Thank you");
 
         if(config.trailDecay) this.decayTask = new DecayTask(this);
+        getCommand("road").setExecutor(new RoadCommand());
     }
     
     @Override
     public void onLoad() {
         pm = Bukkit.getServer().getPluginManager();
-        this.config = new Config(this);
-        this.language = new Language(this);
+
     	// Worldguard Hook
         if (pm.getPlugin("WorldGuard") != null && getConfig().getBoolean("Plugin-Integration.WorldGuard.IntegrationEnabled", true) && wgHook == null) {
             wgHook = new WorldGuardHook(this);
@@ -168,6 +178,7 @@ public class Trails extends JavaPlugin {
             this.decayTask.stopTask();
             this.decayTask = null;
         }
+        JsonStorage.saveRoads();
     	unRegisterCommands();
         this.getToggles().saveUserList(false);
 
@@ -178,9 +189,9 @@ public class Trails extends JavaPlugin {
         return cmap;
     }
       
-    public class CCommand extends Command {
+    public static class CCommand extends Command {
         private CommandExecutor exe = null;
-        private TabCompleter tab = null;
+        private final TabCompleter tab = null;
         
         protected CCommand(String name) {
           super(name);
@@ -192,16 +203,21 @@ public class Trails extends JavaPlugin {
             return false;
         }
 
+        @Override
         public List<String> tabComplete(CommandSender sender, String alias, String[] args) throws IllegalArgumentException {
             List<String> tabs = new ArrayList<>();
 
                 if (args.length == 0) {
-                    tabs.add("on");
-                    tabs.add("off");
-                    tabs.add("boost");
+                    if(sender.hasPermission("trails.toggle")) {
+                        tabs.add("on");
+                        tabs.add("off");
+                    }
+                    if (sender.hasPermission("trails.toggle-boost")) tabs.add("boost");
+                    if (sender.hasPermission("trails.show")) tabs.add("show");
                 } else if (args.length == 1) {
                     if (sender.hasPermission("trails.other")) {
                         for (Player p : Bukkit.getOnlinePlayers()) {
+                            if(p == sender) continue;
                             if (p.getName().indexOf(args[0]) == 0) tabs.add(p.getName());
                         }
                     }
@@ -210,6 +226,7 @@ public class Trails extends JavaPlugin {
                     if (hasPermission && "off".indexOf(args[0]) == 0) tabs.add("off");
                     if (sender.hasPermission("trails.toggle-boost") && "boost".indexOf(args[0]) == 0) tabs.add("boost");
                     if (sender.hasPermission("trails.reload") && "reload".indexOf(args[0]) == 0) tabs.add("reload");
+                    if (sender.hasPermission("trails.show") && "show".indexOf(args[0]) == 0) tabs.add("show");
                 } else if (args.length == 2) {
                     if (sender.hasPermission("trails.other") && (args[0].equalsIgnoreCase("on") || args[0].equalsIgnoreCase("off"))) {
                         for (Player p : Bukkit.getOnlinePlayers()) {
@@ -224,6 +241,9 @@ public class Trails extends JavaPlugin {
                         boolean hasPermission = sender.hasPermission("trails.toggle-boost");
                         if (hasPermission && "on".indexOf(args[1]) == 0) tabs.add("on");
                         if (hasPermission && "off".indexOf(args[1]) == 0) tabs.add("off");
+                    }
+                    else if(args[0].equalsIgnoreCase("show")){
+                        tabs.add("[radius]");
                     }
                 } else if (args.length == 3) {
                     if (args[0].equalsIgnoreCase("boost") && (args[1].equalsIgnoreCase("on") || args[1].equalsIgnoreCase("off")) && sender.hasPermission("trails.toggle-boost.other")) {
@@ -250,21 +270,21 @@ public class Trails extends JavaPlugin {
             Field f = clazz.getDeclaredField("commandMap");
             f.setAccessible(true);
             cmap = (CommandMap)f.get(Bukkit.getServer());
-            if (language.command != null) {
-              this.command = new CCommand(language.command);
+            if (Language.command != null) {
+              this.command = new CCommand(Language.command);
               if(!cmap.register("paths", this.command)) {
-            	  Bukkit.getConsoleSender().sendMessage(this.commands.getFormattedMessage(Bukkit.getConsoleSender().getName(), (language.pluginPrefix + " &aCommand " + language.command
+            	  Bukkit.getConsoleSender().sendMessage(this.trailCommand.getFormattedMessage(Bukkit.getConsoleSender().getName(), (Language.pluginPrefix + " &aCommand " + Language.command
             			  + " command has already been taken. Defaulting to 'paths' for Trails command.")));
               }else {
-            	  Bukkit.getConsoleSender().sendMessage(this.commands.getFormattedMessage(Bukkit.getConsoleSender().getName(), (language.pluginPrefix + " &aCommand " + language.command + " command Registered!")));
+            	  Bukkit.getConsoleSender().sendMessage(this.trailCommand.getFormattedMessage(Bukkit.getConsoleSender().getName(), (Language.pluginPrefix + " &aCommand " + Language.command + " command Registered!")));
               }
-              this.command.setExecutor(this.commands);        
+              this.command.setExecutor(this.trailCommand);
             } 
           } catch (Exception e) {
             e.printStackTrace();
           } 
         } catch (ClassNotFoundException e) {
-          Bukkit.getConsoleSender().sendMessage(this.commands.getFormattedMessage(Bukkit.getConsoleSender().getName(), (language.pluginPrefix + " &ccould not be loaded, is this even Spigot or CraftBukkit?")));
+          Bukkit.getConsoleSender().sendMessage(this.trailCommand.getFormattedMessage(Bukkit.getConsoleSender().getName(), (Language.pluginPrefix + " &ccould not be loaded, is this even Spigot or CraftBukkit?")));
           setEnabled(false);
         } 
       }
@@ -279,13 +299,13 @@ public class Trails extends JavaPlugin {
                   cmap = (CommandMap)f.get(Bukkit.getServer());
                   if (this.command != null) {
                       this.command.unregister(cmap);
-                      Bukkit.getConsoleSender().sendMessage(this.commands.getFormattedMessage(Bukkit.getConsoleSender().getName(), (language.pluginPrefix + " &aCommand " + language.command + " Unregistered!")));
+                      Bukkit.getConsoleSender().sendMessage(this.trailCommand.getFormattedMessage(Bukkit.getConsoleSender().getName(), (Language.pluginPrefix + " &aCommand " + Language.command + " Unregistered!")));
                   } 
               } catch (Exception e) {
               e.printStackTrace();
               } 
           } catch (ClassNotFoundException e) {
-              Bukkit.getConsoleSender().sendMessage(this.commands.getFormattedMessage(Bukkit.getConsoleSender().getName(), (language.pluginPrefix + " &ccould not be unloaded, is this even Spigot or CraftBukkit?")));
+              Bukkit.getConsoleSender().sendMessage(this.trailCommand.getFormattedMessage(Bukkit.getConsoleSender().getName(), (Language.pluginPrefix + " &ccould not be unloaded, is this even Spigot or CraftBukkit?")));
               setEnabled(false);
           } 
     }
@@ -319,16 +339,16 @@ public class Trails extends JavaPlugin {
     	return this.toggle;
     }
     
-    public Config getConfigManager() {
-    	return this.config;
-    }
+    //public Config getConfigManager() {
+    //	return config;
+    //}
     
     public Language getLanguage() {
     	return language;
     }
     
-    public Commands getCommands() {
-		return this.commands;
+    public TrailCommand getCommands() {
+		return this.trailCommand;
 	}
 
 	public LogBlockHook getLbHook() {
@@ -349,5 +369,13 @@ public class Trails extends JavaPlugin {
 
     public MoveEventListener getMoveEventListener() {
         return moveEventListener;
+    }
+
+    public static PAPIHook getPapiHook() {
+        return papiHook;
+    }
+
+    public RedProtectHook getRedProtectHook() {
+        return redProtectHook;
     }
 }

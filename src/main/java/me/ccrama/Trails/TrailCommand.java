@@ -1,8 +1,12 @@
 package me.ccrama.Trails;
 
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import me.ccrama.Trails.configs.Language;
+import me.ccrama.Trails.util.ParticleUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -11,11 +15,12 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
+import xyz.xenondevs.particle.ParticleEffect;
 
-public class Commands implements CommandExecutor {
+public class TrailCommand implements CommandExecutor {
     private Trails plugin;
 
-    public Commands(Trails plugin) {
+    public TrailCommand(Trails plugin) {
         this.plugin = plugin;
     }
 
@@ -27,11 +32,25 @@ public class Commands implements CommandExecutor {
                 if (args.length == 0) {
                     if (sender instanceof Player)
                         switchTrails((Player) sender, plugin.getToggles().isDisabled(((Player) sender).getUniqueId().toString()));
-                    else sender.sendMessage(getFormattedMessage(sender.getName(), plugin.getLanguage().consoleSpecify));
+                    else sender.sendMessage(Language.getString("messages.consoleSpecify", sender.getName()));
                     return true;
                 } else if (args.length == 1) {
                     if(args[0].equalsIgnoreCase("reload")){
                         reload(sender);
+                        return true;
+                    }
+                    if(args[0].equalsIgnoreCase("show")){
+                        if(!sender.hasPermission("trails.show")) {
+                            sender.sendMessage(Language.getString("messages.noPerm", sender.getName()));
+                            return true;
+                        }
+                        if(sender instanceof Player) {
+                            ParticleUtil.showTrailBlocks((Player) sender, ((Player)sender).getLocation(), 30.0, Trails.config.trailParticle);
+                            sender.sendMessage(Language.getString("messages.showing-trails", sender.getName()));
+                        }
+                        else{
+                            sender.sendMessage("Only for players!");
+                        }
                         return true;
                     }
                     if (sender instanceof Player) {
@@ -46,7 +65,7 @@ public class Commands implements CommandExecutor {
                             if (uuid != null)
                                 switchTrails(sender, uuid.toString(), args[0], plugin.getToggles().isDisabled(uuid.toString()));
                             else
-                                sender.sendMessage(getFormattedMessage(playerName, plugin.getLanguage().notPlayedBefore));
+                                sender.sendMessage(Language.getString("messages.notPlayedBefore", playerName));
                         }
                         return true;
                     } else if (sender instanceof ConsoleCommandSender) {
@@ -54,12 +73,33 @@ public class Commands implements CommandExecutor {
                         UUID uuid = getOfflinePlayerUUID(playerName);
                         if (uuid != null)
                             switchTrails(sender, uuid.toString(), args[0], plugin.getToggles().isDisabled(uuid.toString()));
-                        else sender.sendMessage(getFormattedMessage(playerName, plugin.getLanguage().notPlayedBefore));
+                        else sender.sendMessage(Language.getString("messages.notPlayedBefore", playerName));
                         return true;
                     }
                     wrongArgs(sender);
                 } else if (args.length == 2) {
                     if (args[0].equalsIgnoreCase("on")) switchTrails(sender, getUUIDString(args[1]), args[1], true);
+                    else if (args[0].equalsIgnoreCase("show")){
+                        if(!sender.hasPermission("trails.show")) {
+                            sender.sendMessage(Language.getString("messages.noPerm", sender.getName()));
+                            return true;
+                        }
+                        if(sender instanceof Player player) {
+                            double rad = 30.0;
+                            try {
+                                rad = Double.parseDouble(args[1]);
+                            } catch (Exception ex) {
+                                //ex.printStackTrace();
+                                sender.sendMessage(Language.getString("messages.second-argument-not-double", sender.getName()));
+                            }
+                            ParticleUtil.showTrailBlocks((Player) sender,((Player) sender).getLocation(),  rad, Trails.config.trailParticle);
+                            Map<String, String> replace = Map.of("%radius%", (int)rad+"");
+                            sender.sendMessage(Language.getString("messages.showing-trails-radius", replace, player));
+                        } else {
+                            sender.sendMessage(Language.getString("messages.only-layers", sender.getName()));
+                        }
+                        return true;
+                    }
                     else if (args[0].equalsIgnoreCase("off")) switchTrails(sender, getUUIDString(args[1]), args[1], false);
                     else if (args[0].equalsIgnoreCase("boost")){
                         if(sender instanceof Player){
@@ -84,7 +124,7 @@ public class Commands implements CommandExecutor {
                     }
                     return true;
                 } else {
-                    sender.sendMessage(getFormattedMessage(sender.getName(), plugin.getLanguage().tooManyArgs));
+                    sender.sendMessage(Language.getString("messages.tooManyArgs", null, null));
                     return true;
                 }
             }
@@ -105,65 +145,65 @@ public class Commands implements CommandExecutor {
             if (player.hasPermission("trails.toggle")) {
                 if (this.plugin.getToggles().isDisabled(uuid)) {
                     this.plugin.getToggles().enablePlayer(uuid);
-                    player.sendMessage(getFormattedMessage(player.getName(), plugin.getLanguage().toggledOn)); //send toggled on message to player
+                    player.sendMessage(Language.getString("messages.toggledOn", null, player)); //send toggled on message to player
                 } else {
-                    player.sendMessage(getFormattedMessage(player.getName(), plugin.getLanguage().alreadyOn)); //send toggled off message to player
+                    player.sendMessage(Language.getString("messages.alreadyOn", null, player)); //send toggled off message to player
                 }
             } else {
-                player.sendMessage(getFormattedMessage(player.getName(), plugin.getLanguage().noPerm));
+                player.sendMessage(Language.getString("messages.noPerm", null, player));
             }
         } else {
             if (player.hasPermission("trails.toggle")) {
                 if (this.plugin.getToggles().isDisabled(uuid)) {
-                    player.sendMessage(getFormattedMessage(player.getName(), plugin.getLanguage().alreadyOff)); //send toggled on message to player
+                    player.sendMessage(Language.getString("messages.alreadyOff", null, player)); //send toggled on message to player
                 } else {
                     this.plugin.getToggles().disablePlayer(uuid);
-                    player.sendMessage(getFormattedMessage(player.getName(), plugin.getLanguage().toggledOff)); //send toggled off message to player
+                    player.sendMessage(Language.getString("messages.toggledOff", null, player)); //send toggled off message to player
                 }
             } else {
-                player.sendMessage(getFormattedMessage(player.getName(), plugin.getLanguage().noPerm));
+                player.sendMessage(Language.getString("messages.noPerm", null, player));
             }
         }
     }
 
     public void switchTrails(CommandSender sender, String uuid, String playerName, boolean on) {
         if (uuid == null || sender == null){
-            sender.sendMessage(getFormattedMessage(playerName, plugin.getLanguage().notPlayedBefore));
+            sender.sendMessage(Language.getString("messages.notPlayedBefore", playerName));
             return;
         }
         boolean temp = true;
-        if(sender instanceof Player) temp = ((Player) sender).hasPermission("trails.other");
+        if(sender instanceof Player) temp = sender.hasPermission("trails.other");
         if (on) {
             if (temp) {
                 if (this.plugin.getToggles().isDisabled(uuid)) {
                     this.plugin.getToggles().enablePlayer(uuid);
-                    sender.sendMessage(getFormattedMessage(playerName, plugin.getLanguage().toggledOnOther));
+                    sender.sendMessage(Language.getString("messages.toggledOnOther", playerName));
                     if (Bukkit.getOfflinePlayer(UUID.fromString(uuid)).isOnline()) {
                         Player player1 = Bukkit.getOfflinePlayer(UUID.fromString(uuid)).getPlayer();
                         if (player1 != null && !player1.equals(sender))
-                            player1.sendMessage(getFormattedMessage(player1.getName(), plugin.getLanguage().toggledOn));
+                            player1.sendMessage(Language.getString("messages.toggledOn", null, player1));
                     }
                 } else {
-                    sender.sendMessage(getFormattedMessage(sender.getName(), plugin.getLanguage().alreadyOn));
+                    sender.sendMessage(Language.getString("messages.alreadyOn", playerName));
                 }
             } else {
-                sender.sendMessage(getFormattedMessage(sender.getName(), plugin.getLanguage().noPerm));
+                sender.sendMessage(Language.getString("messages.noPerm", null, null));
             }
         } else {
             if (temp) {
                 if (this.plugin.getToggles().isDisabled(uuid)) {
-                    sender.sendMessage(getFormattedMessage(sender.getName(), plugin.getLanguage().alreadyOff));
+                    sender.sendMessage(Language.getString("messages.alreadyOff", playerName));
                 } else {
                     this.plugin.getToggles().disablePlayer(uuid);
-                    sender.sendMessage(getFormattedMessage(playerName, plugin.getLanguage().toggledOffOther));
+                    sender.sendMessage(Language.getString("messages.toggledOffOther", playerName));
                     if (Bukkit.getOfflinePlayer(UUID.fromString(uuid)).isOnline()) {
                         Player player1 = Bukkit.getOfflinePlayer(UUID.fromString(uuid)).getPlayer();
                         if (player1 != null && !player1.equals(sender))
-                            player1.sendMessage(getFormattedMessage(player1.getName(), plugin.getLanguage().toggledOff));
+                            player1.sendMessage(Language.getString("messages.toggledOff", null, player1));
                     }
                 }
             } else {
-                sender.sendMessage(getFormattedMessage(sender.getName(), plugin.getLanguage().noPerm));
+                sender.sendMessage(Language.getString("messages.noPerm", null, null));
             }
         }
     }
@@ -175,65 +215,65 @@ public class Commands implements CommandExecutor {
             if (player.hasPermission("trails.toggle-boost")) {
                 if (!this.plugin.getToggles().isBoost(uuid)) {
                     this.plugin.getToggles().enableBoost(uuid);
-                    player.sendMessage(getFormattedMessage(player.getName(), plugin.getLanguage().boostOn)); //send toggled on message to player
+                    player.sendMessage(Language.getString("messages.boostOn", null, player)); //send toggled on message to player
                 } else {
-                    player.sendMessage(getFormattedMessage(player.getName(), plugin.getLanguage().alreadyOnBoost)); //send toggled off message to player
+                    player.sendMessage(Language.getString("messages.alreadyOnBoost", null, player)); //send toggled off message to player
                 }
             } else {
-                player.sendMessage(getFormattedMessage(player.getName(), plugin.getLanguage().noPermBoost));
+                player.sendMessage(Language.getString("messages.noPermBoost", null, player));
             }
         } else {
             if (player.hasPermission("trails.toggle-boost")) {
                 if (!this.plugin.getToggles().isBoost(uuid)) {
-                    player.sendMessage(getFormattedMessage(player.getName(), plugin.getLanguage().alreadyOffBoost)); //send toggled on message to player
+                    player.sendMessage(Language.getString("messages.alreadyOffBoost", null, player)); //send toggled on message to player
                 } else {
                     this.plugin.getToggles().disableBoost(uuid);
-                    player.sendMessage(getFormattedMessage(player.getName(), plugin.getLanguage().boostOff)); //send toggled off message to player
+                    player.sendMessage(Language.getString("messages.boostOff", null, player)); //send toggled off message to player
                 }
             } else {
-                player.sendMessage(getFormattedMessage(player.getName(), plugin.getLanguage().noPermBoost));
+                player.sendMessage(Language.getString("messages.noPermBoost", null, player));
             }
         }
     }
 
     public void switchBoost(CommandSender sender, String uuid, String playerName ,boolean on) {
-        if (uuid == null || sender == null){
-            sender.sendMessage(getFormattedMessage(playerName, plugin.getLanguage().notPlayedBefore));
+        if (uuid == null){
+            sender.sendMessage(Language.getString("messages.notPlayedBefore", playerName));
             return;
         }
         boolean temp = true;
-        if(sender instanceof Player) temp = ((Player) sender).hasPermission("trails.toggle-boost.other");
+        if(sender instanceof Player) temp = sender.hasPermission("trails.toggle-boost.other");
         if (on) {
             if (temp) {
                 if (!this.plugin.getToggles().isBoost(uuid)) {
                     this.plugin.getToggles().enableBoost(uuid);
-                    sender.sendMessage(getFormattedMessage(playerName, plugin.getLanguage().toggledOnBoostOther));
+                    sender.sendMessage(Language.getString("messages.toggledOnBoostOther", playerName));
                     if (Bukkit.getOfflinePlayer(UUID.fromString(uuid)).isOnline()) {
                         Player player1 = Bukkit.getOfflinePlayer(UUID.fromString(uuid)).getPlayer();
                         if (player1 != null && !player1.equals(sender))
-                            player1.sendMessage(getFormattedMessage(player1.getName(), plugin.getLanguage().boostOn));
+                            player1.sendMessage(Language.getString("messages.boostOn", null, player1));
                     }
                 } else {
-                    sender.sendMessage(getFormattedMessage(sender.getName(), plugin.getLanguage().alreadyOnBoostOther)); //send toggled off message to player
+                    sender.sendMessage(Language.getString("messages.alreadyOnBoostOther", null, null)); //send toggled off message to player
                 }
             } else {
-                sender.sendMessage(getFormattedMessage(sender.getName(), plugin.getLanguage().noPermBoost));
+                sender.sendMessage(Language.getString("messages.noPermBoost", null, null));
             }
         } else {
             if (temp) {
                 if (!this.plugin.getToggles().isBoost(uuid)) {
-                    sender.sendMessage(getFormattedMessage(playerName, plugin.getLanguage().alreadyOffBoostOther)); //send toggled on message to player
+                    sender.sendMessage(Language.getString("messages.alreadyOffBoostOther", null, null)); //send toggled on message to player
                 } else {
                     this.plugin.getToggles().disableBoost(uuid);
-                    sender.sendMessage(getFormattedMessage(sender.getName(), plugin.getLanguage().toggledOffBoostOther));
+                    sender.sendMessage(Language.getString("messages.toggledOffBoostOther", playerName));
                     if (Bukkit.getOfflinePlayer(UUID.fromString(uuid)).isOnline()) {
                         Player player1 = Bukkit.getOfflinePlayer(UUID.fromString(uuid)).getPlayer();
                         if (player1 != null && !player1.equals(sender))
-                            player1.sendMessage(getFormattedMessage(player1.getName(), plugin.getLanguage().boostOff));
+                            player1.sendMessage(Language.getString("messages.boostOff", null, player1));
                     }
                 }
             } else {
-                sender.sendMessage(getFormattedMessage(sender.getName(), plugin.getLanguage().noPermBoost));
+                sender.sendMessage(Language.getString("messages.noPermBoost", null, null));
             }
         }
     }
@@ -258,7 +298,7 @@ public class Commands implements CommandExecutor {
 
     public void wrongArgs(CommandSender sender) {
         if (sender == null) return;
-        sender.sendMessage(getFormattedMessage(sender.getName(), plugin.getLanguage().wrongArgs));
+        sender.sendMessage(Language.getString("messages.wrongArgs", null, null));
     }
 
 
@@ -269,9 +309,9 @@ public class Commands implements CommandExecutor {
             plugin.onDisable();
             plugin.onLoad();
             plugin.onEnable();
-            p.sendMessage(getFormattedMessage(p.getName(), plugin.getLanguage().reload));
+            p.sendMessage(Language.getString("messages.reload", null, null));
         } else {
-            p.sendMessage(getFormattedMessage(p.getName(), plugin.getLanguage().reloadNoPerm));
+            p.sendMessage(Language.getString("messages.reloadNoPerm", null, null));
         }
     }
 
@@ -285,9 +325,9 @@ public class Commands implements CommandExecutor {
     }
 
     public String getFormattedMessage(String name, String message) {
-        message = message.replace("%plugin_prefix%", plugin.getLanguage().pluginPrefix);
+        message = message.replace("%plugin_prefix%", Language.pluginPrefix);
         message = message.replace("%name%", name);
-        message = message.replace("%command%", plugin.getLanguage().command);
+        message = message.replace("%command%", Language.command);
         // Do Colors
         message = ChatColor.translateAlternateColorCodes('&', message);
         return message;

@@ -2,12 +2,14 @@ package me.ccrama.Trails.configs;
 
 import me.ccrama.Trails.Trails;
 import org.bukkit.Material;
+import xyz.xenondevs.particle.ParticleEffect;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Config {
-	
+
+    public boolean redProtect;
 	private LinksConfig linksData;
 	
 	public boolean townyPathsWilderness = true;
@@ -47,6 +49,7 @@ public class Config {
 	public double stepDecayFraction = 0.1;
 	public boolean wgDecayFlag = true;
 	public boolean strictLinks = false;
+	public ParticleEffect trailParticle = ParticleEffect.NAUTILUS;
 	
 	public Config(Trails plugin) {
 		plugin.saveDefaultConfig();
@@ -91,6 +94,13 @@ public class Config {
 		stepDecayFraction = plugin.getConfig().getDouble("General.step-decay-fraction", stepDecayFraction);
 		wgDecayFlag = plugin.getConfig().getBoolean("Plugin-Integration.WorldGuard.decay-flag", wgDecayFlag);
 		strictLinks = plugin.getConfig().getBoolean("General.strict-links", strictLinks);
+		redProtect = plugin.getConfig().getBoolean("Plugin-Integration.CoreProtect.integration-enabled", true);
+
+		try {
+			trailParticle = ParticleEffect.valueOf(plugin.getConfig().getString("General.trails-particle", "FLAME").toUpperCase().trim());
+		} catch (Exception e){
+			e.printStackTrace();
+		}
 
 
 		for(String s : enabledWorlds){
@@ -101,7 +111,7 @@ public class Config {
 		}
 
 		try {
-			trailTool = Material.getMaterial(plugin.getConfig().getString("General.trail-tool").toUpperCase());
+			trailTool = Material.getMaterial(plugin.getConfig().getString("General.trail-tool", "IRON_SHOVEL").toUpperCase());
 		} catch (Exception ex){
 			ex.printStackTrace();
 		}

@@ -31,6 +31,9 @@ messages:
   alreadyOffBoostOther: "%plugin_prefix% &f%name%'s &eBoost &fis already toggled &cOff!"
   toggledOnBoostOther: "%plugin_prefix% %name%'s &eBoost &fhas been toggle &aOn!"
   toggledOffBoostOther: "%plugin_prefix% %name%'s &eBoost &fhas been toggle &cOff!"
+  showing-trails: '%plugin_prefix% &eShowing trails.'
+  showing-trails-radius: '%plugin_prefix% &eShowing trails in a radius of &6%radius% blocks.'
+  second-argument-not-double: '%plugin_prefix% &cSecond argument is not valid. &7Specify radius of displaying trails blocks.'
 lands:
   flag:
     icon-material: DIRT_PATH

@@ -52,6 +52,8 @@ General:
     # Enforce strict trail links which means that trails must start from a first material in a link. By default
     # you can make DIRT PATH from COARSE DIRT even if coarse dirt was not a trail block before.
     strict-links: false
+    # Particle effect to highlight trails on /trails show
+    trails-particle: NAUTILUS
     # Worlds where trails functionality will be enabled. Put 'all' int this list to enable all worlds
     enabled-worlds:
     - 'all'
@@ -98,6 +100,8 @@ Plugin-Integration:
     CoreProtect:
         LogPathBlocks: true
     PlayerPlot:
+        integration-enabled: true
+    RedProtect:
         integration-enabled: true
     Dynmap:
         trails-trigger-render: true
