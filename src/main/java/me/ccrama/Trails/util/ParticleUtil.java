@@ -7,6 +7,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
+import org.bukkit.util.Vector;
 import org.checkerframework.checker.units.qual.C;
 import xyz.xenondevs.particle.ParticleBuilder;
 import xyz.xenondevs.particle.ParticleEffect;
@@ -44,13 +45,13 @@ public class ParticleUtil {
     }
 
     public static List<Location> getTrailTopLocations(@Nullable Set<Block> blocks) {
-        int steps = 8;
+        int steps = 5;
         List<Location> locations = new ArrayList<>();
         if (blocks == null) return locations;
         for (Block block : blocks) {
             CustomBlockData customBlockData = new CustomBlockData(block, Trails.getInstance());
             if (!customBlockData.has(new NamespacedKey(Trails.getInstance(), "n"))) continue;
-            Location location = block.getLocation().add(0, 1, 0);
+            Location location = block.getLocation().add(0, 1.1, 0);
             Block xUp = block.getRelative(-1, 0, 0);
             if (!blocks.contains(xUp)) {
                 Location tmp = location.clone();
@@ -98,7 +99,7 @@ public class ParticleUtil {
                     this.cancel();
                     return;
                 }
-                Set<Block> newBlocks = getTrailBlocks(location, chRadius);
+                Set<Block> newBlocks = getTrailBlocks(player.getLocation(), chRadius);
                 if(newBlocks == null){
                     this.cancel();
                     return;
@@ -176,9 +177,44 @@ public class ParticleUtil {
         return locations;
     }
 
-    public static void showCuboid(Block block1, Block block2, Player player, ParticleEffect particleEffect){
+    public static List<Location> getArrowLocations(Location l1, Location l2, @Nullable Location l3, double theta, double sideLength, int pperMeter){
+        Vector arrow = l2.toVector().subtract(l1.toVector());
+        int pAmount = (int)Math.ceil(arrow.length()*pperMeter);
+        Vector step = arrow.clone().multiply(1.0/pAmount);
+
+        List<Location> locations = new ArrayList<>();
+        Location tmp = l1.clone();
+        locations.add(tmp);
+
+        for(int i=0;i<pAmount;i++){
+            locations.add(tmp.add(step).clone());
+        }
+
+        if(l3 == null) l3 = l2.clone().add(1,0,0);
+        Vector v3 = l3.toVector().subtract(l2.toVector()).normalize();
+        Vector normal = v3.subtract(arrow.clone().multiply(-v3.clone().dot(arrow)/arrow.length()));
+        Vector arrowNormal = arrow.clone().multiply(-1.0).normalize();
+        System.out.println(normal+" | "+normal.dot(arrow));
+        System.out.println(arrow);
+        System.out.println(arrowNormal+" | "+arrowNormal.dot(normal));
+        Vector side1 = normal.clone().multiply(Math.sin(theta)).add(arrowNormal.clone().multiply(Math.cos(theta))).normalize().multiply(1.0/pperMeter);
+        Vector side2 = normal.clone().multiply(-Math.sin(theta)).add(arrowNormal.clone().multiply(Math.cos(theta))).normalize().multiply(1.0/pperMeter);
+        int p2Amount = (int) Math.ceil(sideLength*pperMeter);
+
+
+        Location loc1 = l2.clone();
+        Location loc2=l2.clone();
+        for(int i=0;i<p2Amount;i++){
+            locations.add(loc1.add(side1).clone());
+            locations.add(loc2.add(side2).clone());
+        }
+
+        return locations;
+    }
+
+    public static BukkitTask showCuboid(Block block1, Block block2, Player player, ParticleEffect particleEffect){
         List<Location> locations = getCuboidLocations(block1, block2);
-        BukkitTask task = new BukkitRunnable() {
+        return new BukkitRunnable() {
             @Override
             public void run() {
                 if(player == null || !player.isOnline()){
@@ -190,15 +226,6 @@ public class ParticleUtil {
                 }
             }
         }.runTaskTimerAsynchronously(Trails.getInstance(), 0L, 10L);
-        if(showCuboidTasks.containsKey(player) && !showCuboidTasks.get(player).isCancelled()) showCuboidTasks.get(player).cancel();
-        showCuboidTasks.put(player, task);
-    }
-
-    public static void stopShowingCuboid(Player player){
-        if(showCuboidTasks.containsKey(player) && !showCuboidTasks.get(player).isCancelled()){
-            showCuboidTasks.get(player).cancel();
-            showCuboidTasks.remove(player);
-        }
     }
 
 }

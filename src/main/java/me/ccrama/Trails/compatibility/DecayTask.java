@@ -37,17 +37,17 @@ public class DecayTask {
                 List<Block> decayBlocks = new ArrayList<>();
                 Random random = new Random();
                 for(World world : worlds){
-                    if (!plugin.getConfigManager().allWorldsEnabled && !plugin.getConfigManager().enabledWorlds.contains(world.getName())) continue;
+                    if (!Trails.config.allWorldsEnabled && !Trails.config.enabledWorlds.contains(world.getName())) continue;
                     List<Chunk> chunks = Arrays.asList(world.getLoadedChunks());
                     for(Chunk chunk : chunks){
                         List<Location> playerLocations = plugin.getServer().getOnlinePlayers().stream().map(Player::getLocation).filter(s -> s.getWorld().equals(world)).collect(Collectors.toList());
-                        if(random.nextDouble() > plugin.getConfigManager().chunkChance) continue;
-                        List<Block> blocks = getRandomBlocks(chunk, plugin.getConfigManager().decayFraction);
+                        if(random.nextDouble() > Trails.config.chunkChance) continue;
+                        List<Block> blocks = getRandomBlocks(chunk, Trails.config.decayFraction);
                         if(blocks == null) continue;
                         for(Block block : blocks) {
                             boolean skip = false;
                             for (Location location : playerLocations) {
-                                if(location.distance(block.getLocation()) < plugin.getConfigManager().decayDistance){
+                                if(location.distance(block.getLocation()) < Trails.config.decayDistance){
                                     skip = true;
                                     break;
                                 }
@@ -65,7 +65,7 @@ public class DecayTask {
                     }
                 }.runTaskLater(plugin, 0L);
             }
-        }.runTaskTimerAsynchronously(plugin, plugin.getConfigManager().decayTimer, plugin.getConfigManager().decayTimer);
+        }.runTaskTimerAsynchronously(plugin, Trails.config.decayTimer, Trails.config.decayTimer);
     }
 
     private void decayManyBlocks(List<Block> blocks){
@@ -74,7 +74,7 @@ public class DecayTask {
 
     public static void decayBlock(Block block){
         Link link = plugin.getMoveEventListener().getLink(block);
-        if(link == null || (plugin.getWorldGuardHook() != null && plugin.getConfigManager().wgDecayFlag && !plugin.getWorldGuardHook().canDecay(block.getLocation()))) return;
+        if(link == null || (plugin.getWorldGuardHook() != null && Trails.config.wgDecayFlag && !plugin.getWorldGuardHook().canDecay(block.getLocation()))) return;
         decayPath(block, link);
     }
 
@@ -82,7 +82,7 @@ public class DecayTask {
             PersistentDataContainer container = new CustomBlockData(block, plugin);
             Integer walked = container.get(walksKey, PersistentDataType.INTEGER);
             if (walked == null) return;
-            int newWalked = walked - Math.max(1, (int)(walked*plugin.getConfigManager().stepDecayFraction));
+            int newWalked = walked - Math.max(1, (int)(walked*Trails.config.stepDecayFraction));
             Link previous = link.getPrevious();
             boolean firstLink = previous == null;
             Link superPrevious = null;
@@ -121,10 +121,10 @@ public class DecayTask {
             block.setType(prevMat);
             block.getState().update(true);
             //log block changes in LogBlock and CoreProtect
-            if (plugin.getLbHook() != null && plugin.getConfigManager().logBlock) {
+            if (plugin.getLbHook() != null && Trails.config.logBlock) {
                 plugin.getLbHook().getLBConsumer().queueBlockReplace(new Actor("NaturalTrailDecay"), state, block.getState());
             }
-            if (plugin.getCpHook() != null && plugin.getConfigManager().coreProtect) {
+            if (plugin.getCpHook() != null && Trails.config.coreProtect) {
                 plugin.getCpHook().getAPI().logRemoval("NaturalTrailDecay", block.getLocation(), type, data);
                 plugin.getCpHook().getAPI().logPlacement("NaturalTrailDecay", block.getLocation(), prevMat, block.getBlockData());
             }

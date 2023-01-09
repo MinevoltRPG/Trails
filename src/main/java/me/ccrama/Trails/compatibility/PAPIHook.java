@@ -1,5 +1,6 @@
 package me.ccrama.Trails.compatibility;
 
+import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import me.ccrama.Trails.Trails;
@@ -49,5 +50,9 @@ public class PAPIHook extends PlaceholderExpansion {
 			}
 		}		
 		return "";
+	}
+
+	public String parse(String s, Player p){
+		return PlaceholderAPI.setPlaceholders(p,s);
 	}
 }

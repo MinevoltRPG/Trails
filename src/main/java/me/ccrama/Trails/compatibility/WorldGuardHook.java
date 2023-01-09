@@ -55,7 +55,7 @@ public class WorldGuardHook
 
 
 
-		if(plugin.getConfigManager().wgDecayFlag) {
+		if(Trails.config.wgDecayFlag) {
 			// Register trail decay flag
 			try {
 				// register our flag with the registry
@@ -90,7 +90,7 @@ public class WorldGuardHook
 		//return wg.canBuild(player, location);
 		RegionQuery query = WorldGuard.getInstance().getPlatform().getRegionContainer().createQuery();
 		com.sk89q.worldedit.util.Location loc = BukkitAdapter.adapt(location);
-		if (hasBypass(player, location) && plugin.getConfigManager().checkBypass) {
+		if (hasBypass(player, location) && Trails.config.checkBypass) {
 			return true;
 		}else  {
 			return query.testState(loc, getLocalPlayer(player), TRAILS_FLAG);
@@ -104,7 +104,7 @@ public class WorldGuardHook
 	}
 
 	public boolean canDecay(Location location) {
-		if(!plugin.getConfigManager().wgDecayFlag || !plugin.getConfigManager().wgIntegration) return true;
+		if(!Trails.config.wgDecayFlag || !Trails.config.wgIntegration) return true;
 		//return wg.canBuild(player, location);
 		RegionQuery query = WorldGuard.getInstance().getPlatform().getRegionContainer().createQuery();
 		com.sk89q.worldedit.util.Location loc = BukkitAdapter.adapt(location);

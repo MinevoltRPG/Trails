@@ -31,6 +31,9 @@ messages:
   alreadyOffBoostOther: "%plugin_prefix% &6Ускорение &e%name% &cуже выключено!"
   toggledOnBoostOther: "%plugin_prefix% &6Ускорение &e%name% &aвключено!"
   toggledOffBoostOther: "%plugin_prefix% &6Ускорение &e%name% &cвыключено!"
+  showing-trails: '%plugin_prefix% &eОтображаем тропы.'
+  showing-trails-radius: '%plugin_prefix% &eОтображаем тропы в радиусе &6%radius% блоков.'
+  second-argument-not-double: '%plugin_prefix% &cВторой аргумент неверный. &7Укажите радиус отображения блоков.'
 lands:
   flag:
     icon-material: DIRT_PATH

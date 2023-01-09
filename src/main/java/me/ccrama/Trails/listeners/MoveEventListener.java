@@ -2,6 +2,7 @@ package me.ccrama.Trails.listeners;
 
 import com.jeff_media.customblockdata.CustomBlockData;
 import me.ccrama.Trails.Trails;
+import me.ccrama.Trails.configs.Language;
 import me.ccrama.Trails.objects.Link;
 
 import me.ccrama.Trails.util.RoadUtils;
@@ -26,8 +27,8 @@ import java.util.*;
 public class MoveEventListener implements Listener {
 
 
-    private NamespacedKey walksKey;
-    private NamespacedKey trailNameKey;
+    private final NamespacedKey walksKey;
+    private final NamespacedKey trailNameKey;
     private final Trails main;
     public static final HashMap<UUID, Booster> speedBoostedPlayers = new HashMap<>();
     public static BukkitTask boosterTask;
@@ -40,7 +41,6 @@ public class MoveEventListener implements Listener {
 
     @EventHandler
     public void walk(PlayerMoveEvent e) {
-        boolean createRoad = Trails.roadMap.containsKey(e.getPlayer());
         if(e.getTo() == null || e.getPlayer().isFlying()){
             return;
         }
@@ -48,7 +48,7 @@ public class MoveEventListener implements Listener {
             return;
         }
 
-        if (!main.getConfigManager().allWorldsEnabled && !main.getConfigManager().enabledWorlds.contains(e.getTo().getWorld().getName()))
+        if (!Trails.config.allWorldsEnabled && !Trails.config.enabledWorlds.contains(e.getTo().getWorld().getName()))
             return;
 
         if(Trails.roadMap.containsKey(e.getPlayer())){
@@ -61,8 +61,8 @@ public class MoveEventListener implements Listener {
         Player p = e.getPlayer();
         speedBoost(p, link, block);
 
-        if ((main.getConfigManager().sneakBypass && e.getPlayer().isSneaking()) || link == null) return;
-        if ((!main.getConfigManager().usePermission && main.getToggles().isDisabled(p.getUniqueId().toString())) || (main.getConfigManager().usePermission && !p.hasPermission("trails.create-trails"))) {
+        if ((Trails.config.sneakBypass && e.getPlayer().isSneaking()) || link == null) return;
+        if ((!Trails.config.usePermission && main.getToggles().isDisabled(p.getUniqueId().toString())) || (Trails.config.usePermission && !p.hasPermission("trails.create-trails"))) {
             return;
         }
 
@@ -73,7 +73,7 @@ public class MoveEventListener implements Listener {
         if (!skip) {
             double foo = Math.random() * 100.0D;
             double bar = link.chanceOccurance();
-            if (p.isSprinting()) bar *= main.getConfigManager().runModifier;
+            if (p.isSprinting()) bar *= Trails.config.runModifier;
             if (foo > bar) return;
 
             PersistentDataContainer container = new CustomBlockData(block, main);
@@ -112,10 +112,10 @@ public class MoveEventListener implements Listener {
             block.setType(nextMat);
             block.getState().update(true);
             //log block changes in LogBlock and CoreProtect
-            if (main.getLbHook() != null && main.getConfigManager().logBlock) {
+            if (main.getLbHook() != null && Trails.config.logBlock) {
                 main.getLbHook().getLBConsumer().queueBlockReplace(new Actor(p.getName()), state, block.getState());
             }
-            if (main.getCpHook() != null && main.getConfigManager().coreProtect) {
+            if (main.getCpHook() != null && Trails.config.coreProtect) {
                 main.getCpHook().getAPI().logRemoval(p.getName(), block.getLocation(), type, data);
                 main.getCpHook().getAPI().logPlacement(p.getName(), block.getLocation(), nextMat, block.getBlockData());
             }
@@ -124,7 +124,7 @@ public class MoveEventListener implements Listener {
     }
 
     public Link getLink(Block block) {
-        ArrayList<Link> links = this.main.getConfigManager().getLinksConfig().getLinks().getFromMat(block.getType());
+        ArrayList<Link> links = Trails.config.getLinksConfig().getLinks().getFromMat(block.getType());
         Link link = null;
         PersistentDataContainer container = null;
 
@@ -143,7 +143,7 @@ public class MoveEventListener implements Listener {
                 if (startLinks.size() > 1) {
                     Random random = new Random();
                     return startLinks.get(random.nextInt(startLinks.size()));
-                } else if (startLinks.size() == 0 && main.getConfigManager().strictLinks) return null;
+                } else if (startLinks.size() == 0 && Trails.config.strictLinks) return null;
                 link = minLink;
             } else {
                 String[] blockTrailName = container.get(trailNameKey, PersistentDataType.STRING).split(":");
@@ -165,7 +165,7 @@ public class MoveEventListener implements Listener {
             }
         }
 
-        if (main.getConfigManager().strictLinks) {
+        if (Trails.config.strictLinks) {
             if (container == null) container = new CustomBlockData(block, main);
             String s = container.get(trailNameKey, PersistentDataType.STRING);
             if (s == null && link != null && link.getPrevious() != null) return null;
@@ -176,7 +176,7 @@ public class MoveEventListener implements Listener {
 
     public void speedBoost(Player p, Link link, Block block) {
         PersistentDataContainer container = null;
-        if (main.getToggles().isBoost(p.getUniqueId().toString()) || (main.getConfigManager().usePermissionBoost && p.hasPermission("trails.boost"))) {
+        if (main.getToggles().isBoost(p.getUniqueId().toString()) || (Trails.config.usePermissionBoost && p.hasPermission("trails.boost"))) {
             boolean changeImmediately = false;
             Booster booster = speedBoostedPlayers.get(p.getUniqueId());
             float targetSpeed = 0.2F;
@@ -184,13 +184,13 @@ public class MoveEventListener implements Listener {
             // If block material is in one of the links
             if (link != null) {
                 // In case you are on a trail material but not on an actual trail
-                if (main.getConfigManager().onlyTrails) {
-                    if (container == null) container = new CustomBlockData(block, main);
+                if (Trails.config.onlyTrails) {
+                    container = new CustomBlockData(block, main);
                     if (container.has(trailNameKey, PersistentDataType.STRING)) {
                         targetSpeed = 0.2F * link.getSpeedBoost();
-                    } else changeImmediately = main.getConfigManager().immediatelyRemoveBoost;
+                    } else changeImmediately = Trails.config.immediatelyRemoveBoost;
                 } else targetSpeed = 0.2F * link.getSpeedBoost();
-            } else changeImmediately = main.getConfigManager().immediatelyRemoveBoost;
+            } else changeImmediately = Trails.config.immediatelyRemoveBoost;
             if (p.getWalkSpeed() != targetSpeed) {
                 if (booster != null) {
                     booster.setTargetSpeed(targetSpeed, changeImmediately);
@@ -205,9 +205,9 @@ public class MoveEventListener implements Listener {
                                 Player player = entry.getValue().getPlayer();
                                 if (entry.getValue().immediately) player.setWalkSpeed(entry.getValue().targetSpeed);
                                 else if (entry.getValue().getTargetSpeed() > player.getWalkSpeed())
-                                    player.setWalkSpeed(Math.min(player.getWalkSpeed() + main.getConfigManager().speedBoostStep, entry.getValue().getTargetSpeed()));
+                                    player.setWalkSpeed(Math.min(player.getWalkSpeed() + Trails.config.speedBoostStep, entry.getValue().getTargetSpeed()));
                                 else
-                                    player.setWalkSpeed(Math.max(player.getWalkSpeed() - main.getConfigManager().speedBoostStep, entry.getValue().getTargetSpeed()));
+                                    player.setWalkSpeed(Math.max(player.getWalkSpeed() - Trails.config.speedBoostStep, entry.getValue().getTargetSpeed()));
 
                                 if (player.getWalkSpeed() == entry.getValue().getTargetSpeed())
                                     toRemove.add(entry.getKey());
@@ -215,7 +215,7 @@ public class MoveEventListener implements Listener {
 
                             for (UUID uuid : toRemove) removeBoostedPlayer(uuid, false);
                         }
-                    }.runTaskTimer(main, 0L, main.getConfigManager().speedBoostInterval);
+                    }.runTaskTimer(main, 0L, Trails.config.speedBoostInterval);
                 }
             }
         }
@@ -226,7 +226,7 @@ public class MoveEventListener implements Listener {
         if (main.getTownyHook() != null) {
             if (main.getTownyHook().isWilderness(p)) {
                 if (!main.getTownyHook().isPathsInWilderness()) {
-                    if (main.getConfigManager().sendDenyMessage)
+                    if (Trails.config.sendDenyMessage)
                         sendDelayedMessage(p);
                     return false;
                 }
@@ -234,23 +234,23 @@ public class MoveEventListener implements Listener {
 
             if (main.getTownyHook().isTownyPathsPerms()) {
                 if (main.getTownyHook().isInHomeNation(p) && !main.getTownyHook().hasNationPermission(p) && !main.getTownyHook().isInHomeTown(p)) {
-                    if (main.getConfigManager().sendDenyMessage)
+                    if (Trails.config.sendDenyMessage)
                         sendDelayedMessage(p);
                     return false;
                 }
                 if (main.getTownyHook().isInHomeTown(p) && !main.getTownyHook().hasTownPermission(p)) {
-                    if (main.getConfigManager().sendDenyMessage)
+                    if (Trails.config.sendDenyMessage)
                         sendDelayedMessage(p);
                     return false;
                 }
             } else {
                 if (main.getTownyHook().isInOtherNation(p)) {
-                    if (main.getConfigManager().sendDenyMessage)
+                    if (Trails.config.sendDenyMessage)
                         sendDelayedMessage(p);
                     return false;
                 }
                 if (main.getTownyHook().isInOtherTown(p)) {
-                    if (main.getConfigManager().sendDenyMessage)
+                    if (Trails.config.sendDenyMessage)
                         sendDelayedMessage(p);
                     return false;
                 }
@@ -259,7 +259,7 @@ public class MoveEventListener implements Listener {
         // Check Lands conditions
         if (main.getLandsHook() != null) {
             if (!main.getLandsHook().hasTrailsFlag(p, location)) {
-                if (main.getConfigManager().sendDenyMessage)
+                if (Trails.config.sendDenyMessage)
                     sendDelayedMessage(p);
                 return false;
             }
@@ -267,23 +267,31 @@ public class MoveEventListener implements Listener {
         // Check GriefPrevention conditions
         if (main.getGpHook() != null) {
             if (!main.getGpHook().canMakeTrails(p, location)) {
-                if (main.getConfigManager().sendDenyMessage)
+                if (Trails.config.sendDenyMessage)
                     sendDelayedMessage(p);
                 return false;
             }
         }
         // Check worldguard conditions
-        if (main.getWorldGuardHook() != null && main.getConfigManager().wgIntegration) {
+        if (main.getWorldGuardHook() != null && Trails.config.wgIntegration) {
             if (!main.getWorldGuardHook().canCreateTrails(p, location)) {
-                if (main.getConfigManager().sendDenyMessage)
+                if (Trails.config.sendDenyMessage)
                     sendDelayedMessage(p);
                 return false;
             }
         }
         // Check PlayerPlot conditions
-        if (main.getPlayerPlotHook() != null && main.getConfigManager().playerPlotIntegration) {
+        if (main.getPlayerPlotHook() != null && Trails.config.playerPlotIntegration) {
             if (!main.getPlayerPlotHook().canMakeTrails(p, location)) {
-                if (main.getConfigManager().sendDenyMessage)
+                if (Trails.config.sendDenyMessage)
+                    sendDelayedMessage(p);
+                return false;
+            }
+        }
+        // Check RedProtect conditions
+        if (main.getRedProtectHook() != null && Trails.config.redProtect) {
+            if (!main.getRedProtectHook().canBuild(p, location)) {
+                if (Trails.config.sendDenyMessage)
                     sendDelayedMessage(p);
                 return false;
             }
@@ -293,16 +301,14 @@ public class MoveEventListener implements Listener {
 
     private void sendDelayedMessage(Player p) {
         if (!main.messagePlayers.contains(p.getUniqueId())) {
-            p.sendMessage(main.getCommands().getFormattedMessage(p.getName(), main.getLanguage().cantCreateTrails));
+            p.sendMessage(Language.getString("messages.cantCreateTrails", null, p));
             main.messagePlayers.add(p.getUniqueId());
-            Bukkit.getScheduler().runTaskLater(main, () -> delayWGMessage(p.getUniqueId()), 20 * main.getConfigManager().messageInterval);
+            Bukkit.getScheduler().runTaskLater(main, () -> delayWGMessage(p.getUniqueId()), 20L * Trails.config.messageInterval);
         }
     }
 
     private void delayWGMessage(UUID id) {
-        if (main.messagePlayers.contains(id)) {
-            main.messagePlayers.remove(id);
-        }
+        main.messagePlayers.remove(id);
     }
 
     public static void removeBoostedPlayer(UUID uuid, boolean defaultSpeed) {
@@ -325,10 +331,10 @@ public class MoveEventListener implements Listener {
     }
 
     public void createRoad(Player player, Location from, Location to){
-        Location locBelow = firstSolid(from);
+        Location locBelow = firstSolid(to);
         if(locBelow == null) return;
         CustomBlockData toData = new CustomBlockData(locBelow.getBlock(), main);
-        if(toData.has(new NamespacedKey(main, "road"))){
+        if(toData.has(new NamespacedKey(main, "r"))){
             System.out.println("Already road");
             return;
         }
@@ -338,13 +344,11 @@ public class MoveEventListener implements Listener {
         int z1 = from.getBlockZ();
         int z2 = to.getBlockZ();
         RoadUtils.Direction direction = null;
-        if(x1 > x2) direction = RoadUtils.Direction.EAST;
-        else if (x1 < x2) direction = RoadUtils.Direction.WEST;
-        else if(z1 > z2) direction = RoadUtils.Direction.SOUTH;
-        else if (z1 < z2) direction = RoadUtils.Direction.NORTH;
-        if(direction != null) RoadUtils.placeRoad(player, locBelow, direction, null);
-
-
+        if(x1 > x2) direction = RoadUtils.Direction.WEST;
+        else if (x1 < x2) direction = RoadUtils.Direction.EAST;
+        else if(z1 > z2) direction = RoadUtils.Direction.NORTH;
+        else if (z1 < z2) direction = RoadUtils.Direction.SOUTH;
+        if(direction != null) RoadUtils.placeRoad(player, locBelow, direction, Trails.roadMap.get(player));
     }
 
     public Location firstSolid(Location location){

@@ -2,8 +2,8 @@ name: Trails
 main: me.ccrama.Trails.Trails
 authors: [j10max, ccrama, drkmatr1984, Mr-Deej, GrocerMC]
 api-version: 1.19
-softdepend: [PlayerPlot, WorldGuard, WorldEdit, Towny, Lands, LogBlock, CoreProtect, PlaceholderAPI, MVdWPlaceholderAPI, GriefPrevention, Dynmap, dynmap]
-version: 1.6
+softdepend: [PlayerPlot, RedProtect, WorldGuard, WorldEdit, Towny, Lands, LogBlock, CoreProtect, PlaceholderAPI, MVdWPlaceholderAPI, GriefPrevention, Dynmap, dynmap]
+version: 1.7
 description: Naturally create paths whereever you go!
 
 commands:

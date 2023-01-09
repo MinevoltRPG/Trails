@@ -22,6 +22,7 @@ public class BreakBlockListener implements Listener {
         final PersistentDataContainer customBlockData = new CustomBlockData(event.getBlock(), main);
         if (customBlockData.has(new NamespacedKey(main, "w"), PersistentDataType.INTEGER)) customBlockData.remove(new NamespacedKey(main, "w"));
         if (customBlockData.has(new NamespacedKey(main, "n"), PersistentDataType.STRING)) customBlockData.remove(new NamespacedKey(main, "n"));
+        if (customBlockData.has(new NamespacedKey(main, "r"), PersistentDataType.STRING)) customBlockData.remove(new NamespacedKey(main, "r"));
     }
 
 }

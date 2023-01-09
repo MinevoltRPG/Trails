@@ -34,7 +34,7 @@ public class PlayerInteractListener implements Listener {
     @EventHandler
     public void PlayerInteract(PlayerInteractEvent event) {
         if (!event.hasBlock() || !(event.getHand() == EquipmentSlot.HAND) || !event.hasItem() || !event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) return;
-        if (event.getItem().getType() == plugin.getConfigManager().trailTool && event.getPlayer().hasPermission("trails.trail-tool")) {
+        if (event.getItem().getType() == Trails.config.trailTool && event.getPlayer().hasPermission("trails.trail-tool")) {
             Block block = event.getClickedBlock();
             Link link = plugin.getMoveEventListener().getLink(block);
             if (link != null && (plugin.getMoveEventListener().checkConditions(event.getPlayer(), event.getClickedBlock().getLocation()) || event.getPlayer().hasPermission("trails.trail-tool.bypass-protection"))) {
@@ -43,7 +43,7 @@ public class PlayerInteractListener implements Listener {
             Material material = event.getItem().getType();
             if (material == Material.DIAMOND_SHOVEL || material == Material.IRON_SHOVEL || material == Material.GOLDEN_SHOVEL || material == Material.WOODEN_SHOVEL || material == Material.NETHERITE_SHOVEL || material == Material.STONE_SHOVEL)
                 event.setCancelled(true);
-        } else if (event.getItem().getType() == plugin.getConfigManager().infoTool && event.getPlayer().hasPermission("trails.info-tool")) {
+        } else if (event.getItem().getType() == Trails.config.infoTool && event.getPlayer().hasPermission("trails.info-tool")) {
             Block block = event.getClickedBlock();
             PersistentDataContainer container = new CustomBlockData(block, plugin);
             Integer walks = container.get(new NamespacedKey(plugin, "w"), PersistentDataType.INTEGER);

@@ -43,6 +43,6 @@ public class GriefPreventionHook {
 	        else
 	         	return true;
         }else
-          	return plugin.getConfigManager().gpPathsWilderness;
+          	return Trails.config.gpPathsWilderness;
 	}
 }

@@ -35,7 +35,7 @@ public class ToggleLists{
 		saveDefaultUserList();
 		loadUserList();
 		//Start save task
-		plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, () -> saveUserList(false), 20*60*plugin.getConfigManager().saveInterval, 20*60*plugin.getConfigManager().saveInterval);
+		plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, () -> saveUserList(false), 20L *60*Trails.config.saveInterval, 20L *60*Trails.config.saveInterval);
 	}
 	
     ////////////////////////////////////////////////////////////
@@ -106,7 +106,7 @@ public class ToggleLists{
 	public boolean isDisabled(@Nonnull String uuid) {
 		HashMap<String, Object> playerInfo = this.toggledPlayers.get(uuid);
 		if(this.toggledPlayers == null || playerInfo == null || playerInfo.get("enable") == null) {
-			return !plugin.getConfigManager().enabledDefault;
+			return !Trails.config.enabledDefault;
 		}
 		return !((boolean) playerInfo.get("enable"));
 	}
@@ -114,7 +114,7 @@ public class ToggleLists{
 	public boolean isBoost(@Nonnull String uuid) {
 		HashMap<String, Object> playerInfo = this.toggledPlayers.get(uuid);
 		if(this.toggledPlayers == null || playerInfo == null || playerInfo.get("boost") == null) {
-			return plugin.getConfigManager().boostEnabledDefault;
+			return Trails.config.boostEnabledDefault;
 		}
 		return (boolean) playerInfo.get("boost");
 	}

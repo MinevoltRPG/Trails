@@ -6,7 +6,7 @@
 
     <groupId>me.ccrama.Trails</groupId>
     <artifactId>Trails</artifactId>
-    <version>1.6</version>
+    <version>1.7</version>
     <name>Trails</name>
 
     <!-- Properties -->
@@ -104,7 +104,7 @@
         <dependency>
             <groupId>com.github.angeschossen</groupId>
             <artifactId>LandsAPI</artifactId>
-            <version>6.22.0</version>
+            <version>6.26.17</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -144,10 +144,21 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>com.github.stefvanschie.inventoryframework</groupId>
+            <artifactId>IF</artifactId>
+            <version>0.10.8</version>
+        </dependency>
+        <dependency>
             <groupId>org.bstats</groupId>
             <artifactId>bstats-bukkit</artifactId>
             <version>3.0.0</version>
             <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.github.fabiozumbi12.RedProtect</groupId>
+            <artifactId>RedProtect</artifactId>
+            <version>8.0.0</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 
@@ -159,8 +170,8 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
                 <configuration>
-                    <source>8</source>
-                    <target>8</target>
+                    <source>16</source>
+                    <target>16</target>
                 </configuration>
             </plugin>
             <plugin>
@@ -181,6 +192,10 @@
                         <relocation>
                             <pattern>org.reflections</pattern>
                             <shadedPattern>me.ccrama.Trails.reflections</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>com.github.stefvanschie.inventoryframework</pattern>
+                            <shadedPattern>me.ccrama.Trails.inventoryframework</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>
