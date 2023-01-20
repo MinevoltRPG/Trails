@@ -37,7 +37,7 @@ public class Language {
     }
 
     public void initLanguageFile() {
-        loadLanguageFile(saveDefaultLanguageFile(Trails.config.langType));
+        loadLanguageFile(saveDefaultLanguageFile( plugin.getConfig().getString("General.Language", "en-US")));
     }
 
     public File saveDefaultLanguageFile(String languageType) {
