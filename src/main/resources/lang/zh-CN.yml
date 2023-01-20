@@ -5,40 +5,40 @@ messages:
   ## 有一些占位符是你必须在消息中使用的.
   ## %plugin_prefix% = 你在上面设置的插件前缀 %command% = 你在上面设置的指令全称
   ## %name% = 你所指玩家的名称
-  alreadyMaxLevel: "%plugin_prefix% &fYour &eTrail &fis already max level!"
+  alreadyMaxLevel: "%plugin_prefix% &f你的 &e路径生成 &f已经是最高等级!"
   noPerm: "%plugin_prefix% &c你没有权限开关路径生成."
-  noPermBoost: "%plugin_prefix% &cYou do not have permission to toggle boost"
+  noPermBoost: "%plugin_prefix% &c你没有权限开关增速."
   noPermOthers: "%plugin_prefix% &c你没有权限开关其他人的路径生成."
-  consoleSpecify: "%plugin_prefix% &7在控制台&c中使用时必须指定&f玩家名称."
-  toggledOn: "%plugin_prefix% &f你的&e路径生成&f已被切换为&a开启!"
-  toggledOff: "%plugin_prefix% &f你的&e路径生成&f已被切换为&c关闭!"
-  boostOn: "%plugin_prefix% &fYour &eBoost &fhave been toggle &aOn!"
-  boostOff: "%plugin_prefix% &fYour &eBoost &fhave been toggle &cOff!"
-  toggledOnOther: "%plugin_prefix% %name%&7的&e路径生成&f已被切换为&a开启!"
-  toggledOffOther: "%plugin_prefix% %name%&7的&e路径生成&f已被切换为&c关闭!"
+  consoleSpecify: "%plugin_prefix% &7在控制台&c中使用时必须指定 &f玩家名称."
+  toggledOn: "%plugin_prefix% &f你的 &e路径生成 &f已被切换为&a开启!"
+  toggledOff: "%plugin_prefix% &f你的 &e路径生成 &f已被切换为&c关闭!"
+  boostOn: "%plugin_prefix% &f你的 &e行走增速 &f已 &a开启!"
+  boostOff: "%plugin_prefix% &f你的 &e行走增速 &f已 &c关闭!"
+  toggledOnOther: "%plugin_prefix% %name%&7的 &e路径生成&f 已被切换为 &a开启!"
+  toggledOffOther: "%plugin_prefix% %name%&7的 &e路径生成&f 已被切换为 &c关闭!"
   notPlayedBefore: "%plugin_prefix% %name%&7此前未在此服务器游玩过."
   cantCreateTrails: "%plugin_prefix% 你不能在此处创建路径."
   saveMessage: "%plugin_prefix% 已成功保存了路径数据!"
-  alreadyOff: "%plugin_prefix% &fYour &eTrails &fare already toggled &cOff!"
-  alreadyOn: "%plugin_prefix% &fYour &eTrails &fare already toggled &aOn!"
-  alreadyOffBoost: "%plugin_prefix% &fYour &eBoost &fis already toggled &cOff!"
-  alreadyOnBoost: "%plugin_prefix% &fYour &eBoost &fis already toggled &aOn!"
-  reload: "%plugin_prefix% &6Plugin reloaded!"
-  reloadNoPerm: "%plugin_prefix% &cYou don't have permissions to do this!"
-  tooManyArgs: "%plugin_prefix% &cToo many arguments!"
-  wrongArgs: "%plugin_prefix% &cWrong command arguments!"
-  alreadyOnBoostOther: "%plugin_prefix% &f%name%'s &eBoost &fis already toggled &aOn!"
-  alreadyOffBoostOther: "%plugin_prefix% &f%name%'s &eBoost &fis already toggled &cOff!"
-  toggledOnBoostOther: "%plugin_prefix% %name%'s &eBoost &fhas been toggle &aOn!"
-  toggledOffBoostOther: "%plugin_prefix% %name%'s &eBoost &fhas been toggle &cOff!"
-  showing-trails: '%plugin_prefix% &eShowing trails.'
-  showing-trails-radius: '%plugin_prefix% &eShowing trails in a radius of &6%radius% blocks.'
-  second-argument-not-double: '%plugin_prefix% &cSecond argument is not valid. &7Specify radius of displaying trails blocks.'
+  alreadyOff: "%plugin_prefix% &f你的 &e路径生成 &f已经是 &c关闭 &f状态!"
+  alreadyOn: "%plugin_prefix% &f你的 &e路径生成 &f已经是 &a开启 &f状态!"
+  alreadyOffBoost: "%plugin_prefix% &f你的 &e行走增速 &f已经是 &c关闭 &f状态!"
+  alreadyOnBoost: "%plugin_prefix% &f你的 &e行走增速 &f已经是 &a开启 &f状态!"
+  reload: "%plugin_prefix% &6插件已重载!"
+  reloadNoPerm: "%plugin_prefix% &c你没有权限这么做!"
+  tooManyArgs: "%plugin_prefix% &c参数过多!"
+  wrongArgs: "%plugin_prefix% &c错误的参数!"
+  alreadyOnBoostOther: "%plugin_prefix% 玩家 &f%name% 的 &e行走增速 &f已经是 &a开启 &f状态了!"
+  alreadyOffBoostOther: "%plugin_prefix% 玩家 &f%name% 的 &e行走增速 &f已经是 &c关闭 &f状态了!"
+  toggledOnBoostOther: "%plugin_prefix% 玩家 %name% 的 &e行走增速 &f已 &a开启&f!"
+  toggledOffBoostOther: "%plugin_prefix% 玩家 %name% 的 &e行走增速 &f已 &c关闭&f!"
+  showing-trails: '%plugin_prefix% &e正在显示路径轨迹.'
+  showing-trails-radius: '%plugin_prefix% &e在 &6%radius% &f格半径内显示路径轨迹.'
+  second-argument-not-double: '%plugin_prefix% &c第二个参数无效. &7请指定显示轨迹的半径.'
 lands:
   flag:
     icon-material: DIRT_PATH
-    display-name: "&e路径生成Flag"
+    display-name: "&e路径生成"
     description:
-    - "启用该flag时"
-    - "将允许玩家在这个区域"
-    - "留下路径"
+      - "启用该 flag 时"
+      - "将允许玩家在这个区域"
+      - "留下路径"

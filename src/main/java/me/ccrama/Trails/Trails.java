@@ -68,7 +68,7 @@ public class Trails extends JavaPlugin {
     public void onEnable() {
         plugin = this;
         config = new Config(this);
-        this.language = new Language(this);
+
 
         DecayTask.setPlugin(this);
         DecayTask.setTrailKey(new NamespacedKey(this, "n"));
@@ -156,6 +156,7 @@ public class Trails extends JavaPlugin {
     @Override
     public void onLoad() {
         pm = Bukkit.getServer().getPluginManager();
+        this.language = new Language(this);
 
     	// Worldguard Hook
         if (pm.getPlugin("WorldGuard") != null && getConfig().getBoolean("Plugin-Integration.WorldGuard.IntegrationEnabled", true) && wgHook == null) {

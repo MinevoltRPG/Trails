@@ -22,8 +22,8 @@ public class LandsAPIHook {
         //seems like should use RoleFlag instead of LandFlag
         this.roleflag = RoleFlag.of(landsIntegration, FlagTarget.PLAYER, RoleFlagCategory.ACTION, "allow_trails");
         //this.roleflag = new RoleFlag(plugin, Category.ACTION, "ALLOW_TRAILS", plugin.getConfigManager().applyInSubAreas, plugin.getConfigManager().landsPathsWilderness);
-        roleflag.setApplyInSubareas(Trails.config.applyInSubAreas);
-        roleflag.setAlwaysAllowInWilderness(Trails.config.landsPathsWilderness);
+        roleflag.setApplyInSubareas(plugin.getConfig().getBoolean("Plugin-Integration.Lands.ApplyInSubAreas", true));
+        roleflag.setAlwaysAllowInWilderness(plugin.getConfig().getBoolean("Plugin-Integration.Lands.PathsInWilderness", true));
         roleflag.setDisplayName(plugin.getLanguage().displayName);
         roleflag.setIcon(icon);
         roleflag.setDescription(Language.getStringList("lands.flag.description", null, null));
