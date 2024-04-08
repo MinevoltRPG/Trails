@@ -6,7 +6,7 @@
 
     <groupId>me.ccrama.Trails</groupId>
     <artifactId>Trails</artifactId>
-    <version>1.7</version>
+    <version>1.9</version>
     <name>Trails</name>
 
     <!-- Properties -->
@@ -73,11 +73,6 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>xyz.xenondevs</groupId>
-            <artifactId>particle</artifactId>
-            <version>1.8.3</version>
-        </dependency>
-        <dependency>
             <groupId>com.sk89q.worldguard</groupId>
             <artifactId>worldguard-bukkit</artifactId>
             <version>7.0.6</version>
@@ -104,7 +99,13 @@
         <dependency>
             <groupId>com.github.angeschossen</groupId>
             <artifactId>LandsAPI</artifactId>
-            <version>6.26.17</version>
+            <version>6.26.18</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>zrips</groupId>
+            <artifactId>Residence</artifactId>
+            <version>5.1.1.0</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

@@ -11,8 +11,8 @@ import java.util.Arrays;
 
 public class LinksConfig {
 
-    private Trails main;
-    private Links links = new Links();
+    private final Trails main;
+    private final Links links = new Links();
 
     public LinksConfig(Trails plugin) {
         this.main = plugin;
@@ -20,7 +20,6 @@ public class LinksConfig {
     }
 
     private void createLinks() {
-
         for (String trailName : this.main.getConfig().getConfigurationSection("Trails").getKeys(false)) {
             String linkString = this.main.getConfig().getString("Trails." + trailName);
             String[] linksArray = Arrays.stream(linkString.split(">")).map(String::trim).toArray(String[]::new);

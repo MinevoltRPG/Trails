@@ -1,10 +1,5 @@
 package me.ccrama.Trails;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-
 import me.ccrama.Trails.configs.Language;
 import me.ccrama.Trails.util.ParticleUtil;
 import org.bukkit.Bukkit;
@@ -15,7 +10,9 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
-import xyz.xenondevs.particle.ParticleEffect;
+
+import java.util.Map;
+import java.util.UUID;
 
 public class TrailCommand implements CommandExecutor {
     private Trails plugin;

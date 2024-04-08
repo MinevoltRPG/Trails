@@ -28,8 +28,8 @@ public class LandsAPIHook {
         roleflag.setIcon(icon);
         roleflag.setDescription(Language.getStringList("lands.flag.description", null, null));
         roleflag.setDisplay(true);
-        plugin.getLogger().info(Language.pluginPrefix + ChatColor.GREEN + " hooked into " + ChatColor.YELLOW + "Lands!");
-        plugin.getLogger().info(Language.pluginPrefix + ChatColor.YELLOW + " ALLOW_TRAILS " + ChatColor.GREEN + "Role Flag registered!");
+        plugin.getLogger().info(ChatColor.translateAlternateColorCodes('&',Language.pluginPrefix) + ChatColor.GREEN + " hooked into " + ChatColor.YELLOW + "Lands!");
+        plugin.getLogger().info(ChatColor.translateAlternateColorCodes('&',Language.pluginPrefix) + ChatColor.YELLOW + " ALLOW_TRAILS " + ChatColor.GREEN + "Role Flag registered!");
         //landsIntegration.registerFlag(roleflag);
     }
 

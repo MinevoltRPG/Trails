@@ -48,8 +48,11 @@ public class MoveEventListener implements Listener {
             return;
         }
 
-        if (!Trails.config.allWorldsEnabled && !Trails.config.enabledWorlds.contains(e.getTo().getWorld().getName()))
+        if (!Trails.config.allWorldsEnabled && !Trails.config.enabledWorlds.contains(e.getTo().getWorld().getName())){
+            //System.out.println("World is disabled");
             return;
+        }
+
 
         if(Trails.roadMap.containsKey(e.getPlayer())){
             createRoad(e.getPlayer(), e.getFrom(), e.getTo());
@@ -61,12 +64,17 @@ public class MoveEventListener implements Listener {
         Player p = e.getPlayer();
         speedBoost(p, link, block);
 
-        if ((Trails.config.sneakBypass && e.getPlayer().isSneaking()) || link == null) return;
+        if ((Trails.config.sneakBypass && e.getPlayer().isSneaking()) || link == null){
+            //System.out.println("Sneak or link == null");
+            return;
+        }
         if ((!Trails.config.usePermission && main.getToggles().isDisabled(p.getUniqueId().toString())) || (Trails.config.usePermission && !p.hasPermission("trails.create-trails"))) {
+            //System.out.println("Disabled trails");
             return;
         }
 
         if (checkConditions(p, block.getLocation())) makePath(p, block, link, false);
+        //System.out.println("Check conditions: "+checkConditions(p, block.getLocation()));
     }
 
     public void makePath(Player p, Block block, Link link, boolean skip) {
@@ -258,6 +266,7 @@ public class MoveEventListener implements Listener {
         }
         // Check Lands conditions
         if (main.getLandsHook() != null) {
+            //System.out.println("Lands: "+main.getLandsHook().hasTrailsFlag(p, location));
             if (!main.getLandsHook().hasTrailsFlag(p, location)) {
                 if (Trails.config.sendDenyMessage)
                     sendDelayedMessage(p);
@@ -266,6 +275,7 @@ public class MoveEventListener implements Listener {
         }
         // Check GriefPrevention conditions
         if (main.getGpHook() != null) {
+            //System.out.println("GP: "+main.getGpHook().canMakeTrails(p, location));
             if (!main.getGpHook().canMakeTrails(p, location)) {
                 if (Trails.config.sendDenyMessage)
                     sendDelayedMessage(p);
@@ -274,6 +284,7 @@ public class MoveEventListener implements Listener {
         }
         // Check worldguard conditions
         if (main.getWorldGuardHook() != null && Trails.config.wgIntegration) {
+            //System.out.println("WG: "+main.getWorldGuardHook().canCreateTrails(p, location));
             if (!main.getWorldGuardHook().canCreateTrails(p, location)) {
                 if (Trails.config.sendDenyMessage)
                     sendDelayedMessage(p);
@@ -282,6 +293,7 @@ public class MoveEventListener implements Listener {
         }
         // Check PlayerPlot conditions
         if (main.getPlayerPlotHook() != null && Trails.config.playerPlotIntegration) {
+            //System.out.println("PlayerPlot: "+main.getPlayerPlotHook().canMakeTrails(p, location));
             if (!main.getPlayerPlotHook().canMakeTrails(p, location)) {
                 if (Trails.config.sendDenyMessage)
                     sendDelayedMessage(p);
@@ -290,7 +302,17 @@ public class MoveEventListener implements Listener {
         }
         // Check RedProtect conditions
         if (main.getRedProtectHook() != null && Trails.config.redProtect) {
+            //System.out.println("WG: "+main.getRedProtectHook().canBuild(p, location));
             if (!main.getRedProtectHook().canBuild(p, location)) {
+                if (Trails.config.sendDenyMessage)
+                    sendDelayedMessage(p);
+                return false;
+            }
+        }
+        //Check residence
+        if(main.getResidenceHook() != null && Trails.config.residence){
+            //System.out.println("WG: "+main.getResidenceHook().canCreateTrails(location, p));
+            if(!main.getResidenceHook().canCreateTrails(location, p)){
                 if (Trails.config.sendDenyMessage)
                     sendDelayedMessage(p);
                 return false;

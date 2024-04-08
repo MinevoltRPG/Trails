@@ -106,6 +106,7 @@ public class ToggleLists{
 	public boolean isDisabled(@Nonnull String uuid) {
 		HashMap<String, Object> playerInfo = this.toggledPlayers.get(uuid);
 		if(this.toggledPlayers == null || playerInfo == null || playerInfo.get("enable") == null) {
+			//System.out.println("Default: "+Trails.config.enabledDefault);
 			return !Trails.config.enabledDefault;
 		}
 		return !((boolean) playerInfo.get("enable"));
