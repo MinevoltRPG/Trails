@@ -2,7 +2,7 @@ package me.ccrama.Trails.configs;
 
 import me.ccrama.Trails.Trails;
 import org.bukkit.Material;
-import xyz.xenondevs.particle.ParticleEffect;
+import org.bukkit.Particle;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +10,8 @@ import java.util.List;
 public class Config {
 
     public boolean redProtect;
-	private LinksConfig linksData;
+    public boolean residence;
+    private LinksConfig linksData;
 	
 	public boolean townyPathsWilderness = true;
 	public boolean townyPathsPerm = false;
@@ -49,10 +50,13 @@ public class Config {
 	public double stepDecayFraction = 0.1;
 	public boolean wgDecayFlag = true;
 	public boolean strictLinks = false;
-	public ParticleEffect trailParticle = ParticleEffect.NAUTILUS;
+	public Particle trailParticle = Particle.NAUTILUS;
 	
 	public Config(Trails plugin) {
 		plugin.saveDefaultConfig();
+		plugin.getConfig().options().copyDefaults();
+		plugin.reloadConfig();
+
 		this.linksData = new LinksConfig(plugin);
 		loadConfig(plugin);
 	}
@@ -79,7 +83,7 @@ public class Config {
 		usePermissionBoost = plugin.getConfig().getBoolean("General.use-permission-for-boost", false);
 		onlyTrails = plugin.getConfig().getBoolean("General.speed-boost-only-trails", true);
 		immediatelyRemoveBoost = plugin.getConfig().getBoolean("General.immediately-remove-boost", false);
-		enabledWorlds = (ArrayList<String>) plugin.getConfig().getList("General.enabled-worlds", new ArrayList<>());
+		enabledWorlds = plugin.getConfig().getStringList("General.enabled-worlds");
 		saveInterval = plugin.getConfig().getInt("Data-Saving.Interval");
 		enabledDefault = plugin.getConfig().getBoolean("General.enabled-by-default", true);
 		boostEnabledDefault = plugin.getConfig().getBoolean("General.boost-enabled-by-default", true);
@@ -95,9 +99,10 @@ public class Config {
 		wgDecayFlag = plugin.getConfig().getBoolean("Plugin-Integration.WorldGuard.decay-flag", wgDecayFlag);
 		strictLinks = plugin.getConfig().getBoolean("General.strict-links", strictLinks);
 		redProtect = plugin.getConfig().getBoolean("Plugin-Integration.CoreProtect.integration-enabled", true);
+		residence = plugin.getConfig().getBoolean("Plugin-Integration.Residence.integration-enabled", true);
 
 		try {
-			trailParticle = ParticleEffect.valueOf(plugin.getConfig().getString("General.trails-particle", "FLAME").toUpperCase().trim());
+			trailParticle = Particle.valueOf(plugin.getConfig().getString("General.trails-particle", "FLAME").toUpperCase().trim());
 		} catch (Exception e){
 			e.printStackTrace();
 		}

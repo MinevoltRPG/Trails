@@ -2,10 +2,7 @@ package me.ccrama.Trails.roads;
 
 import me.ccrama.Trails.Trails;
 import me.ccrama.Trails.util.Pair;
-import me.ccrama.Trails.util.ParticleUtil;
-import me.ccrama.Trails.util.RoadUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
@@ -16,10 +13,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
-import xyz.xenondevs.particle.ParticleBuilder;
-import xyz.xenondevs.particle.ParticleEffect;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -49,7 +43,7 @@ public class RoadEditor implements Listener {
 
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
-        if (!isInCuboid(event.getBlockPlaced())){
+/*        if (!isInCuboid(event.getBlockPlaced())){
             if(isInStairs(event.getBlock())){
                 if (!event.getPlayer().equals(player)) {
                     event.setCancelled(true);
@@ -82,12 +76,12 @@ public class RoadEditor implements Listener {
         int z = event.getBlockPlaced().getZ() - block1.getZ();
         int y = event.getBlockPlaced().getY() - block1.getY();
         road.setRoadBlock(x, y, z, roadBlock);
-        new ParticleBuilder(ParticleEffect.END_ROD, event.getBlockPlaced().getLocation().clone().add(0.5, 0.5, 0.5)).setAmount(5).setOffset(0.2f, 0.2f, 0.2f).setSpeed(0.2f).display(player);
+        new ParticleBuilder(ParticleEffect.END_ROD, event.getBlockPlaced().getLocation().clone().add(0.5, 0.5, 0.5)).setAmount(5).setOffset(0.2f, 0.2f, 0.2f).setSpeed(0.2f).display(player);*/
     }
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
-        if (!isInCuboid(event.getBlock())){
+/*        if (!isInCuboid(event.getBlock())){
             if(isInStairs(event.getBlock())){
                 if (!event.getPlayer().equals(player)) {
                     event.setCancelled(true);
@@ -113,7 +107,7 @@ public class RoadEditor implements Listener {
         int z = event.getBlock().getZ() - block1.getZ();
         int y = event.getBlock().getY() - block1.getY();
         road.setRoadBlock(x, y, z, roadBlock);
-        new ParticleBuilder(ParticleEffect.END_ROD, event.getBlock().getLocation().clone().add(0.5, 0.5, 0.5)).setAmount(5).setOffset(0.2f, 0.2f, 0.2f).setSpeed(0.2f).display(player);
+        new ParticleBuilder(ParticleEffect.END_ROD, event.getBlock().getLocation().clone().add(0.5, 0.5, 0.5)).setAmount(5).setOffset(0.2f, 0.2f, 0.2f).setSpeed(0.2f).display(player);*/
     }
 
     @EventHandler
@@ -271,7 +265,7 @@ public class RoadEditor implements Listener {
     }
 
     private void createTask() {
-        if (this.particleTask != null && !particleTask.isCancelled()) particleTask.cancel();
+/*        if (this.particleTask != null && !particleTask.isCancelled()) particleTask.cancel();
         List<Location> cuboidLocations = ParticleUtil.getCuboidLocations(block1, block2);
 
         int x = road.xAxis;
@@ -318,7 +312,7 @@ public class RoadEditor implements Listener {
                     new ParticleBuilder(ParticleEffect.SNEEZE, location).setOffset(0f, 0f, 0f).setSpeed(0f).setAmount(3).display(player);
                 }
             }
-        }.runTaskTimerAsynchronously(Trails.getInstance(), 0L, 10L);
+        }.runTaskTimerAsynchronously(Trails.getInstance(), 0L, 10L);*/
     }
 
     private void setupEditor() {

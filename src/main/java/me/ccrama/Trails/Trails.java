@@ -41,6 +41,7 @@ public class Trails extends JavaPlugin {
     private PlayerPlotHook playerPlotHook = null;
     private static PAPIHook papiHook = null;
     private RedProtectHook redProtectHook = null;
+    private ResidenceHook residenceHook = null;
 
     private ToggleLists toggle;
     public static Config config;
@@ -146,11 +147,16 @@ public class Trails extends JavaPlugin {
         if(pm.isPluginEnabled("PlayerPlot") && playerPlotHook == null && config.playerPlotIntegration){
             playerPlotHook = new PlayerPlotHook(this);
         }
+
+        // Residence Hook
+        if (pm.getPlugin("Residence") != null && residenceHook == null) {
+            residenceHook = new ResidenceHook();
+        }
         // Console enabled message
         Console.sendConsoleMessage(String.format("Trails v%s", this.getDescription().getVersion()), "updated to 1.15.2 by j10max", "created by ccrama & drkmatr1984", "maintained by GrocerMC", ChatColor.GREEN + "Thank you");
 
         if(config.trailDecay) this.decayTask = new DecayTask(this);
-        getCommand("road").setExecutor(new RoadCommand());
+        //getCommand("road").setExecutor(new RoadCommand());
     }
     
     @Override
@@ -165,10 +171,12 @@ public class Trails extends JavaPlugin {
             Console.sendConsoleMessage(String.format(ChatColor.GRAY + "[" + ChatColor.YELLOW + "Trails" + ChatColor.GRAY + "]" 
             + ChatColor.GREEN + " hooked into worldguard! Flag trails-flag registered. Set trails-flag = DENY to deny trails in regions."));
         }
+
         // Lands Hook
         if (pm.getPlugin("Lands") != null && landsHook == null) {
             landsHook = new LandsAPIHook(this);
         }
+
     }
 
     /**
@@ -321,6 +329,10 @@ public class Trails extends JavaPlugin {
         }
         }
 
+
+    public ResidenceHook getResidenceHook() {
+        return residenceHook;
+    }
 
     public PlayerPlotHook getPlayerPlotHook() {
         return playerPlotHook;

@@ -103,6 +103,8 @@ Plugin-Integration:
         integration-enabled: true
     RedProtect:
         integration-enabled: true
+    Residence:
+        integration-enabled: true
     Dynmap:
         trails-trigger-render: true
     
